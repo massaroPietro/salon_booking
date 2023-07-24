@@ -1,0 +1,7 @@
+# PostgreSQL
+# ------------------------------------------------------------------------------
+POSTGRES_HOST=postgres
+POSTGRES_PORT=5432
+POSTGRES_DB=salon_booking
+POSTGRES_USER=LjqEQtaCotZEYxpJTCvwUwqZvCSGZAsm
+POSTGRES_PASSWORD=tsfYb8ObNRdQdXEhllpXEG815dcNMqevnFEMNDiiODdV4ulUufFVPJNR32hgWorC
