@@ -324,6 +324,7 @@ dump.rdb
 
 ### Project template
 salon_booking/media/
+!salon_booking/media/users/pics/default.png
 
 .pytest_cache/
 .ipython/

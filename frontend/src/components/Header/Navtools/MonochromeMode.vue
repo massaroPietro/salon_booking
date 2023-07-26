@@ -1,25 +1,29 @@
 <template>
     <span
-      @click="toggleMonochrome"
-      class="lg:h-[32px] lg:w-[32px] lg:bg-slate-50 lg:dark:bg-slate-900 dark:text-white text-slate-900 cursor-pointer rounded-full text-[20px] flex flex-col items-center justify-center"
+        @click="toggleMonochrome"
+        class="lg:h-[32px] lg:w-[32px] lg:bg-slate-50 lg:dark:bg-slate-900 dark:text-white text-slate-900 cursor-pointer rounded-full text-[20px] flex flex-col items-center justify-center"
     >
-      <Icon icon="mdi:palette-outline" class="font-bold"  />
+      <Icon icon="mdi:palette-outline" class="font-bold"/>
     </span>
-  </template>
-  <script>
-  import Icon from "@/components/Icon";
-  import { useThemeSettingsStore } from "@/store/themeSettings";
-  const themeSettingsStore = useThemeSettingsStore()
-  export default {
-    components: {
-      Icon,
+</template>
+<script>
+import Icon from "@/components/Icon";
+import {useThemeSettingsStore} from "@/store/themeSettings";
+import axios from "@/plugins/axios";
+import apiEndpoints from "@/constant/apiEndpoints";
+import {useAuthStore} from "@/store/auth";
+
+const themeSettingsStore = useThemeSettingsStore()
+const authStore = useAuthStore();
+export default {
+  components: {
+    Icon,
+  },
+  methods: {
+    toggleMonochrome() {
+      themeSettingsStore.toggleMonochrome();
     },
-    methods: {
-      toggleMonochrome() {
-        themeSettingsStore.toggleMonochrome();
-      },
-    },
-  };
-  </script>
-  <style lang=""></style>
-  
+  },
+};
+</script>
+<style lang=""></style>

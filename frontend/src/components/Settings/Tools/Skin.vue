@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="col-span-12 text-slate-600 dark:text-slate-300 text-base mb-2">
-      Skin
+      {{ $t("themeCustomizer.skin.title") }}
     </div>
     <div class="grid md:grid-cols-3 grid-cols-1 gap-3">
       <div v-for="(item, i) in skins" :key="i">
@@ -36,11 +36,11 @@ export default {
       skins: [
         {
           value: "default",
-          label: "Default",
+          label: this.$t("themeCustomizer.skin.default"),
         },
         {
           value: "bordered",
-          label: "Bordered",
+          label: this.$t("themeCustomizer.skin.bordered"),
         },
       ],
     };

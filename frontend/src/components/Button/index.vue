@@ -16,9 +16,9 @@
           :class="`
           ${iconPosition === 'right' ? 'order-1 ltr:ml-2 rtl:mr-2' : ' '}
           ${text && iconPosition === 'left' ? 'ltr:mr-2 rtl:ml-2' : ''}
-          
+
           ${iconClass}
-          
+
           `"
           v-if="icon"
           ><Icon :icon="icon"
@@ -48,7 +48,7 @@
           d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
         ></path>
       </svg>
-      Loading ...
+      {{ loadingText }}
     </template>
     <div v-if="$slots.default && !isLoading">
       <slot></slot>
@@ -71,9 +71,9 @@
           :class="`
           ${iconPosition === 'right' ? 'order-1 ltr:ml-2 rtl:mr-2' : ' '}
           ${text && iconPosition === 'left' ? 'ltr:mr-2 rtl:ml-2' : ''}
-          
+
           ${iconClass}
-          
+
           `"
           v-if="icon"
           ><Icon :icon="icon"
@@ -103,7 +103,7 @@
           d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
         ></path>
       </svg>
-      Loading ...
+      {{ loadingText }}
     </template>
     <div v-if="$slots.default && !isLoading">
       <slot></slot>
@@ -124,9 +124,9 @@
           :class="`
           ${iconPosition === 'right' ? 'order-1 ltr:ml-2 rtl:mr-2' : ' '}
           ${text && iconPosition === 'left' ? 'ltr:mr-2 rtl:ml-2' : ''}
-          
+
           ${iconClass}
-          
+
           `"
           v-if="icon"
           ><Icon :icon="icon"
@@ -156,7 +156,7 @@
           d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
         ></path>
       </svg>
-      Loading ...
+      {{ loadingText }}
     </template>
     <div v-if="$slots.default && !isLoading">
       <slot></slot>
@@ -172,6 +172,10 @@ export default {
   name: "Button",
   props: {
     text: {
+      type: String,
+      default: "",
+    },
+    loadingText: {
       type: String,
       default: "",
     },

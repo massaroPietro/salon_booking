@@ -1,26 +1,22 @@
 from django.contrib.auth.models import AbstractUser
-from django.db.models import CharField
-from django.urls import reverse
+from django.db import models
 from django.utils.translation import gettext_lazy as _
 
+from salon_booking.core.constants import LANGUAGES
+from salon_booking.core.models import BaseModel
 
-class User(AbstractUser):
-    """
-    Default custom user model for Salon Booking.
-    If adding fields that need to be filled at user signup,
-    check forms.SignupForm and forms.SocialSignupForms accordingly.
-    """
 
-    # First and last name do not cover name patterns around the globe
-    name = CharField(_("Name of User"), blank=True, max_length=255)
-    first_name = None  # type: ignore
-    last_name = None  # type: ignore
+class User(AbstractUser, BaseModel):
+    pic = models.ImageField(upload_to='users/pics/', default='users/pics/default.png')
+    email = models.EmailField(_("email address"))
+    first_name = models.CharField(_("first name"), max_length=150)
+    last_name = models.CharField(_("last name"), max_length=150)
 
-    def get_absolute_url(self) -> str:
-        """Get URL for user's detail view.
+    REQUIRED_FIELDS = ["email", "first_name", 'last_name']
 
-        Returns:
-            str: URL for user detail.
 
-        """
-        return reverse("users:detail", kwargs={"username": self.username})
+class UserSettings(BaseModel):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='settings')
+    lang = models.CharField(max_length=64, choices=LANGUAGES, default="en")
+    dark_theme = models.BooleanField(default=False)
+    monochrome_theme = models.BooleanField(default=False)

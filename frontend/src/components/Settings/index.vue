@@ -25,11 +25,11 @@
           <div>
             <span
               class="block text-xl text-slate-900 font-medium dark:text-[#eee]"
-              >Theme customizer</span
+              >{{ $t("themeCustomizer.title") }}</span
             >
             <span
               class="block text-sm font-light text-[#68768A] dark:text-[#eee]"
-              >Customize & Preview in Real Time</span
+              >{{ $t("themeCustomizer.description") }}</span
             >
           </div>
           <div

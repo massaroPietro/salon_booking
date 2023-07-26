@@ -19,8 +19,22 @@ import router from "./router";
 import VCalendar from "v-calendar";
 import {createPinia} from 'pinia'
 import "v-calendar/dist/style.css";
+import vue3GoogleLogin from 'vue3-google-login'
+import messages from "./locales/messages";
+import axios from "@/plugins/axios";
+import {createI18n} from 'vue-i18n'
 
 const pinia = createPinia()
+let lang = localStorage.getItem("lang") || "en";
+
+axios.defaults.headers.common["Accept-Language"] = lang;
+
+const i18n = createI18n({
+    legacy: false,
+    locale: lang,
+    messages,
+});
+
 
 // vue use
 const app = createApp(App)
@@ -37,11 +51,17 @@ const app = createApp(App)
     .use(VueGoodTablePlugin)
     .use(VueApexCharts)
     .use(VCalendar)
+    .use(vue3GoogleLogin, {
+        clientId: '798717259518-194q1iqbltl6jj6eu4rj0cpi5mq6nq9l.apps.googleusercontent.com'
+    })
+    .use(i18n)
+
 
 app.config.globalProperties.$store = {};
 app.mount("#app");
 
 import {useThemeSettingsStore} from "@/store/themeSettings";
+
 const themeSettingsStore = useThemeSettingsStore()
 if (localStorage.users === undefined) {
     let users = [
@@ -100,5 +120,5 @@ if (localStorage.direction === "true") {
 // Check if the monochrome mode is set or not
 if (localStorage.getItem('monochrome') !== null) {
     themeSettingsStore.monochrome = true;
-    document.getElementsByTagName( 'html' )[0].classList.add('grayscale');
+    document.getElementsByTagName('html')[0].classList.add('grayscale');
 }

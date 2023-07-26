@@ -1,6 +1,6 @@
-import { defineStore } from 'pinia';
+import {defineStore} from 'pinia';
 
-export const useThemeSettingsStore = defineStore('themeSettings',{
+export const useThemeSettingsStore = defineStore('themeSettings', {
     state: () => ({
         sidebarCollaspe: false,
         sidebarHidden: false,
@@ -37,14 +37,14 @@ export const useThemeSettingsStore = defineStore('themeSettings',{
 
         toggleMonochrome() {
             const isMonochrome = (localStorage.getItem('monochrome') !== null);
-            // this.monochrome = !this.monochrome;
-            if(isMonochrome) {
+
+            if (isMonochrome) {
                 localStorage.removeItem("monochrome");
-                document.getElementsByTagName( 'html' )[0].classList.remove('grayscale');
+                document.getElementsByTagName('html')[0].classList.remove('grayscale');
                 return;
-            } 
+            }
             localStorage.setItem("monochrome", true);
-            document.getElementsByTagName( 'html' )[0].classList.add('grayscale');
+            document.getElementsByTagName('html')[0].classList.add('grayscale');
             return;
         },
 
