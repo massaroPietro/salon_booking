@@ -331,3 +331,9 @@ salon_booking/media/
 .env
 .envs/*
 !.envs/.local/
+
+.idea
+**/migrations/*
+!**/migrations/__init__.py
+
+db.sqlite3
