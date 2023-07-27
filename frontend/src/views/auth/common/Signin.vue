@@ -1,7 +1,7 @@
 <template>
   <form @submit.prevent="onSubmit" class="space-y-4">
     <Textinput
-        label="Email"
+        :label="$t('auth.emailOrUsername')"
         type="text"
         placeholder="Type your email"
         name="emil"
@@ -10,7 +10,7 @@
         classInput="h-[48px]"
     />
     <Textinput
-        label="Password"
+        :label="$t('auth.password')"
         type="password"
         placeholder="8+ characters, 1 capitat letter "
         name="password"
@@ -43,13 +43,13 @@
           />
         </span>
         <span class="text-slate-500 dark:text-slate-400 text-sm leading-6"
-        >Keep me signed in</span
+        >{{ $t('auth.keepSignIn') }}</span
         >
       </label>
       <router-link
-          to="/forgot-password"
+          :to="{name:'forgot-password'}"
           class="text-sm text-slate-800 dark:text-slate-400 leading-6 font-medium"
-      >Forgot Password?
+      >{{ $t('auth.forgotPassword') }}
       </router-link
       >
     </div>
@@ -109,13 +109,30 @@ export default {
     };
   },
   methods: {
+    isEmail(email) {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      return emailRegex.test(email);
+    },
     onSubmit() {
       this.resetFormErrors();
       FormScheme.validate(this.form, {abortEarly: false})
           .then(() => {
             let endpoint = apiEndpoints.login();
+
+
+            let data = null;
+
+            if (this.isEmail(this.form.username)) {
+              data = {
+                password: this.form.password,
+                email: this.form.username
+              }
+            } else {
+              data = this.form;
+            }
+
             this.isLoading = true;
-            axios.post(endpoint, this.form)
+            axios.post(endpoint, data)
                 .then((response) => {
 
                   const token = response.data.key;
@@ -128,13 +145,12 @@ export default {
                   this.$router.push(toPath)
 
 
-                  this.toast.success("Login successfully", {
+                  this.toast.success(this.$t("toasts.successLogin"), {
                     timeout: 2000
                   });
                 })
                 .catch((err) => {
                   console.log(err);
-                  this.toast.error("Error");
                 });
             this.isLoading = false;
           })

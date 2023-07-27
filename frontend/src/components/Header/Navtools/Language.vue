@@ -103,6 +103,7 @@ export default {
       this.$i18n.locale = language;
       this.store.user.settings.lang = language;
       localStorage.setItem('lang', language);
+      axios.defaults.headers.common["Accept-Language"] = language;
 
       if (saveOnDB) {
         let endpoint = apiEndpoints.userSettings(this.store.user.id);

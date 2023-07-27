@@ -59,7 +59,7 @@
             <div class="text-center 2xl:mb-10 mb-4">
               <h4 class="font-medium">Sign in</h4>
               <div class="text-slate-500 text-base">
-                Sign in to your account to start using Dashcode
+                {{ $t("auth.signInDescription") }}
               </div>
             </div>
             <Signin />
@@ -69,21 +69,21 @@
               <div
                 class="absolute inline-block bg-white dark:bg-slate-800 dark:text-slate-400 left-1/2 top-1/2 transform -translate-x-1/2 px-4 min-w-max text-sm text-slate-500 font-normal"
               >
-                Or continue with
+                {{ $t("auth.orContinueWith") }}
               </div>
             </div>
             <div class="max-w-[242px] mx-auto mt-8 w-full">
               <Social />
             </div>
             <div
-              class="md:max-w-[345px] mx-auto font-normal text-slate-500 dark:text-slate-400 mt-12 uppercase text-sm"
+              class="md:max-w-[345px] mx-auto font-normal text-slate-500 dark:text-slate-400 mt-12 text-sm"
             >
-              Don’t have an account? Sign up
+               {{ $t("auth.dontHaveAccount") }}
               <router-link
-                to="/register"
+                :to="{name:'Register'}"
                 class="text-slate-900 dark:text-white font-medium hover:underline"
               >
-                Sign up
+                {{ $t("auth.signUp") }}
               </router-link>
             </div>
           </div>

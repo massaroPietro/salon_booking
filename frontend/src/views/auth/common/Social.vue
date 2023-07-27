@@ -55,13 +55,12 @@ export default {
             this.$router.push(toPath)
 
 
-            this.toast.success("Login successfully", {
+            this.toast.success(this.$t("toasts.successLogin"), {
               timeout: 2000
             });
           })
           .catch((err) => {
             console.log(err);
-            this.toast.error("Error");
           });
     }
   },
