@@ -3,16 +3,16 @@
     <Textinput
         :label="$t('auth.emailOrUsername')"
         type="text"
-        placeholder="Type your email"
+        placeholder=""
         name="emil"
         v-model="form.username"
         :error="formErrors.username"
         classInput="h-[48px]"
     />
     <Textinput
-        :label="$t('auth.password')"
+        :label="$t('generic.password')"
         type="password"
-        placeholder="8+ characters, 1 capitat letter "
+        placeholder=""
         name="password"
         v-model="form.password"
         :error="formErrors.password"
@@ -53,11 +53,9 @@
       </router-link
       >
     </div>
-    <Alert type="danger" v-for="(error, index) in coreStore.non_field_errors" :key="index">
-      {{ error }}
-    </Alert>
+    <Alert v-if="formErrors.non_field_errors" type="danger">{{ formErrors.non_field_errors }}</Alert>
 
-    <Button text="Sign in" btnClass="btn btn-dark block w-full text-center" :is-loading="isLoading"/>
+    <Button :text="$t('auth.signIn')" btnClass="btn btn-dark block w-full text-center" :is-loading="isLoading"/>
 
   </form>
 </template>
@@ -69,18 +67,9 @@ import {useAuthStore} from "@/store/auth";
 import axios from "@/plugins/axios";
 import Button from "@/components/Button/index.vue";
 import Alert from "@/components/Alert/index.vue";
-import {useCoreStore} from "@/store/core";
 import apiEndpoints from "@/constant/apiEndpoints";
-
-const FormScheme = yup.object().shape({
-  username: yup
-      .string()
-      .required(),
-  password: yup
-      .string()
-      .required(),
-});
-
+import {useI18n} from "vue-i18n";
+import {initFormState, setBackendResposeErrors} from "@/utils/utils";
 
 export default {
   name: "SignIn",
@@ -91,21 +80,26 @@ export default {
   },
   setup() {
     const toast = useToast();
-    const coreStore = useCoreStore();
-    return {toast, coreStore};
+
+    const {t} = useI18n();
+
+    const FormScheme = yup.object().shape({
+      username: yup
+          .string()
+          .required(t('generic.requiredField')),
+      password: yup
+          .string()
+          .required(t('generic.requiredField')),
+    });
+
+    const {form, formErrors, validateForm} = initFormState(Object.keys(FormScheme.fields), FormScheme);
+
+    return {toast, FormScheme, form, formErrors, validateForm};
   },
   data() {
     return {
       isLoading: false,
       checkbox: false,
-      form: {
-        username: "",
-        password: "",
-      },
-      formErrors: {
-        username: "",
-        password: "",
-      }
     };
   },
   methods: {
@@ -114,62 +108,43 @@ export default {
       return emailRegex.test(email);
     },
     onSubmit() {
-      this.resetFormErrors();
-      FormScheme.validate(this.form, {abortEarly: false})
-          .then(() => {
-            let endpoint = apiEndpoints.login();
+      this.validateForm().then(() => {
+        let endpoint = apiEndpoints.login();
+        let data = {};
+
+        if (this.isEmail(this.form.username)) {
+          data = {
+            password: this.form.password,
+            email: this.form.username
+          }
+        } else {
+          data = this.form;
+        }
+
+        this.isLoading = true;
+        axios.post(endpoint, data)
+            .then((response) => {
+
+              const token = response.data.key;
+              const store = useAuthStore();
+
+              store.setToken(token, this.checkbox);
+              store.user = response.data.user;
+              this.$i18n.locale = response.data.user.settings.lang;
+
+              const toPath = this.$route.query.to || '/'
+              this.$router.push(toPath)
 
 
-            let data = null;
-
-            if (this.isEmail(this.form.username)) {
-              data = {
-                password: this.form.password,
-                email: this.form.username
-              }
-            } else {
-              data = this.form;
-            }
-
-            this.isLoading = true;
-            axios.post(endpoint, data)
-                .then((response) => {
-
-                  const token = response.data.key;
-                  const store = useAuthStore();
-
-                  store.setToken(token, this.checkbox);
-                  store.user = response.data.user;
-
-                  const toPath = this.$route.query.to || '/'
-                  this.$router.push(toPath)
-
-
-                  this.toast.success(this.$t("toasts.successLogin"), {
-                    timeout: 2000
-                  });
-                })
-                .catch((err) => {
-                  console.log(err);
-                });
-            this.isLoading = false;
-          })
-          .catch((err) => {
-            err.inner.forEach((error) => {
-              this.formErrors = {
-                ...this.formErrors,
-                [error.path]: error.message,
-              };
-            });
-          });
-    },
-    resetFormErrors() {
-      this.formErrors = {
-        username: "",
-        password: "",
-      }
+              this.toast.success(this.$t("toasts.successLogin"), {
+                timeout: 2000
+              });
+            }).catch((error) => {
+          setBackendResposeErrors(error, this.formErrors)
+        })
+        this.isLoading = false;
+      })
     },
   },
 };
 </script>
-<style lang="scss"></style>

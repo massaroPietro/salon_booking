@@ -1,15 +1,30 @@
 export default {
     en: {
+        errors: {
+            notValidEmail: "Email non valida",
+            notMatchPassword: "Passwords must match",
+
+        },
+        generic: {
+            firstName: "First name",
+            lastName: "Last name",
+            password: "Password",
+        },
         auth: {
             signIn: "Sign in",
             signUp: "Sign up",
             signInDescription: "Sign in to your account to start using BarberBooking",
+            signUpDescription: "Sign up to your account to start using BarberBooking",
             emailOrUsername: "Email or Username",
-            password: "Password",
             keepSignIn: "Keep me signed in",
             orContinueWith: "Or continue with",
             dontHaveAccount: "Don’t have an account?",
-            forgotPassword: 'Forgot Password?'
+            alreadyRegistered: "Already registered?",
+            forgotPassword: 'Forgot Password?',
+            repeatPassword: "Repeat password",
+            acceptPrivacy: "You accept our Terms and Conditions and Privacy Policy",
+            createAccount: "Create an account",
+            notAcceptedPrivacy: "You must accept the privacy to continue registration"
         },
         toasts: {
             successLogin: "Welcome back to BarberBooking",
@@ -80,16 +95,31 @@ export default {
         },
     },
     it: {
+        generic: {
+            firstName: "Nome",
+            lastName: "Cognome",
+            password: "Password",
+            requiredField: "Campo obbligatorio",
+        },
+        errors: {
+            notValidEmail: "Email non valida",
+            notMatchPassword: "Le password non coincidono",
+        },
         auth: {
             signIn: "Accedi",
             signUp: "Registrati",
             signInDescription: "Accedi al tuo account per usare BarberBooking",
+            signUpDescription: "Registrati per usare BarberBooking",
             emailOrUsername: "Email o Username",
-            password: "Password",
             keepSignIn: "Tienimi autenticato",
             orContinueWith: "O continua con",
             dontHaveAccount: "Non hai ancora un account?",
-            forgotPassword: 'Password dimenticata?'
+            alreadyRegistered: "Sei già registrato?",
+            forgotPassword: 'Password dimenticata?',
+            repeatPassword: "Ripeti password",
+            acceptPrivacy: "Accetti i nostri Termini e condizioni e l'Informativa sulla privacy",
+            createAccount: "Crea account",
+            notAcceptedPrivacy: "Devi accettare la privacy per continuare la registrazione"
         },
         toasts: {
             successLogin: "Bentornato in BarberBooking",

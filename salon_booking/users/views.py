@@ -5,10 +5,6 @@ from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 from django.views.generic import DetailView, RedirectView, UpdateView
 
-from allauth.socialaccount.providers.google.views import GoogleOAuth2Adapter
-from allauth.socialaccount.providers.oauth2.client import OAuth2Client
-from dj_rest_auth.registration.views import SocialLoginView
-
 User = get_user_model()
 
 
@@ -45,9 +41,3 @@ class UserRedirectView(LoginRequiredMixin, RedirectView):
 
 
 user_redirect_view = UserRedirectView.as_view()
-
-
-class GoogleLogin(SocialLoginView):  # if you want to use Authorization Code Grant, use this
-    adapter_class = GoogleOAuth2Adapter
-    callback_url = "http://127.0.0.1:8000/accounts/google/login/callback/"
-    client_class = OAuth2Client

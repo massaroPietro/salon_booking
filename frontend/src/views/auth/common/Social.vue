@@ -26,16 +26,8 @@ export default {
         .then((response) => {
           this.callback(response);
         })
-        .catch((error) => {
-          console.log("Handle the error", error)
-        })
   },
   methods: {
-    login() {
-      googleAuthCodeLogin().then((response) => {
-        console.log("Handle the response", response)
-      })
-    },
     callback(response) {
       let endpoint = apiEndpoints.authGoogle();
       const data = {
@@ -50,6 +42,7 @@ export default {
 
             this.store.setToken(token, true);
             this.store.user = response.data.user;
+            this.$i18n.locale = response.data.user.settings.lang;
 
             const toPath = this.$route.query.to || '/'
             this.$router.push(toPath)

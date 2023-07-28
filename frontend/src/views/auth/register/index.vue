@@ -1,79 +1,81 @@
 <template>
-  <div class="loginwrapper">
+  <success v-if="registered" :email="email"/>
+  <div class="loginwrapper" v-else>
     <div class="lg-inner-column">
       <div class="left-column relative z-[1]">
         <div class="max-w-[520px] pt-20 ltr:pl-20 rtl:pr-20">
           <router-link to="/">
             <img
-              src="@/assets/images/logo/logo.svg"
-              alt=""
-              class="mb-10"
-              v-if="!this.$store.themeSettingsStore.isDark"
+                src="@/assets/images/logo/logo.svg"
+                alt=""
+                class="mb-10"
+                v-if="!this.$store.themeSettingsStore.isDark"
             />
             <img
-              src="@/assets/images/logo/logo-white.svg"
-              alt=""
-              class="mb-10"
-              v-else
+                src="@/assets/images/logo/logo-white.svg"
+                alt=""
+                class="mb-10"
+                v-else
             />
           </router-link>
 
           <h4>
             Unlock your Project
             <span class="text-slate-800 dark:text-slate-400 font-bold"
-              >performance</span
+            >performance</span
             >
           </h4>
         </div>
         <div class="absolute left-0 bottom-[-130px] h-full w-full z-[-1]">
           <img
-            src="@/assets/images/auth/ils1.svg"
-            alt=""
-            class="h-full w-full object-contain"
+              src="@/assets/images/auth/ils1.svg"
+              alt=""
+              class="h-full w-full object-contain"
           />
         </div>
       </div>
       <div class="right-column relative bg-white dark:bg-slate-800">
         <div
-          class="inner-content h-full flex flex-col bg-white dark:bg-slate-800"
+            class="inner-content h-full flex flex-col bg-white dark:bg-slate-800"
         >
           <div class="auth-box h-full flex flex-col justify-center">
             <div class="mobile-logo text-center mb-6 lg:hidden block">
               <router-link to="/"
-                ><img
+              ><img
                   src="@/assets/images/logo/logo.svg"
                   alt=""
                   class="mx-auto"
               /></router-link>
             </div>
             <div class="text-center 2xl:mb-10 mb-5">
-              <h4 class="font-medium">Sign up</h4>
+              <h4 class="font-medium">{{ $t('auth.signUp') }}</h4>
               <div class="text-slate-500 dark:text-slate-400 text-base">
-                Create an account to start using Dashcode
+                {{ $t('auth.signUpDescription') }}
               </div>
             </div>
-            <Signup />
+            <Signup @email-sent="registerCompleted"/>
             <div
-              className=" relative border-b-[#9AA2AF] border-opacity-[16%] border-b pt-6"
+                className=" relative border-b-[#9AA2AF] border-opacity-[16%] border-b pt-6"
             >
               <div
-                className=" absolute inline-block  bg-white dark:bg-slate-800 left-1/2 top-1/2 transform -translate-x-1/2 px-4 min-w-max text-sm  text-slate-500  dark:text-slate-400font-normal "
+                  className=" absolute inline-block  bg-white dark:bg-slate-800 left-1/2 top-1/2 transform -translate-x-1/2 px-4 min-w-max text-sm  text-slate-500  dark:text-slate-400font-normal "
               >
-                Or continue with
+                {{ $t('auth.orContinueWith') }}
               </div>
             </div>
             <div class="max-w-[242px] mx-auto mt-8 w-full">
-              <Social />
+              <Social/>
             </div>
             <div
-              class="max-w-[215px] mx-auto font-normal text-slate-500 dark:text-slate-400 2xl:mt-12 mt-6 uppercase text-sm"
+                class="max-w-[215px] mx-auto font-normal text-slate-500 dark:text-slate-400 2xl:mt-12 mt-6 text-sm"
             >
-              Already registered?
+              {{ $t('auth.alreadyRegistered') }}
               <router-link
-                to="/"
-                class="text-slate-900 dark:text-white font-medium hover:underline"
+                  to="/"
+                  class="text-slate-900 dark:text-white font-medium hover:underline"
               >
-                Sign In</router-link
+                {{ $t('auth.signIn') }}
+              </router-link
               >
             </div>
           </div>
@@ -88,12 +90,27 @@
 <script>
 import Signup from "../common/Signup";
 import Social from "../common/Social";
+import Success from "@/views/auth/register/success.vue";
 
 export default {
   components: {
+    Success,
     Social,
     Signup,
   },
+  data() {
+    return {
+      registered: false,
+      email: "",
+    }
+  },
+  methods: {
+    registerCompleted(email) {
+      console.log(email)
+      this.email = email;
+      this.registered = true;
+    }
+  }
 };
 </script>
 <style lang="scss"></style>

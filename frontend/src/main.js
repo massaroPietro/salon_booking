@@ -25,7 +25,7 @@ import axios from "@/plugins/axios";
 import {createI18n} from 'vue-i18n'
 
 const pinia = createPinia()
-let lang = localStorage.getItem("lang") || navigator.language.substring(0, 2);
+let lang = navigator.language.substring(0, 2);
 
 axios.defaults.headers.common["Accept-Language"] = lang;
 

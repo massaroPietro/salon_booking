@@ -25,20 +25,24 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ["id", "username", "first_name", "last_name", "email", 'pic', 'settings']
+        read_only_fields = ('username', "email")
 
 
-class CustomRegisterSerializer(RegisterSerializer):
+class UserRegistrationSerializer(RegisterSerializer):
+    first_name = serializers.CharField()
+    last_name = serializers.CharField()
     username = None
-    first_name = serializers.CharField(max_length=255)
-    last_name = serializers.CharField(max_length=255)
 
-    @transaction.atomic
-    def save(self, request):
-        user = super().save(request)
-        user.first_name = self.data.get('first_name')
-        user.last_name = self.data.get('last_name')
+    def custom_signup(self, request, user):
+        user.first_name = self.validated_data.get('first_name', '')
+        user.last_name = self.validated_data.get('last_name', '')
         user.save()
-        return user
+
+    def get_cleaned_data(self):
+        data = super().get_cleaned_data()
+        data['first_name'] = self.validated_data.get('first_name', '')
+        data['last_name'] = self.validated_data.get('last_name', '')
+        return data
 
 
 class CustomTokenSerializer(TokenSerializer):

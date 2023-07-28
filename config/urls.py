@@ -1,12 +1,11 @@
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
-from django.urls import include, path, re_path
+from django.urls import include, path
 from django.views import defaults as default_views
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 
-from salon_booking.core.views import IndexTemplateView
-from salon_booking.users.views import GoogleLogin
+from salon_booking.users.api.views import *
 
 urlpatterns = [
     path(settings.ADMIN_URL, admin.site.urls),
@@ -19,7 +18,10 @@ urlpatterns += [
     path('api/auth/', include('dj_rest_auth.urls')),
     path('api/auth/register/', include('dj_rest_auth.registration.urls')),
     path("users/", include("salon_booking.users.urls", namespace="users")),
-    path('api/auth/google/', GoogleLogin.as_view(), name='google_login')
+
+    # SOCIAL
+    path('api/auth/google/', GoogleLogin.as_view(), name='google_login'),
+    path('api/auth/google/connect/', GoogleConnect.as_view(), name='google_login')
 ]
 
 if settings.DEBUG:

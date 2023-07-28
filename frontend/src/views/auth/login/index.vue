@@ -57,7 +57,7 @@
               </router-link>
             </div>
             <div class="text-center 2xl:mb-10 mb-4">
-              <h4 class="font-medium">Sign in</h4>
+              <h4 class="font-medium">{{ $t("auth.signIn") }}</h4>
               <div class="text-slate-500 text-base">
                 {{ $t("auth.signInDescription") }}
               </div>

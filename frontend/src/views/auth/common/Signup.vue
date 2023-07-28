@@ -1,136 +1,118 @@
 <template>
-  <form @submit.prevent="onSubmit" class="space-y-4">
+  <form @submit.prevent="onSubmit" class="space-y-4" novalidate>
     <Textinput
-      label="Full name"
-      type="text"
-      placeholder="Full Name"
-      name="name"
-      v-model="name"
-      :error="nameError"
-      classInput="h-[48px]"
+        :label="$t('generic.firstName')"
+        type="text"
+        placeholder=""
+        v-model="form.first_name"
+        :error="formErrors.first_name"
+        classInput="h-[48px]"
     />
     <Textinput
-      label="Email"
-      type="email"
-      placeholder="Type your email"
-      name="emil"
-      v-model="email"
-      :error="emailError"
-      classInput="h-[48px]"
+        :label="$t('generic.lastName')"
+        type="text"
+        placeholder=""
+        v-model="form.last_name"
+        :error="formErrors.last_name"
+        classInput="h-[48px]"
     />
     <Textinput
-      label="Password"
-      type="password"
-      placeholder="8+ characters, 1 capitat letter "
-      name="password"
-      v-model="password"
-      :error="passwordError"
-      hasicon
-      classInput="h-[48px]"
+        label="Email"
+        type="email"
+        placeholder=""
+        name="emil"
+        v-model="form.email"
+        :error="formErrors.email"
+        classInput="h-[48px]"
     />
-
-    <label class="cursor-pointer flex items-start">
-      <input
-        type="checkbox"
-        class="hidden"
-        @change="() => (checkbox = !checkbox)"
-      />
-      <span
-        class="h-4 w-4 border rounded inline-flex mr-3 relative flex-none top-1 transition-all duration-150"
-        :class="
-          checkbox
-            ? 'ring-2 ring-black-500 dark:ring-offset-slate-600 dark:ring-slate-900  dark:bg-slate-900 ring-offset-2 bg-slate-900'
-            : 'bg-slate-100 dark:bg-slate-600 border-slate-100 dark:border-slate-600 '
-        "
-      >
-        <img
-          src="@/assets/images/icon/ck-white.svg"
-          alt=""
-          class="h-[10px] w-[10px] block m-auto"
-          v-if="checkbox"
-        />
-      </span>
-      <span class="text-slate-500 dark:text-slate-400 text-sm leading-6"
-        >You accept our Terms and Conditions and Privacy Policy</span
-      >
-    </label>
-
-    <button type="submit" class="btn btn-dark block w-full text-center">
-      Create an account
-    </button>
+    <Textinput
+        :label="$t('generic.password')"
+        type="password"
+        placeholder=""
+        v-model="form.password1"
+        :error="formErrors.password1"
+        hasicon
+        classInput="h-[48px]"
+    />
+    <Textinput
+        :label="$t('auth.repeatPassword')"
+        type="password"
+        placeholder=""
+        v-model="form.password2"
+        :error="formErrors.password2"
+        hasicon
+        classInput="h-[48px]"
+    />
+    <Checkbox :label="$t('auth.acceptPrivacy')" v-model="privacyAccepted" class="my-5"/>
+    <Alert v-if="formErrors.non_field_errors" type="danger">{{ formErrors.non_field_errors }}</Alert>
+    <Button :text="$t('auth.createAccount')" btnClass="btn btn-dark block w-full text-center" :is-loading="isLoading"/>
   </form>
 </template>
 <script>
 import Textinput from "@/components/Textinput";
-import { useField, useForm } from "vee-validate";
 import * as yup from "yup";
+import Button from "@/components/Button/index.vue";
+import Alert from "@/components/Alert/index.vue";
+import {useI18n} from "vue-i18n";
+import {initFormState, resetObject, setBackendResposeErrors} from "@/utils/utils";
+import Checkbox from "@/components/Checkbox";
+import {useToast} from "vue-toastification";
+import axios from "@/plugins/axios";
+import apiEndpoints from "@/constant/apiEndpoints";
+import {useCoreStore} from "@/store/core";
 
-import { inject } from "vue";
-import { useRouter } from "vue-router";
-import { useToast } from "vue-toastification";
 export default {
+  name: "SignUp",
   components: {
+    Checkbox,
+    Alert,
+    Button,
     Textinput,
+  },
+  setup() {
+    const {t} = useI18n();
+    const toast = useToast();
+    const coreStore = useCoreStore()
+    const FormScheme = yup.object().shape({
+      first_name: yup.string().required(t('generic.requiredField')),
+      last_name: yup.string().required(t('generic.requiredField')),
+      email: yup.string().email(t('errors.notValidEmail')).required(t('generic.requiredField')),
+      password1: yup.string().required(t('generic.requiredField')),
+      password2: yup.string().required(t('generic.requiredField')).test('password-match', t('errors.notMatchPassword'), function (value) {
+        return this.parent.password1 === value;
+      }),
+    });
+
+    const {form, formErrors, validateForm} = initFormState(Object.keys(FormScheme.fields), FormScheme);
+
+    return {form, formErrors, t, validateForm, toast, coreStore};
   },
   data() {
     return {
+      isLoading: false,
       checkbox: false,
+      privacyAccepted: false,
     };
   },
-  setup() {
-    // Define a validation schema
-    const schema = yup.object({
-      email: yup.string().required(" Email is required").email(),
-      password: yup.string().required("Password is  required").min(8),
-      name: yup.string().required("Full name is required"),
-    });
-    const swal = inject("$swal");
-    const toast = useToast();
-    const router = useRouter();
-
-    // Create a form context with the validation schema
-    const users = [];
-    const { handleSubmit } = useForm({
-      validationSchema: schema,
-    });
-    // No need to define rules for fields
-
-    const { value: email, errorMessage: emailError } = useField("email");
-    const { value: name, errorMessage: nameError } = useField("name");
-    const { value: password, errorMessage: passwordError } =
-      useField("password");
-
-    const onSubmit = handleSubmit((values) => {
-      // add value into user array if same email not found
-      if (!users.find((user) => user.email === values.email)) {
-        users.push(values);
-        localStorage.setItem("users", JSON.stringify(users));
-        router.push("/");
-        // use vue-toast-notification app use
-        toast.success -
-          500(" Account Create successfully", {
-            timeout: 2000,
-          });
-      } else {
-        // use sweetalert 2
-        swal.fire({
-          title: "Email already exists",
-          text: "Please try another email",
-          icon: "error",
-          confirmButtonText: "Ok",
-        });
-      }
-    });
-
-    return {
-      email,
-      name,
-      nameError,
-      emailError,
-      password,
-      passwordError,
-      onSubmit,
-    };
+  methods: {
+    onSubmit() {
+      this.validateForm().then(() => {
+        if (!this.privacyAccepted) {
+          this.toast.info(this.$t("auth.notAcceptedPrivacy"), {
+            timeout: 2000
+          })
+        } else {
+          const endpoint = apiEndpoints.register();
+          this.isLoading = true;
+          axios.post(endpoint, this.form).then(() => {
+            this.$emit('emailSent', this.form.email)
+          }).catch((error) => {
+            setBackendResposeErrors(error, this.formErrors)
+          })
+          this.isLoading = false;
+        }
+      })
+    },
   },
 };
 </script>

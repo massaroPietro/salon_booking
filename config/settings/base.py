@@ -351,4 +351,5 @@ SPECTACULAR_SETTINGS = {
 REST_AUTH = {
     'USER_DETAILS_SERIALIZER': 'salon_booking.users.api.serializers.UserSerializer',
     'TOKEN_SERIALIZER': 'salon_booking.users.api.serializers.CustomTokenSerializer',
+    'REGISTER_SERIALIZER': 'salon_booking.users.api.serializers.UserRegistrationSerializer',
 }

@@ -10,12 +10,6 @@ axios.defaults.baseURL = 'http://127.0.0.1:8000/api'
 
 axios.interceptors.request.use(
     config => {
-        try {
-            const store = useCoreStore();
-            store.non_field_errors = [];
-        } catch (e) {
-            console.error(e);
-        }
         return config;
     },
     error => {
@@ -37,13 +31,6 @@ axios.interceptors.response.use(
                 const authStore = useAuthStore();
                 authStore.removeToken();
                 router.push('/auth/login');
-            }
-
-            try {
-                const store = useCoreStore();
-                store.non_field_errors = [...error.response.data.non_field_errors];
-            } catch (e) {
-                console.error(e)
             }
         }
         return Promise.reject(error);
