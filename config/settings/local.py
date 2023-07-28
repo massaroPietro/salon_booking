@@ -71,3 +71,5 @@ CORS_ALLOWED_ORIGINS = [
     "http://192.168.1.111:5173"
 ]
 
+
+BASE_URL = "http://localhost:5173"

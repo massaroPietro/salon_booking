@@ -106,7 +106,6 @@ export default {
   },
   methods: {
     registerCompleted(email) {
-      console.log(email)
       this.email = email;
       this.registered = true;
     }

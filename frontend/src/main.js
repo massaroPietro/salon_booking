@@ -61,6 +61,7 @@ app.config.globalProperties.$store = {};
 app.mount("#app");
 
 import {useThemeSettingsStore} from "@/store/themeSettings";
+import setupAxiosInterceptors from "@/plugins/axios";
 
 const themeSettingsStore = useThemeSettingsStore()
 if (localStorage.users === undefined) {

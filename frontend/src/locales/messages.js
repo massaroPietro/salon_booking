@@ -3,7 +3,8 @@ export default {
         errors: {
             notValidEmail: "Email non valida",
             notMatchPassword: "Passwords must match",
-
+            genericError: "Generic error",
+            serverError: "Server error. Try later.",
         },
         generic: {
             firstName: "First name",
@@ -24,7 +25,11 @@ export default {
             repeatPassword: "Repeat password",
             acceptPrivacy: "You accept our Terms and Conditions and Privacy Policy",
             createAccount: "Create an account",
-            notAcceptedPrivacy: "You must accept the privacy to continue registration"
+            notAcceptedPrivacy: "You must accept the privacy to continue registration",
+            registerCompleted: "Registration completed successfully",
+            successRegisterDescription: "We have sent an email to the following address: {email}. Check your email to confirm your account. To complete the registration, follow the instructions in the email. Once your account is confirmed, you will be able to access all the features of our site.",
+            resendEmail: "Resend email",
+            emailSent: "Email sent"
         },
         toasts: {
             successLogin: "Welcome back to BarberBooking",
@@ -104,6 +109,8 @@ export default {
         errors: {
             notValidEmail: "Email non valida",
             notMatchPassword: "Le password non coincidono",
+            genericError: "Errore generico",
+            serverError: "Errore con il server. Riprova più tardi."
         },
         auth: {
             signIn: "Accedi",
@@ -119,7 +126,11 @@ export default {
             repeatPassword: "Ripeti password",
             acceptPrivacy: "Accetti i nostri Termini e condizioni e l'Informativa sulla privacy",
             createAccount: "Crea account",
-            notAcceptedPrivacy: "Devi accettare la privacy per continuare la registrazione"
+            notAcceptedPrivacy: "Devi accrete la privacy per continuare la registrazione",
+            registerCompleted: "Registrazione completata con successo",
+            successRegisterDescription: "Abbiamo inviato un'email al seguente indirizzo: {email}. Controlla la tua casella di posta elettronica per confermare il tuo account. Per completare la registrazione, segui le istruzioni nell'email. Una volta confermato il tuo account, sarai in grado di accedere a tutte le funzionalità del nostro sito.",
+            resendEmail: "Reinvia email",
+            emailSent: "Email inviata"
         },
         toasts: {
             successLogin: "Bentornato in BarberBooking",
