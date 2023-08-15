@@ -106,7 +106,7 @@ export default {
       axios.defaults.headers.common["Accept-Language"] = language;
 
       if (saveOnDB) {
-        let endpoint = apiEndpoints.userSettings(this.store.user.id);
+        let endpoint = apiEndpoints.userSettings();
         const data = {
           lang: language
         }

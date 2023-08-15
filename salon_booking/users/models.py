@@ -19,3 +19,4 @@ class UserSettings(BaseModel):
     lang = models.CharField(max_length=64, choices=LANGUAGES, default="en")
     dark_theme = models.BooleanField(default=False)
     monochrome_theme = models.BooleanField(default=False)
+    current_salon = models.ForeignKey('salons.Salon', on_delete=models.CASCADE, blank=True, null=True)

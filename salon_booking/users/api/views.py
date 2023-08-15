@@ -4,8 +4,8 @@ from django.contrib.sites.shortcuts import get_current_site
 from rest_framework import generics
 from rest_framework.generics import get_object_or_404
 
-from .permissions import IsOwnerSettings
-from .serializers import UserSettingsSerializer
+from .permissions import IsOwnerSettings, IsEmployee
+from .serializers import UserSettingsSerializer, DashboardUserSerializer
 from ..models import UserSettings
 
 from allauth.socialaccount.providers.oauth2.client import OAuth2Client
@@ -17,12 +17,9 @@ User = get_user_model()
 
 class UserSettingsRUAPIView(generics.RetrieveUpdateAPIView):
     serializer_class = UserSettingsSerializer
-    permission_classes = [IsOwnerSettings]
 
     def get_object(self):
-        user_id = self.kwargs['user_id']
-        user_settings = get_object_or_404(UserSettings, user_id=user_id)
-        return user_settings
+        return self.request.user.settings
 
 
 class GoogleLogin(SocialLoginView):  # if you want to use Authorization Code Grant, use this
@@ -33,3 +30,10 @@ class GoogleLogin(SocialLoginView):  # if you want to use Authorization Code Gra
 class GoogleConnect(SocialConnectView):
     adapter_class = GoogleOAuth2Adapter
     client_class = OAuth2Client
+
+
+class DashboardUserRetrieveAPIView(generics.RetrieveAPIView):
+    serializer_class = DashboardUserSerializer
+
+    def get_object(self):
+        return self.request.user

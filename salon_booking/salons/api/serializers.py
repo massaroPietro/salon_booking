@@ -18,7 +18,16 @@ class SalonSerializer(serializers.ModelSerializer):
 
 
 class FriendlySalonSerializer(serializers.ModelSerializer):
+    logo = serializers.SerializerMethodField(read_only=True)
+
     class Meta:
         model = Salon
-        fields = ('name', 'logo', 'slug', 'owner', )
+        fields = ('id', 'name', 'logo', 'slug', 'owner')
         read_only_fields = ('slug', 'owner')
+
+    def get_logo(self, instance):
+        print(self.context.get('request'))
+        request = self.context.get('request')
+        if request:
+            return request.build_absolute_uri(instance.logo.url)
+        return None

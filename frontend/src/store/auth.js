@@ -47,7 +47,7 @@ export const useAuthStore = defineStore('auth', {
             localStorage.removeItem('token')
         },
         getUser() {
-            let endpoint = apiEndpoints.user();
+            let endpoint = apiEndpoints.dashboardUser();
             axios.get(endpoint).then((response) => {
                 this.user = response.data;
             })
