@@ -20,6 +20,7 @@ class Salon(BaseModel):
 
 
 class Employee(BaseModel):
+    pic = models.ImageField(upload_to='users/pics/', default='users/pics/default.png')
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='employees')
     salon = models.ForeignKey(Salon, on_delete=models.CASCADE, related_name='employees')
 

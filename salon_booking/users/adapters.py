@@ -12,16 +12,8 @@ from django.contrib.auth import get_user_model
 import requests
 from django.core.files.base import ContentFile
 
-from config.settings.base import MEDIA_ROOT
 
 User = get_user_model()
-
-
-def download_and_save_picture(user, picture_url):
-    response = requests.get(picture_url)
-    if response.status_code == 200:
-        previous_image_filename = f"{user.id}_social_profile_pic.jpg"
-        user.pic.save(previous_image_filename, ContentFile(response.content))
 
 
 class AccountAdapter(DefaultAccountAdapter):
@@ -37,10 +29,6 @@ class AccountAdapter(DefaultAccountAdapter):
 
 
 class SocialAccountAdapter(DefaultSocialAccountAdapter):
-    def save_user(self, request, sociallogin, form=None):
-        user = super().save_user(request, sociallogin, form)
-        if picture_url := sociallogin.account.extra_data.get("picture"):
-            download_and_save_picture(user, picture_url)
 
     def is_open_for_signup(self, request: HttpRequest, sociallogin: SocialLogin) -> bool:
         return getattr(settings, "ACCOUNT_ALLOW_REGISTRATION", True)

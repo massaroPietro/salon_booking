@@ -25,12 +25,6 @@ def merge_social_accounts(sender, request, sociallogin, **kwargs):
 
         if existing_user != sociallogin.user:
             sociallogin.connect(request, existing_user)
-            url = sociallogin.account.extra_data.get('picture')
-            if url:
-                response = requests.get(url)
-                image_filename = f"{existing_user.id}_social_profile_pic.jpg"
-                existing_user.pic.save(image_filename, ContentFile(response.content))
-                existing_user.save()
 
     except SocialAccount.DoesNotExist:
         pass

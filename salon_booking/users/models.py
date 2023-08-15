@@ -7,7 +7,6 @@ from salon_booking.core.models import BaseModel
 
 
 class User(AbstractUser, BaseModel):
-    pic = models.ImageField(upload_to='users/pics/', default='users/pics/default.png')
     email = models.EmailField(_("email address"))
     first_name = models.CharField(_("first name"), max_length=150)
     last_name = models.CharField(_("last name"), max_length=150)
