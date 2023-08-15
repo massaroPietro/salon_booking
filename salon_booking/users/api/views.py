@@ -1,4 +1,6 @@
+from allauth.utils import build_absolute_uri
 from django.contrib.auth import get_user_model
+from django.contrib.sites.shortcuts import get_current_site
 from rest_framework import generics
 from rest_framework.generics import get_object_or_404
 

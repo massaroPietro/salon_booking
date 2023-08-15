@@ -4,6 +4,7 @@ const apiEndpoints = {
     register: () => `/auth/register/`,
     logout: () => `/auth/logout/`,
     resendEmail: () => `/auth/register/resend-email/`,
+    resetPassword: () => `/auth/password/reset/`,
     userSettings: (userId) => `/user/${userId}/settings/`,
     authGoogle: () => `/auth/google/`,
 };

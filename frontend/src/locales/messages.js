@@ -10,6 +10,7 @@ export default {
             firstName: "First name",
             lastName: "Last name",
             password: "Password",
+            email: "Email",
         },
         auth: {
             signIn: "Sign in",
@@ -29,7 +30,13 @@ export default {
             registerCompleted: "Registration completed successfully",
             successRegisterDescription: "We have sent an email to the following address: {email}. Check your email to confirm your account. To complete the registration, follow the instructions in the email. Once your account is confirmed, you will be able to access all the features of our site.",
             resendEmail: "Resend email",
-            emailSent: "Email sent"
+            emailSent: "Email sent",
+            forgotPasswordDescription: "Reset password with BarberBooking",
+            forgotPasswordAlert: "Enter your Email and instructions will be sent to you!",
+            sendRecoveryEmail: "Send recovery email",
+            backToLogin: "Send me back to the login",
+            insertYourEmail: "Type your email",
+            recoveryEmailSent: "The recovery email has been sent successfully",
         },
         toasts: {
             successLogin: "Welcome back to BarberBooking",
@@ -104,6 +111,7 @@ export default {
             firstName: "Nome",
             lastName: "Cognome",
             password: "Password",
+            email: "Email",
             requiredField: "Campo obbligatorio",
         },
         errors: {
@@ -130,7 +138,13 @@ export default {
             registerCompleted: "Registrazione completata con successo",
             successRegisterDescription: "Abbiamo inviato un'email al seguente indirizzo: {email}. Controlla la tua casella di posta elettronica per confermare il tuo account. Per completare la registrazione, segui le istruzioni nell'email. Una volta confermato il tuo account, sarai in grado di accedere a tutte le funzionalità del nostro sito.",
             resendEmail: "Reinvia email",
-            emailSent: "Email inviata"
+            emailSent: "Email inviata",
+            forgotPasswordDescription: "Reimposta password con BarberBooking",
+            forgotPasswordAlert: "Inserisci la tua email e segui le instruzioni che ti invieremo!",
+            sendRecoveryEmail: "Invia email di recupero",
+            backToLogin: "Torna alla pagina di login",
+            insertYourEmail: "Inserisci la tua email",
+            recoveryEmailSent: "L'email di recupero è stata inviata con successo",
         },
         toasts: {
             successLogin: "Bentornato in BarberBooking",

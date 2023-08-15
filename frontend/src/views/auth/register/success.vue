@@ -69,13 +69,11 @@ export default {
         email: this.email
       }
       this.isLoading = true
-      setTimeout(() => {
 
-        axios.post(endpoint, data).then(() => {
-          this.toast.success(this.$t('emailSent'))
-        })
+      axios.post(endpoint, data).then(() => {
         this.isLoading = false
-      }, 2000)
+        this.toast.success(this.$t('emailSent'))
+      });
     }
   }
 };

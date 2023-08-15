@@ -1,3 +1,4 @@
+from dj_rest_auth.views import PasswordResetConfirmView
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
@@ -8,8 +9,8 @@ from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 from salon_booking.users.api.views import *
 
 urlpatterns = [
-    path(settings.ADMIN_URL, admin.site.urls),
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+                  path(settings.ADMIN_URL, admin.site.urls),
+              ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 # API URLS
 urlpatterns += [
@@ -21,7 +22,8 @@ urlpatterns += [
 
     # SOCIAL
     path('api/auth/google/', GoogleLogin.as_view(), name='google_login'),
-    path('api/auth/google/connect/', GoogleConnect.as_view(), name='google_login')
+    path('rest-auth/password/reset/confirm/<str:uidb64>/<str:token>', PasswordResetConfirmView.as_view(),
+         name='password_reset_confirm'),
 ]
 
 if settings.DEBUG:

@@ -33,7 +33,7 @@ LANGUAGE_CODE = "en-us"
 #     ('pt-br', _('Português')),
 # ]
 # https://docs.djangoproject.com/en/dev/ref/settings/#site-id
-SITE_ID = 1
+SITE_ID = 3
 # https://docs.djangoproject.com/en/dev/ref/settings/#use-i18n
 USE_I18N = True
 # https://docs.djangoproject.com/en/dev/ref/settings/#use-tz
@@ -97,6 +97,7 @@ THIRD_PARTY_APPS = [
 LOCAL_APPS = [
     "salon_booking.users",
     "salon_booking.core",
+    "salon_booking.salons"
     # Your stuff: custom apps go here
 ]
 # https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps

@@ -127,7 +127,9 @@ export default {
             axios.post(endpoint).then(() => {
               const store = useAuthStore();
               store.removeToken();
-              this.$i18n.locale = navigator.language.substring(0, 2);
+              const lang = navigator.language.substring(0,2);
+              axios.defaults.headers['Accept-Language'] = lang
+              this.$i18n.locale = lang;
               this.$router.push({name: "Login"})
             })
           },

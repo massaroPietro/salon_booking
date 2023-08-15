@@ -17,7 +17,10 @@ export function initFormState(fields, validationSchema) {
             return new Promise((resolve, reject) => {
                 validationSchema
                     .validate(form, {abortEarly: false})
-                    .then(resolve())
+                    .then(() => {
+                        resetObject(formErrors)
+                        resolve()
+                    })
                     .catch((err) => {
                         resetObject(formErrors)
                         err.inner.forEach((error) => {

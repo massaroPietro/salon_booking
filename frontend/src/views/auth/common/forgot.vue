@@ -1,57 +1,74 @@
 <template>
-  <form @submit.prevent="onSubmit" class="space-y-4">
+  <form @submit.prevent="onSubmit" class="space-y-4" novalidate>
     <Textinput
-      label="Email"
-      type="email"
-      placeholder="Type your email"
-      name="emil"
-      v-model="email"
-      :error="emailError"
-      classInput="h-[48px]"
+        label="Email"
+        type="email"
+        :placeholder="$t('auth.insertYourEmail')"
+        name="emil"
+        v-model="form.email"
+        :error="formErrors.email"
+        classInput="h-[48px]"
     />
 
-    <button type="submit" class="btn btn-dark block w-full text-center">
-      Send recovery email
-    </button>
+    <Alert v-if="formErrors.non_field_errors" type="danger">{{ formErrors.non_field_errors }}</Alert>
+
+    <Alert v-if="recoveryEmailSent" type="success">{{ $t('auth.recoveryEmailSent') }}</Alert>
+
+    <Button :text="$t('auth.sendRecoveryEmail')" btn-class="btn btn-dark" class="block w-full text-center" :is-loading="isLoading"/>
+
   </form>
 </template>
 <script>
 import Textinput from "@/components/Textinput";
-import { useField, useForm } from "vee-validate";
 import * as yup from "yup";
+import {initFormState, setBackendResposeErrors} from "@/utils/utils";
+import apiEndpoints from "@/constant/apiEndpoints";
+import Button from "@/components/Button/index.vue";
+import axios from "@/plugins/axios";
+import Alert from "@/components/Alert/index.vue";
+import {useI18n} from "vue-i18n";
 
 export default {
   components: {
+    Alert,
+    Button,
     Textinput,
   },
   data() {
     return {
-      checkbox: false,
+      isLoading: false,
+      recoveryEmailSent: false,
     };
   },
   setup() {
-    // Define a validation schema
+    const {t} = useI18n();
+
     const schema = yup.object({
-      email: yup.string().required().email(),
+      email: yup.string()
+          .required(t('generic.requiredField'))
+          .email(t('errors.notValidEmail')),
     });
 
-    const { handleSubmit } = useForm({
-      validationSchema: schema,
-    });
-    // No need to define rules for fields
+    const {form, formErrors, validateForm} = initFormState(Object.keys(schema.fields), schema);
 
-    const { value: email, errorMessage: emailError } = useField("email");
-
-    const onSubmit = handleSubmit(() => {
-      // console.warn(values);
-    });
-
-    return {
-      email,
-      emailError,
-      onSubmit,
-    };
+    return {form, formErrors, validateForm};
   },
+  methods: {
+    onSubmit() {
+      this.validateForm().then(() => {
+          console.log(this.formErrors)
+        const endpoint = apiEndpoints.resetPassword();
+        this.loading = true;
+        axios.post(endpoint, this.form).then(() => {
+          this.isLoading = false;
+          this.recoveryEmailSent = true;
+        }).catch((error) => {
+          this.isLoading = false;
+          this.recoveryEmailSent = false;
+          setBackendResposeErrors(error, this.formErrors)
+        })
+      })
+    }
+  }
 };
 </script>
-<style lang="scss"></style>

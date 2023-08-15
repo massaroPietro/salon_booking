@@ -105,11 +105,12 @@ export default {
           const endpoint = apiEndpoints.register();
           this.isLoading = true;
           axios.post(endpoint, this.form).then(() => {
+            this.isLoading = false;
             this.$emit('emailSent', this.form.email)
           }).catch((error) => {
+            this.isLoading = false;
             setBackendResposeErrors(error, this.formErrors)
           })
-          this.isLoading = false;
         }
       })
     },

@@ -5,8 +5,8 @@
         type="text"
         placeholder=""
         name="emil"
-        v-model="form.username"
-        :error="formErrors.username"
+        v-model="form.email"
+        :error="formErrors.email"
         classInput="h-[48px]"
     />
     <Textinput
@@ -84,7 +84,7 @@ export default {
     const {t} = useI18n();
 
     const FormScheme = yup.object().shape({
-      username: yup
+      email: yup
           .string()
           .required(t('generic.requiredField')),
       password: yup
@@ -112,19 +112,19 @@ export default {
         let endpoint = apiEndpoints.login();
         let data = {};
 
-        if (this.isEmail(this.form.username)) {
+        if (!this.isEmail(this.form.username)) {
           data = {
             password: this.form.password,
-            email: this.form.username
+            username: this.form.username
           }
         } else {
           data = this.form;
         }
 
         this.isLoading = true;
-        axios.post(endpoint, data)
+        axios.post(endpoint, this.form)
             .then((response) => {
-
+              this.isLoading = false;
               const token = response.data.key;
               const store = useAuthStore();
 
@@ -140,9 +140,10 @@ export default {
                 timeout: 2000
               });
             }).catch((error) => {
+
+          this.isLoading = false;
           setBackendResposeErrors(error, this.formErrors)
         })
-        this.isLoading = false;
       })
     },
   },
