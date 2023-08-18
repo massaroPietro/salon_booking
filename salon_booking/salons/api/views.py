@@ -6,29 +6,29 @@ from rest_framework.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
 from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
+from rest_framework.views import APIView
 
 from .permissions import IsOwnerOrReadOnly, IsOwner
 from ..models import *
 from .serializers import *
 from rest_framework import status
 from dj_rest_auth.registration.views import RegisterView
+import time
 
 
 class SalonViewSet(viewsets.ModelViewSet):
     permission_classes = [IsOwnerOrReadOnly]
     lookup_field = 'slug'
-
-    def get_queryset(self):
-        user = self.request.user
-
-        return user.salons.all()
+    queryset = Salon.objects.all()
 
     def get_serializer_class(self):
-        try:
-            if self.request.user == self.get_object().owner:
+        if self.action == 'list':
+            return FriendlySalonSerializer
+        elif self.action in ['update', 'partial_update', 'retrieve']:
+            if self.get_object().owner == self.request.user:
                 return SalonSerializer
-        except:
-            pass
+        elif self.action == 'create':
+            return SalonSerializer
         return FriendlySalonSerializer
 
     @transaction.atomic
@@ -41,6 +41,8 @@ class SalonViewSet(viewsets.ModelViewSet):
 
         salon = serializer.save(owner=user, slug=slug_name)
         Employee.objects.create(user=user, salon=salon)
+        user.settings.current_salon = salon
+        user.settings.save()
 
 
 class EmployeeListAPIView(generics.ListAPIView):
@@ -67,3 +69,15 @@ class EmployeeRegisterAPIView(RegisterView):
     def create(self, request, *args, **kwargs):
         super().create(request, *args, **kwargs)
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class CheckSalonExistence(APIView):
+    def post(self, request, *args, **kwargs):
+        salon_name = request.data.get('name', None)
+
+        if salon_name:
+            slug = slugify(salon_name)
+            available = not Salon.objects.filter(slug=slug).exists()
+            return Response({"available": available, "slug": slug, "name": salon_name})
+        else:
+            return Response({"exists": False})

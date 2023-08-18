@@ -130,7 +130,10 @@ export default {
 
               store.setToken(token, this.checkbox);
               store.user = response.data.user;
-              this.$i18n.locale = response.data.user.settings.lang;
+
+              if(response.data.user.settings){
+                this.$i18n.locale = response.data.user.settings.lang;
+              }
 
               const toPath = this.$route.query.to || '/'
               this.$router.push(toPath)

@@ -1,7 +1,7 @@
 <template>
   <header :class="navbarTypeClass()">
     <div
-      :class="`app-header md:px-6 px-[15px]  dark:bg-slate-800 shadow-base dark:shadow-base3 bg-white ${borderSwicthClass()} ${
+        :class="`app-header md:px-6 px-[15px]  dark:bg-slate-800 shadow-base dark:shadow-base3 bg-white ${borderSwicthClass()} ${
         this.$store.themeSettingsStore.navbarColor
       }
       ${
@@ -13,52 +13,53 @@
     >
       <div class="flex justify-between items-center h-full">
         <div
-          v-if="this.$store.themeSettingsStore.menuLayout === 'vertical'"
-          class="flex items-center md:space-x-4 space-x-2 rtl:space-x-reverse"
+            v-if="this.$store.themeSettingsStore.menuLayout === 'vertical'"
+            class="flex items-center md:space-x-4 space-x-2 rtl:space-x-reverse"
         >
           <button
-            class="ltr:mr-5 rtl:ml-5 text-xl text-slate-900 dark:text-white"
-            v-if="this.$store.themeSettingsStore.sidebarCollasp && window.width > 1280"
-            @click="this.$store.themeSettingsStore.sidebarCollasp = false"
+              class="ltr:mr-5 rtl:ml-5 text-xl text-slate-900 dark:text-white"
+              v-if="this.$store.themeSettingsStore.sidebarCollasp && window.width > 1280"
+              @click="this.$store.themeSettingsStore.sidebarCollasp = false"
           >
             <Icon
-              icon="akar-icons:arrow-right"
-              v-if="!this.$store.themeSettingsStore.direction"
+                icon="akar-icons:arrow-right"
+                v-if="!this.$store.themeSettingsStore.direction"
             />
             <Icon
-              icon="akar-icons:arrow-left"
-              v-if="this.$store.themeSettingsStore.direction"
+                icon="akar-icons:arrow-left"
+                v-if="this.$store.themeSettingsStore.direction"
             />
           </button>
-          <MobileLogo v-if="window.width < 1280" />
+          <MobileLogo v-if="window.width < 1280"/>
           <handle-mobile-menu
-            v-if="window.width < 1280 && window.width > 768"
+              v-if="window.width < 1280 && window.width > 768"
           />
-          <SearchModal />
+          <SearchModal/>
         </div>
         <div
-          v-if="this.$store.themeSettingsStore.menuLayout === 'horizontal'"
-          class="flex items-center space-x-4 rtl:space-x-reverse"
+            v-if="this.$store.themeSettingsStore.menuLayout === 'horizontal'"
+            class="flex items-center space-x-4 rtl:space-x-reverse"
         >
-          <Logo v-if="window.width > 1280" />
-          <MobileLogo v-else />
-          <handle-mobile-menu v-if="window.width < 1280" />
+          <Logo v-if="window.width > 1280"/>
+          <MobileLogo v-else/>
+          <handle-mobile-menu v-if="window.width < 1280"/>
         </div>
         <Mainnav
-          v-if="
+            v-if="
             this.$store.themeSettingsStore.menuLayout === 'horizontal' && window.width > 1280
           "
         />
         <div
-          class="nav-tools flex items-center lg:space-x-5 space-x-3 rtl:space-x-reverse"
+            class="nav-tools flex items-center lg:space-x-5 space-x-3 rtl:space-x-reverse"
         >
-          <LanguageVue />
-          <SwitchDark />
-          <MonochromeMode />
-          <Message v-if="window.width > 768" />
-          <Notification v-if="window.width > 768" />
-          <Profile v-if="window.width > 768" />
-          <handle-mobile-menu v-if="window.width < 768" />
+          <Salons/>
+          <LanguageVue/>
+          <SwitchDark/>
+          <MonochromeMode/>
+          <Message v-if="window.width > 768"/>
+          <Notification v-if="window.width > 768"/>
+          <Profile v-if="window.width > 768"/>
+          <handle-mobile-menu v-if="window.width < 768"/>
         </div>
       </div>
     </div>
@@ -78,10 +79,13 @@ import Logo from "./Navtools/Logo.vue";
 import MobileLogo from "./Navtools/MobileLogo.vue";
 import window from "@/mixins/window";
 import HandleMobileMenu from "./Navtools/HandleMobileMenu.vue";
+import {useAuthStore} from "@/store/auth";
+import Salons from "@/components/Header/Navtools/Salons.vue";
 
 export default {
   mixins: [window],
   components: {
+    Salons,
     Profile,
     Notification,
     Message,
@@ -94,6 +98,17 @@ export default {
     Logo,
     MobileLogo,
     HandleMobileMenu,
+  },
+  setup() {
+    const authStore = useAuthStore();
+
+    return {authStore}
+  },
+
+  computed: {
+    settings() {
+      return this.authStore.user.settings
+    }
   },
 
   methods: {
@@ -113,13 +128,13 @@ export default {
     },
     borderSwicthClass() {
       if (
-        this.$store.themeSettingsStore.skin === "bordered" &&
-        this.$store.themeSettingsStore.navbarType !== "floating"
+          this.$store.themeSettingsStore.skin === "bordered" &&
+          this.$store.themeSettingsStore.navbarType !== "floating"
       ) {
         return "border-b border-gray-5002 dark:border-slate-700";
       } else if (
-        this.$store.themeSettingsStore.skin === "bordered" &&
-        this.$store.themeSettingsStore.navbarType === "floating"
+          this.$store.themeSettingsStore.skin === "bordered" &&
+          this.$store.themeSettingsStore.navbarType === "floating"
       ) {
         return "border border-gray-5002 dark:border-slate-700";
       } else {

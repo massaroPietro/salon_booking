@@ -17,12 +17,13 @@ User = get_user_model()
 
 class UserSettingsRUAPIView(generics.RetrieveUpdateAPIView):
     serializer_class = UserSettingsSerializer
+    permission_classes = [IsEmployee]
 
     def get_object(self):
         return self.request.user.settings
 
 
-class GoogleLogin(SocialLoginView):  # if you want to use Authorization Code Grant, use this
+class GoogleLogin(SocialLoginView):
     adapter_class = GoogleOAuth2Adapter
     client_class = OAuth2Client
 
@@ -34,6 +35,7 @@ class GoogleConnect(SocialConnectView):
 
 class DashboardUserRetrieveAPIView(generics.RetrieveAPIView):
     serializer_class = DashboardUserSerializer
+    permission_classes = [IsEmployee]
 
     def get_object(self):
         return self.request.user

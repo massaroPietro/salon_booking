@@ -7,10 +7,18 @@ export default {
             serverError: "Server error. Try later.",
         },
         generic: {
+            name: "Name",
             firstName: "First name",
             lastName: "Last name",
             password: "Password",
             email: "Email",
+            action: "Action",
+            employee: "Employee",
+            owner: "Owner",
+            role: "Role",
+            requiredField: "Required field",
+            you: "You",
+            noTableDatas: "No data for table"
         },
         auth: {
             signIn: "Sign in",
@@ -37,6 +45,8 @@ export default {
             backToLogin: "Send me back to the login",
             insertYourEmail: "Type your email",
             recoveryEmailSent: "The recovery email has been sent successfully",
+            verifyEmailSuccess: "Email verified successfully",
+            verifyEmailError: "Link is not valid or expired",
         },
         toasts: {
             successLogin: "Welcome back to BarberBooking",
@@ -55,12 +65,23 @@ export default {
                     memberRole: "Member",
                 },
             },
+            salons: {
+                addSalon: "Add salon",
+                salonAddedSuccessfully: "Salon added successfully",
+                nameNotAvailable: 'The name "%{name}" is already taken',
+                nameIsAvailableAlert: 'The name "%{name}" is available.<br>This is what the public domain of your salon will look like: http://localhost:5173/%{slug}',
+                salonNamePlaceholder: "Type your salon name"
+            },
             header: {
                 search: {
                     placeholder: "Search...",
                     noResults: "No result found",
                 },
             },
+            menuItems: {
+                employees: "Employees",
+                employeesList: "Employees List",
+            }
         },
         themeCustomizer: {
             name: "Settings",
@@ -108,11 +129,18 @@ export default {
     },
     it: {
         generic: {
+            name: "Nome",
             firstName: "Nome",
             lastName: "Cognome",
             password: "Password",
             email: "Email",
+            action: "Azione",
+            owner: "Proprietario",
+            employee: "Dipendente",
+            role: "Ruolo",
             requiredField: "Campo obbligatorio",
+            you: "Tu",
+            noTableDatas: "Non ci sono dati per la tabella"
         },
         errors: {
             notValidEmail: "Email non valida",
@@ -134,7 +162,7 @@ export default {
             repeatPassword: "Ripeti password",
             acceptPrivacy: "Accetti i nostri Termini e condizioni e l'Informativa sulla privacy",
             createAccount: "Crea account",
-            notAcceptedPrivacy: "Devi accrete la privacy per continuare la registrazione",
+            notAcceptedPrivacy: "Devi accettare la privacy per continuare la registrazione",
             registerCompleted: "Registrazione completata con successo",
             successRegisterDescription: "Abbiamo inviato un'email al seguente indirizzo: {email}. Controlla la tua casella di posta elettronica per confermare il tuo account. Per completare la registrazione, segui le istruzioni nell'email. Una volta confermato il tuo account, sarai in grado di accedere a tutte le funzionalità del nostro sito.",
             resendEmail: "Reinvia email",
@@ -145,6 +173,8 @@ export default {
             backToLogin: "Torna alla pagina di login",
             insertYourEmail: "Inserisci la tua email",
             recoveryEmailSent: "L'email di recupero è stata inviata con successo",
+            verifyEmailSuccess: "Email verificata con successo",
+            verifyEmailError: "Link non valido o scaduto",
         },
         toasts: {
             successLogin: "Bentornato in BarberBooking",
@@ -163,12 +193,23 @@ export default {
                     memberRole: "Membro",
                 },
             },
+            salons: {
+                addSalon: "Aggiungi salone",
+                salonAddedSuccessfully: "Salone aggiunto con successo",
+                nameNotAvailable: 'Il nome "%{name}" è già occupato',
+                nameIsAvailableAlert: 'Il nome "%{name}" è disponinile.<br>Ecco come sarà il dominio pubblico del tuo salone: http://localhost:5173/%{slug}',
+                salonNamePlaceholder: "Inserisci il nome del salone"
+            },
             header: {
                 search: {
                     placeholder: "Cerca...",
                     noResults: "Non ci sono corrispondenze",
                 },
             },
+            menuItems: {
+                employees: "Dipendenti",
+                employeesList: "Lista dipendenti",
+            }
         },
         themeCustomizer: {
             name: "Impostazioni",

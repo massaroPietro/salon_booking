@@ -29,7 +29,6 @@ axios.interceptors.response.use(
         if (error.response) {
             if (error.response.status === 404) {
                 router.push('/');
-
             }
             if (error.response.status === 403) {
                 const authStore = useAuthStore();

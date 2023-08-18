@@ -10,6 +10,7 @@ from django.utils.text import slugify
 from allauth.socialaccount.signals import *
 
 from config.settings.base import MEDIA_ROOT
+from salon_booking.salons.models import Employee
 from salon_booking.users.models import UserSettings
 
 User = get_user_model()
@@ -33,15 +34,15 @@ def merge_social_accounts(sender, request, sociallogin, **kwargs):
 @receiver(pre_save, sender=User)
 def create_username(sender, instance, **kwargs):
     if not instance.username:
-        username = slugify(instance.email.split('@')[0])  # generate username from email
+        username = slugify(instance.email.split('@')[0])
         n = 1
-        while User.objects.filter(username=username).exists():  # check if username already exists
+        while User.objects.filter(username=username).exists():
             username = username + str(n)
             n += 1
         instance.username = username
 
 
-@receiver(post_save, sender=User)
+@receiver(post_save, sender=Employee)
 def add_info_to_user(sender, instance, created, **kwargs):
-    if created:
-        UserSettings.objects.create(user=instance)
+    if created and not UserSettings.objects.filter(user=instance.user).exists():
+        UserSettings.objects.create(user=instance.user)

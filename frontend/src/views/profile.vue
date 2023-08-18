@@ -13,7 +13,7 @@
               class="md:h-[186px] md:w-[186px] h-[140px] w-[140px] md:ml-0 md:mr-0 ml-auto mr-auto md:mb-0 mb-4 rounded-full ring-4 ring-slate-100 relative"
             >
               <img
-                src="@/assets/images/users/user-1.jpg"
+                :src="authStore.employeePicBySalon"
                 alt=""
                 class="w-full h-full object-cover rounded-full"
               />
@@ -164,11 +164,16 @@
 import Card from "@/components/Card";
 import Icon from "@/components/Icon";
 import { basicArea, basicAreaDark } from "@/constant/appex-chart.js";
+import {useAuthStore} from "@/store/auth";
 export default {
   components: {
     Card,
     Icon,
   },
+    setup() {
+      const authStore = useAuthStore();
+      return { authStore }
+    },
   data() {
     return {
       basicArea,

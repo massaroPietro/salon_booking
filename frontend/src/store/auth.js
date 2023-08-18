@@ -1,8 +1,10 @@
 import {defineStore} from "pinia";
 import axios from "@/plugins/axios";
 import apiEndpoints from "@/constant/apiEndpoints";
+import router from "@/router";
+import i18n from "@/main"
 
-export const useAuthStore = defineStore('auth', {
+export const useAuthStore = defineStore('authStore', {
     state: () => {
         return {
             isAuthenticated: false,
@@ -10,7 +12,8 @@ export const useAuthStore = defineStore('auth', {
             user: {
                 settings: {
                     lang: "en",
-                }
+                },
+                salons: [],
             },
         }
     },
@@ -20,6 +23,9 @@ export const useAuthStore = defineStore('auth', {
                 return this.user.first_name + " " + this.user.last_name;
             }
             return "";
+        },
+        employeePicBySalon() {
+            return this.user.employees.find((employee) => employee.salon === this.user.settings.current_salon).pic || "";
         }
     },
     actions: {
@@ -40,6 +46,17 @@ export const useAuthStore = defineStore('auth', {
                 localStorage.setItem('token', token)
             }
         },
+        logout() {
+            let endpoint = apiEndpoints.logout();
+            axios.post(endpoint).then(() => {
+                router.push({name: "Login"})
+                const store = useAuthStore();
+                store.removeToken();
+                const lang = navigator.language.substring(0, 2);
+                axios.defaults.headers['Accept-Language'] = lang
+                i18n.locale = lang;
+            })
+        },
         removeToken() {
             this.token = "";
             this.isAuthenticated = false
@@ -51,6 +68,12 @@ export const useAuthStore = defineStore('auth', {
             axios.get(endpoint).then((response) => {
                 this.user = response.data;
             })
+        },
+        getCurrentSalon() {
+            return this.user.salons.find((salon) => salon.id === this.user.settings.current_salon);
+        },
+        isCurrentSalonOwner() {
+            return this.user.id === this.getCurrentSalon().owner;
         }
     },
 })

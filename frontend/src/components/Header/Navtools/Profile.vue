@@ -5,8 +5,7 @@
         <div class="lg:h-8 lg:w-8 h-7 w-7 rounded-full">
           <img
               v-if="authStore.user"
-              :src="authStore.user.pic"
-              alt=""
+              :src="authStore.employeePicBySalon"
               class="block w-full h-full object-cover rounded-full"
           />
         </div>
@@ -123,15 +122,8 @@ export default {
           label: "Logout",
           icon: "heroicons-outline:login",
           link: () => {
-            let endpoint = apiEndpoints.logout();
-            axios.post(endpoint).then(() => {
-              const store = useAuthStore();
-              store.removeToken();
-              const lang = navigator.language.substring(0,2);
-              axios.defaults.headers['Accept-Language'] = lang
-              this.$i18n.locale = lang;
-              this.$router.push({name: "Login"})
-            })
+            const authStore = useAuthStore();
+            authStore.logout();
           },
         },
       ],

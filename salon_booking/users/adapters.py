@@ -12,11 +12,13 @@ from django.contrib.auth import get_user_model
 import requests
 from django.core.files.base import ContentFile
 
-
 User = get_user_model()
 
 
 class AccountAdapter(DefaultAccountAdapter):
+    def get_email_confirmation_url(self, request, emailconfirmation):
+        return settings.FRONTEND_BASE_URL + "/auth/verify-email/" + emailconfirmation.key
+
     def is_open_for_signup(self, request: HttpRequest) -> bool:
         return getattr(settings, "ACCOUNT_ALLOW_REGISTRATION", True)
 

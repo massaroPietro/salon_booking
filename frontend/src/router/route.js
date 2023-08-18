@@ -1,5 +1,4 @@
-import auth from "@/middleware/auth";
-import guest from "@/middleware/guest";
+import auth, {IsCurrentSalonOwner} from "@/middleware/auth";
 
 const routes = [
     {
@@ -27,18 +26,32 @@ const routes = [
         component: () => import("@/views/auth/lock-screen.vue"),
     },
     {
+        path: "/auth/verify-email/:key",
+        name: "verify-email",
+        component: () => import("@/views/auth/verify-email.vue"),
+    },
+    {
         path: "/app",
         name: "Layout",
         redirect: "/app/home",
         component: () => import("@/Layout/index.vue"),
         meta: {
             middleware: [auth],
+            hide: true,
         },
         children: [
             {
                 path: "blank-page",
                 name: "blank-page",
                 component: () => import("@/views/blank-page.vue"),
+            },
+            {
+                path: "employees",
+                name: "employees-list",
+                component: () => import("@/views/employees/EmployeesListView.vue"),
+                meta: {
+                    middleware: [IsCurrentSalonOwner]
+                }
             },
             {
                 path: "notifications",

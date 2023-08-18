@@ -355,3 +355,9 @@ REST_AUTH = {
     'TOKEN_SERIALIZER': 'salon_booking.users.api.serializers.CustomTokenSerializer',
     'REGISTER_SERIALIZER': 'salon_booking.users.api.serializers.UserRegistrationSerializer',
 }
+
+FRONTEND_BASE_URL = "https://example.com"
+BACKEND_BASE_URL = "https://api.example.com"
+if DEBUG:
+    FRONTEND_BASE_URL = "http://localhost:5173"
+    BACKEND_BASE_URL = "http://localhost:8000"

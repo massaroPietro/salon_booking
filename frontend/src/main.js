@@ -22,7 +22,9 @@ import "v-calendar/dist/style.css";
 import vue3GoogleLogin from 'vue3-google-login'
 import messages from "./locales/messages";
 import axios from "@/plugins/axios";
-import {createI18n} from 'vue-i18n'
+import {createI18n, useI18n} from 'vue-i18n'
+import {LoadingPlugin} from 'vue-loading-overlay';
+import 'vue-loading-overlay/dist/css/index.css';
 
 const pinia = createPinia()
 let lang = navigator.language.substring(0, 2);
@@ -36,6 +38,8 @@ const i18n = createI18n({
 });
 
 
+
+
 // vue use
 const app = createApp(App)
     .use(pinia)
@@ -44,6 +48,7 @@ const app = createApp(App)
         toastClassName: "dashcode-toast",
         bodyClassName: "dashcode-toast-body",
     })
+    .use(LoadingPlugin)
     .use(router)
     .use(VueClickAway)
     .use(VueTippy)
@@ -123,3 +128,5 @@ if (localStorage.getItem('monochrome') !== null) {
     themeSettingsStore.monochrome = true;
     document.getElementsByTagName('html')[0].classList.add('grayscale');
 }
+
+export default { i18n }

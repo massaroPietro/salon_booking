@@ -3,21 +3,22 @@
     <Listbox>
       <div class="relative z-[22]">
         <ListboxButton
-            class="relative w-full flex items-center cursor-pointer space-x-[6px]"
+            class="relative w-full flex items-center space-x-[6px] cursor-pointer"
         >
           <span class="inline-block md:h-6 md:w-6 w-4 h-4 rounded-full"
           ><img
-              :src="selectedLanguage.image"
+              :src="selectedSalon.logo"
               alt=""
               class="h-full w-full object-cover rounded-full"
           /></span>
           <span
               class="text-sm md:block hidden font-medium text-slate-600 dark:text-slate-300"
-          >{{ selectedLanguage.name }}</span
+          >{{ selectedSalon.name }}</span
           >
         </ListboxButton>
 
         <Transition
+            v-if="authStore.user.salons.length > 1"
             leave-active-class="transition duration-100 ease-in"
             leave-from-class="opacity-100"
             leave-to-class="opacity-0"
@@ -27,10 +28,10 @@
           >
             <ListboxOption
                 v-slot="{ active }"
-                v-for="item in languages"
-                @click="item.locale !== selectedLanguage.locale ? changeLang(item.locale) : ''"
-                :key="item.name"
-                :value="item"
+                v-for="item in authStore.user.salons"
+                @click="changeSalon(item.id)"
+                :key="item.id"
+                :value="item.slug"
                 as="template"
             >
               <li
@@ -47,7 +48,7 @@
                         class="lg:w-6 lg:h-6 w-4 h-4 rounded-full inline-block"
                     >
                       <img
-                          :src="item.image"
+                          :src="item.logo"
                           alt=""
                           class="w-full h-full object-cover relative top-1 rounded-full"
                       />
@@ -71,48 +72,50 @@ import {Listbox, ListboxButton, ListboxOption, ListboxOptions} from "@headlessui
 import {useAuthStore} from "@/store/auth";
 import axios from "@/plugins/axios";
 import apiEndpoints from '@/constant/apiEndpoints.js';
-import route from "@/router/route";
 import router from "@/router";
+import {getCurrentInstance} from "vue";
+import {useCoreStore} from "@/store/core";
 
 export default {
-  name: "Language",
+  name: "Salons",
   components: {
     Listbox,
     ListboxButton,
     ListboxOption,
     ListboxOptions,
   },
-  setup() {
-    const store = useAuthStore();
-
-    const languages = [
-      {name: "En", image: "/src/assets/images/flags/usa.png", locale: "en"},
-      {name: "It", image: "/src/assets/images/flags/it.png", locale: "it"},
-    ];
-
-    return {store, languages};
-  },
-  created() {
-    this.changeLang(this.store.user.settings.lang, false)
-  },
-  computed: {
-    selectedLanguage() {
-      return this.languages.find((language) => language.locale === this.store.user.settings.lang);
+  data() {
+    return {
+      selectedSalon: null,
     }
   },
+  setup() {
+    const authStore = useAuthStore();
+    const coreStore = useCoreStore();
+    return {authStore, coreStore};
+  },
+  created() {
+    this.changeSalon(this.authStore.user.settings.current_salon, false)
+  },
   methods: {
-    changeLang(language, saveOnDB = true) {
-      this.$i18n.locale = language;
-      this.store.user.settings.lang = language;
-      localStorage.setItem('lang', language);
-      axios.defaults.headers.common["Accept-Language"] = language;
-
-      if (saveOnDB) {
-        let endpoint = apiEndpoints.userSettings();
-        const data = {
-          lang: language
+    changeSalon(salon_id, saveOnDB = true) {
+      if (this.selectedSalon === null || salon_id !== this.selectedSalon.id) {
+        this.selectedSalon = this.authStore.user.salons.find((salon) => salon.id === salon_id);
+        this.authStore.user.settings.current_salon = salon_id
+        if (saveOnDB) {
+          let endpoint = apiEndpoints.userSettings();
+          const data = {
+            current_salon: salon_id
+          }
+          axios.patch(endpoint, data);
+          if (!this.authStore.isCurrentSalonOwner()) {
+            router.push({name: 'home'}).then(() => {
+              this.coreStore.reload += 1;
+            })
+          } else {
+            this.coreStore.reload += 1;
+          }
         }
-        axios.patch(endpoint, data);
       }
     }
   }
