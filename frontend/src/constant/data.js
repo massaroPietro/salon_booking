@@ -17,7 +17,7 @@ export const menuItems = [
         child: [
             {
                 childtitle: "app.menuItems.employeesList",
-                childlink: "employees",
+                childlink: "/app/employees",
             },
         ],
     },

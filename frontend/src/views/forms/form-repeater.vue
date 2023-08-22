@@ -2,7 +2,7 @@
   <div>
     <Card bodyClass="p-0">
       <header
-        class="border-b px-4 border-slate-100 dark:border-slate-700 pt-4 pb-3 flex justify-between items-center"
+        class="border-b px-4 border-slate-100 dark:border-slate-700 pb-3 flex justify-between items-center"
       >
         <h6 class="card-title mb-0">Repeating Forms</h6>
         <div>

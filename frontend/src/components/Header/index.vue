@@ -52,7 +52,7 @@
         <div
             class="nav-tools flex items-center lg:space-x-5 space-x-3 rtl:space-x-reverse"
         >
-          <Salons/>
+          <Salons ref="salonsHeaderComponent"/>
           <LanguageVue/>
           <SwitchDark/>
           <MonochromeMode/>

@@ -8,7 +8,7 @@ from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from .permissions import IsOwnerOrReadOnly, IsOwner
+from .permissions import IsOwnerOrReadOnly, IsOwner, IsOwnerOrEmployee, IsWorkDaySalonOwner
 from ..models import *
 from .serializers import *
 from rest_framework import status
@@ -22,9 +22,7 @@ class SalonViewSet(viewsets.ModelViewSet):
     queryset = Salon.objects.all()
 
     def get_serializer_class(self):
-        if self.action == 'list':
-            return FriendlySalonSerializer
-        elif self.action in ['update', 'partial_update', 'retrieve']:
+        if self.action in ['update', 'partial_update', 'retrieve']:
             if self.get_object().owner == self.request.user:
                 return SalonSerializer
         elif self.action == 'create':
@@ -62,13 +60,6 @@ class EmployeeRegisterAPIView(RegisterView):
         user = super().perform_create(serializer)
         salon = get_object_or_404(Salon, slug=self.kwargs['slug'])
         Employee.objects.create(user=user, salon=salon)
-        email = get_object_or_404(EmailAddress, user=user)
-        email.verified = True
-        email.save()
-
-    def create(self, request, *args, **kwargs):
-        super().create(request, *args, **kwargs)
-        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 class CheckSalonExistence(APIView):
@@ -81,3 +72,15 @@ class CheckSalonExistence(APIView):
             return Response({"available": available, "slug": slug, "name": salon_name})
         else:
             return Response({"exists": False})
+
+
+class EmployeeRUDAPIView(generics.RetrieveUpdateDestroyAPIView):
+    serializer_class = FullEmployeeSerializer
+    queryset = Employee.objects.all()
+    permission_classes = [IsOwnerOrEmployee]
+
+
+class EmployeeWorkDayRUAPIView(generics.RetrieveUpdateAPIView):
+    serializer_class = EmployeeWorkDaySerializer
+    queryset = EmployeeWorkDay.objects.all()
+    permission_classes = [IsWorkDaySalonOwner]

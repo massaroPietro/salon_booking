@@ -75,6 +75,7 @@ import apiEndpoints from '@/constant/apiEndpoints.js';
 import router from "@/router";
 import {getCurrentInstance} from "vue";
 import {useCoreStore} from "@/store/core";
+import emitter from "@/plugins/mitt";
 
 export default {
   name: "Salons",
@@ -95,25 +96,31 @@ export default {
     return {authStore, coreStore};
   },
   created() {
-    this.changeSalon(this.authStore.user.settings.current_salon, false)
+    this.changeSalon(this.authStore.user.settings.current_salon, false);
+    emitter.on('changeSalon', (id) => {
+      this.changeSalon(id);
+    })
   },
   methods: {
     changeSalon(salon_id, saveOnDB = true) {
       if (this.selectedSalon === null || salon_id !== this.selectedSalon.id) {
-        this.selectedSalon = this.authStore.user.salons.find((salon) => salon.id === salon_id);
-        this.authStore.user.settings.current_salon = salon_id
-        if (saveOnDB) {
-          let endpoint = apiEndpoints.userSettings();
-          const data = {
-            current_salon: salon_id
-          }
-          axios.patch(endpoint, data);
-          if (!this.authStore.isCurrentSalonOwner()) {
-            router.push({name: 'home'}).then(() => {
-              this.coreStore.reload += 1;
-            })
-          } else {
-            this.coreStore.reload += 1;
+        const tmpSalon = this.authStore.user.salons.find((salon) => salon.id === salon_id);
+        if (tmpSalon) {
+          this.selectedSalon = tmpSalon;
+          this.authStore.user.settings.current_salon = salon_id
+          if (saveOnDB) {
+            let endpoint = apiEndpoints.userSettings();
+            const data = {
+              current_salon: salon_id
+            }
+            axios.patch(endpoint, data);
+            if (!this.authStore.isCurrentSalonOwner()) {
+              router.push({name: 'home'}).then(() => {
+                this.coreStore.reloadPage();
+              })
+            } else {
+              this.coreStore.reloadPage();
+            }
           }
         }
       }

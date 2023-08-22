@@ -28,7 +28,7 @@
     </template>
     <template v-if="isLoading">
       <svg
-        class="animate-spin ltr:-ml-1 ltr:mr-3 rtl:-mr-1 rtl:ml-3 h-5 w-5"
+        class="animate-spin h-5 w-5 mt-auto mb-auto"
         xmlns="http://www.w3.org/2000/svg"
         fill="none"
         viewBox="0 0 24 24"
@@ -83,7 +83,7 @@
     </template>
     <template v-if="isLoading">
       <svg
-        class="animate-spin -ml-1 mr-3 h-5 w-5"
+        class="animate-spin h-5 w-5  mt-auto mb-auto"
         xmlns="http://www.w3.org/2000/svg"
         fill="none"
         viewBox="0 0 24 24"
@@ -136,7 +136,7 @@
     </template>
     <template v-if="isLoading">
       <svg
-        class="animate-spin -ml-1 mr-3 h-5 w-5"
+        class="animate-spin h-5 w-5  mt-auto mb-auto"
         xmlns="http://www.w3.org/2000/svg"
         fill="none"
         viewBox="0 0 24 24"

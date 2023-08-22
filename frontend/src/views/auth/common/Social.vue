@@ -43,8 +43,8 @@ export default {
             this.store.setToken(token, true);
             this.store.user = response.data.user;
 
-            if(response.data.user.settings){
-                this.$i18n.locale = response.data.user.settings.lang;
+            if (response.data.user.settings) {
+              this.$i18n.locale = response.data.user.settings.lang;
             }
 
 

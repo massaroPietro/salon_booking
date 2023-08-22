@@ -38,6 +38,7 @@ import Alert from "@/components/Alert/index.vue";
 import apiEndpoints from "@/constant/apiEndpoints";
 import {useI18n} from "vue-i18n";
 import {initFormState, setBackendResposeErrors} from "@/utils/utils";
+import {useCoreStore} from "@/store/core";
 
 export default {
   name: "AddSalonFormComponent",
@@ -50,6 +51,7 @@ export default {
   setup() {
     const toast = useToast();
     const authStore = useAuthStore();
+    const coreStore = useCoreStore();
 
     const {t} = useI18n();
 
@@ -61,7 +63,7 @@ export default {
 
     const {form, formErrors, validateForm} = initFormState(Object.keys(FormScheme.fields), FormScheme);
 
-    return {toast, FormScheme, form, formErrors, validateForm, authStore};
+    return {toast, FormScheme, form, formErrors, validateForm, authStore, coreStore};
   },
   data() {
     return {
@@ -100,7 +102,13 @@ export default {
             .then((response) => {
               this.$emit('salonAdded');
               this.isLoading = false;
-              this.authStore.user.salons.push(response.data.id);
+
+              try {
+                this.authStore.user.salons.push(response.data);
+              } catch (e) {
+                this.coreStore.reloadPage();
+              }
+
               this.toast.success(this.$t("app.salons.salonAddedSuccessfully"), {
                 timeout: 2000
               });

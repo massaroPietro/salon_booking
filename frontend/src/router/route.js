@@ -49,9 +49,17 @@ const routes = [
                 path: "employees",
                 name: "employees-list",
                 component: () => import("@/views/employees/EmployeesListView.vue"),
-                meta: {
-                    middleware: [IsCurrentSalonOwner]
-                }
+            },
+            {
+                path: "employees/create",
+                name: "employee-create",
+                component: () => import("@/views/employees/EmployeesListView.vue"),
+            },
+            {
+                path: "employee/:employeeID/detail",
+                name: "employee-detail",
+                component: () => import("@/views/employees/EmployeeDetailView.vue"),
+                props: true,
             },
             {
                 path: "notifications",

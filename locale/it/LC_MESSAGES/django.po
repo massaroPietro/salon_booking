@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-08-10 09:29+0000\n"
+"POT-Creation-Date: 2023-08-19 16:44+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,7 +18,57 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: salon_booking/salons/api/views.py:25
+#: salon_booking/core/constants.py:4
+msgid "English"
+msgstr "Inglese"
+
+#: salon_booking/core/constants.py:5
+msgid "Italian"
+msgstr "Italiano"
+
+#: salon_booking/core/constants.py:9
+#: venv/lib/python3.10/site-packages/django/utils/dates.py:7
+#: venv/lib/python3.10/site-packages/tornado/locale.py:295
+msgid "Monday"
+msgstr "Lunedì"
+
+#: salon_booking/core/constants.py:10
+#: venv/lib/python3.10/site-packages/django/utils/dates.py:8
+#: venv/lib/python3.10/site-packages/tornado/locale.py:296
+msgid "Tuesday"
+msgstr "Martedì"
+
+#: salon_booking/core/constants.py:11
+#: venv/lib/python3.10/site-packages/django/utils/dates.py:9
+#: venv/lib/python3.10/site-packages/tornado/locale.py:297
+msgid "Wednesday"
+msgstr "Mercoledì"
+
+#: salon_booking/core/constants.py:12
+#: venv/lib/python3.10/site-packages/django/utils/dates.py:10
+#: venv/lib/python3.10/site-packages/tornado/locale.py:298
+msgid "Thursday"
+msgstr "Giovedì"
+
+#: salon_booking/core/constants.py:13
+#: venv/lib/python3.10/site-packages/django/utils/dates.py:11
+#: venv/lib/python3.10/site-packages/tornado/locale.py:299
+msgid "Friday"
+msgstr "Venerdì"
+
+#: salon_booking/core/constants.py:14
+#: venv/lib/python3.10/site-packages/django/utils/dates.py:12
+#: venv/lib/python3.10/site-packages/tornado/locale.py:300
+msgid "Saturday"
+msgstr "Sabato"
+
+#: salon_booking/core/constants.py:15
+#: venv/lib/python3.10/site-packages/django/utils/dates.py:13
+#: venv/lib/python3.10/site-packages/tornado/locale.py:301
+msgid "Sunday"
+msgstr "Domenica"
+
+#: salon_booking/salons/api/views.py:40
 msgid "There is already a salon with this name"
 msgstr "Esiste già un salone con questo nome"
 
@@ -305,15 +355,15 @@ msgstr ""
 msgid "This username has already been taken."
 msgstr ""
 
-#: salon_booking/users/models.py:11
+#: salon_booking/users/models.py:10
 msgid "email address"
 msgstr ""
 
-#: salon_booking/users/models.py:12
+#: salon_booking/users/models.py:11
 msgid "first name"
 msgstr ""
 
-#: salon_booking/users/models.py:13
+#: salon_booking/users/models.py:12
 msgid "last name"
 msgstr ""
 
@@ -1381,41 +1431,6 @@ msgstr ""
 
 #: venv/lib/python3.10/site-packages/django/utils/dateformat.py:154
 msgid "noon"
-msgstr ""
-
-#: venv/lib/python3.10/site-packages/django/utils/dates.py:7
-#: venv/lib/python3.10/site-packages/tornado/locale.py:295
-msgid "Monday"
-msgstr ""
-
-#: venv/lib/python3.10/site-packages/django/utils/dates.py:8
-#: venv/lib/python3.10/site-packages/tornado/locale.py:296
-msgid "Tuesday"
-msgstr ""
-
-#: venv/lib/python3.10/site-packages/django/utils/dates.py:9
-#: venv/lib/python3.10/site-packages/tornado/locale.py:297
-msgid "Wednesday"
-msgstr ""
-
-#: venv/lib/python3.10/site-packages/django/utils/dates.py:10
-#: venv/lib/python3.10/site-packages/tornado/locale.py:298
-msgid "Thursday"
-msgstr ""
-
-#: venv/lib/python3.10/site-packages/django/utils/dates.py:11
-#: venv/lib/python3.10/site-packages/tornado/locale.py:299
-msgid "Friday"
-msgstr ""
-
-#: venv/lib/python3.10/site-packages/django/utils/dates.py:12
-#: venv/lib/python3.10/site-packages/tornado/locale.py:300
-msgid "Saturday"
-msgstr ""
-
-#: venv/lib/python3.10/site-packages/django/utils/dates.py:13
-#: venv/lib/python3.10/site-packages/tornado/locale.py:301
-msgid "Sunday"
 msgstr ""
 
 #: venv/lib/python3.10/site-packages/django/utils/dates.py:16

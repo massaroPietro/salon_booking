@@ -14,6 +14,9 @@ const apiEndpoints = {
     salons: () => `/salons/`,
     checkSalonExists: () => `/salons/check-existence/`,
     salonEmployees: (slug) => `/salons/${slug}/employees/`,
+    registerEmployee: (slug) => `/salons/${slug}/employees/register/`,
+    employee: (id) => `/employees/${id}/`,
+    workDay: (id) => `/work-days/${id}/`,
 };
 
 export default apiEndpoints;

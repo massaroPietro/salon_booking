@@ -7,8 +7,12 @@ export const useCoreStore = defineStore('coreStore', {
             reload: 0,
         }
     },
-    getters: {},
+    getters: {
+        onMobile: () => window.innerWidth < 1280
+    },
     actions: {
-
+        reloadPage(){
+            this.reload += 1;
+        },
     }
 })

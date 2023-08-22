@@ -84,9 +84,7 @@ export default {
     const {t} = useI18n();
 
     const FormScheme = yup.object().shape({
-      email: yup
-          .string()
-          .required(t('generic.requiredField')),
+      email: yup.string().email(t('errors.notValidEmail')).required(t('generic.requiredField')),
       password: yup
           .string()
           .required(t('generic.requiredField')),

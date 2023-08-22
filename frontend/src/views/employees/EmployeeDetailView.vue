@@ -1,5 +1,5 @@
 <template>
-  <div class="space-y-5 profile-page" v-if="user">
+  <div class="space-y-5 profile-page" v-if="employee">
     <div
         class="profiel-wrap px-[35px] pb-10 md:pt-[84px] pt-10 rounded-lg bg-white dark:bg-slate-800 lg:flex lg:space-y-0 space-y-6 justify-between items-end relative z-[1]"
     >
@@ -13,7 +13,7 @@
                 class="md:h-[186px] md:w-[186px] h-[140px] w-[140px] md:ml-0 md:mr-0 ml-auto mr-auto md:mb-0 mb-4 rounded-full ring-4 ring-slate-100 relative"
             >
               <img
-                  :src="employeeID ? user.pic : authStore.employeePicBySalon"
+                  :src="employee.pic"
                   alt=""
                   class="w-full h-full object-cover rounded-full"
               />
@@ -29,7 +29,7 @@
             <div
                 class="text-2xl font-medium text-slate-900 dark:text-slate-200 mb-[3px]"
             >
-              {{ user.full_name }}
+              {{ employee.user.full_name }}
             </div>
             <div class="text-sm font-light text-slate-600 dark:text-slate-400">
               Front End Developer
@@ -78,7 +78,7 @@
       <!-- profile info-500 -->
     </div>
     <div class="grid grid-cols-12 gap-6">
-      <div class="lg:col-span-4 col-span-12">
+      <div class="lg:col-span-5 col-span-12">
         <Card title="Info">
           <ul class="list space-y-8">
             <li class="flex space-x-3 rtl:space-x-reverse">
@@ -94,28 +94,19 @@
                   EMAIL
                 </div>
                 <a
-                    :href="user.email"
+                    :href="employee.user.email"
                     class="text-base text-slate-600 dark:text-slate-50"
                 >
-                  {{ user.email }}
+                  {{ employee.user.email }}
                 </a>
               </div>
             </li>
           </ul>
         </Card>
       </div>
-      <div class="lg:col-span-8 col-span-12">
-        <Card title="User Overview">
-          <apexchart
-              type="area"
-              height="250"
-              :options="
-              this.$store.themeSettingsStore.isDark
-                ? basicAreaDark.chartOptions
-                : basicArea.chartOptions
-            "
-              :series="basicArea.series"
-          />
+      <div class="lg:col-span-7 col-span-12">
+        <Card title="" noborder>
+          <WorkDaysTabsComponent :work-days="employee.work_days"/>
         </Card>
       </div>
     </div>
@@ -124,41 +115,55 @@
 <script>
 import Card from "@/components/Card";
 import Icon from "@/components/Icon";
-import {basicArea, basicAreaDark} from "@/constant/appex-chart.js";
 import {useAuthStore} from "@/store/auth";
+import apiEndpoints from "@/constant/apiEndpoints";
+import axios from "@/plugins/axios";
+import WorkDaysTabsComponent from "@/components/WorkDaysTabsComponent.vue";
+import emitter from "@/plugins/mitt";
 
 export default {
+  name: "EmployeeDetailView",
   components: {
+    WorkDaysTabsComponent,
     Card,
     Icon,
   },
   data() {
     return {
-      basicArea,
-      basicAreaDark,
-      user: null,
+      employee: null,
+      loading: false,
     };
   },
   setup() {
     const authStore = useAuthStore();
-    return {authStore}
-  },
-  created() {
-    if (this.employeeID) {
-
-    }
-  },
-  computed: {
-    user() {
-      return this.employeeID ? this.user : this.authStore.user;
-    }
+    return {authStore};
   },
   props: {
     employeeID: {
       type: String,
-      required: false
+      required: true,
     }
   },
+  created() {
+    this.getEmployee()
+  },
+  methods: {
+    getEmployee() {
+      let endpoint = apiEndpoints.employee(this.employeeID);
+      let loader = this.$loading.show();
+      axios.get(endpoint).then((response) => {
+        loader.hide();
+        if (response.data.salon !== this.authStore.getCurrentSalon().id) {
+            emitter.emit('changeSalon', response.data.salon)
+        } else {
+          this.employee = response.data;
+        }
+      }).catch((err) => {
+          console.log(err);
+          loader.hide()
+      })
+    }
+  }
 };
 </script>
 <style lang="scss" scoped></style>

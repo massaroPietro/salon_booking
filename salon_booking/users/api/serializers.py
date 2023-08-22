@@ -1,5 +1,6 @@
 import urllib.parse
 
+from allauth.account.models import EmailAddress
 from dj_rest_auth.registration.serializers import RegisterSerializer
 from dj_rest_auth.serializers import TokenSerializer
 from django.contrib.auth import get_user_model
@@ -7,7 +8,6 @@ from django.db import transaction
 from rest_framework import serializers
 from rest_framework.generics import get_object_or_404
 
-from salon_booking.core.api.serializers import CustomImageField
 from salon_booking.salons.api.serializers import SalonSerializer, FriendlySalonSerializer, EmployeeSerializer
 from salon_booking.salons.models import Salon, Employee
 from salon_booking.users.models import User as UserType, UserSettings
@@ -25,14 +25,23 @@ class UserSettingsSerializer(serializers.ModelSerializer):
 
 class UserSerializer(serializers.ModelSerializer):
     full_name = serializers.SerializerMethodField(read_only=True)
+    email_verified = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
         model = User
-        fields = ["id", "username", "first_name", "last_name", "email", 'full_name']
+        fields = ["id", "username", "first_name", "last_name", "email", 'full_name', 'email_verified']
         read_only_fields = ('username', "email")
 
     def get_full_name(self, instance):
         return instance.first_name + " " + instance.last_name
+
+    def get_email_verified(self, instance):
+        try:
+            email_address = EmailAddress.objects.get(user=instance, primary=True)
+
+            return email_address.verified
+        except EmailAddress.DoesNotExist:
+            return False
 
 
 class UserRegistrationSerializer(RegisterSerializer):
@@ -60,10 +69,8 @@ class CustomTokenSerializer(TokenSerializer):
 
     def get_user(self, instance):
         if Employee.objects.filter(user=instance.user).exists():
-            print("cao")
             return DashboardUserSerializer(instance.user).data
         else:
-            print("yes")
             return UserSerializer(instance.user).data
 
 

@@ -33,7 +33,7 @@
             <AddSalonFormComponent @salon-added="authStore.getUser()"/>
 
           <span @click="authStore.logout()" class="btn btn-outline-dark block text-center mt-5">
-            Back to home
+            {{ $t('generic.comeBack') }}
           </span>
         </div>
       </div>

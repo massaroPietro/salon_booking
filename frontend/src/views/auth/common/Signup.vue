@@ -60,6 +60,7 @@ import {useToast} from "vue-toastification";
 import axios from "@/plugins/axios";
 import apiEndpoints from "@/constant/apiEndpoints";
 import {useCoreStore} from "@/store/core";
+import formSchemes from "@/constant/formSchemes";
 
 export default {
   name: "SignUp",
@@ -73,15 +74,8 @@ export default {
     const {t} = useI18n();
     const toast = useToast();
     const coreStore = useCoreStore()
-    const FormScheme = yup.object().shape({
-      first_name: yup.string().required(t('generic.requiredField')),
-      last_name: yup.string().required(t('generic.requiredField')),
-      email: yup.string().email(t('errors.notValidEmail')).required(t('generic.requiredField')),
-      password1: yup.string().required(t('generic.requiredField')),
-      password2: yup.string().required(t('generic.requiredField')).test('password-match', t('errors.notMatchPassword'), function (value) {
-        return this.parent.password1 === value;
-      }),
-    });
+
+    const FormScheme = formSchemes.UserRegistrationFormScheme();
 
     const {form, formErrors, validateForm} = initFormState(Object.keys(FormScheme.fields), FormScheme);
 

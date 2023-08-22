@@ -2,7 +2,6 @@
   <button v-if="!hiddenButton" type="button" @click="openModal" class="btn" :class="labelClass">
     {{ label }}
   </button>
-
   <TransitionRoot :show="isOpen" as="template">
     <Dialog
         as="div"
@@ -148,7 +147,7 @@ export default defineComponent({
   props: {
     hiddenButton: {
       type: Boolean,
-      default: true
+      default: false
     },
     closable: {
       type: Boolean,

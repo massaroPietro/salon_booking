@@ -5,6 +5,16 @@ export default {
             notMatchPassword: "Passwords must match",
             genericError: "Generic error",
             serverError: "Server error. Try later.",
+            insertValidHours: "Please enter valid working hours",
+        },
+        weekDays: {
+            1: "Monday",
+            2: "Tuesday",
+            3: "Wednesday",
+            4: "Thursday",
+            5: "Friday",
+            6: "Saturday",
+            7: "Sunday"
         },
         generic: {
             name: "Name",
@@ -18,7 +28,16 @@ export default {
             role: "Role",
             requiredField: "Required field",
             you: "You",
-            noTableDatas: "No data for table"
+            noTableDatas: "No data for table",
+            comeBack: "Come back",
+            workHours: "Work hours",
+            add: "Add",
+            save: "Save",
+            close: "Close",
+            emailNotVerified: "Email not verified",
+            view: "View",
+            delete: "Delete",
+            resendEmail: "Resend email"
         },
         auth: {
             signIn: "Sign in",
@@ -50,27 +69,18 @@ export default {
         },
         toasts: {
             successLogin: "Welcome back to BarberBooking",
+            employeeRegistered: "Employee registered successfully. After verifying the email you can use BarberBooking"
         },
         app: {
-            profile: {
-                myOrganizations: "My organizations",
-                addOrganization: "Add organization",
-                organizationsTable: {
-                    name: "Name",
-                    createdAt: "Created at",
-                    members: "Members",
-                    role: "Role",
-                    action: "Action",
-                    ownerRole: "Owner",
-                    memberRole: "Member",
-                },
-            },
             salons: {
                 addSalon: "Add salon",
                 salonAddedSuccessfully: "Salon added successfully",
                 nameNotAvailable: 'The name "%{name}" is already taken',
                 nameIsAvailableAlert: 'The name "%{name}" is available.<br>This is what the public domain of your salon will look like: http://localhost:5173/%{slug}',
-                salonNamePlaceholder: "Type your salon name"
+                salonNamePlaceholder: "Type your salon name",
+                workHoursUpdated: "working hours on %{weekday} updated correctly",
+                addEmployee: "Add employee",
+                addNewEmployee: "Add new employee",
             },
             header: {
                 search: {
@@ -140,13 +150,32 @@ export default {
             role: "Ruolo",
             requiredField: "Campo obbligatorio",
             you: "Tu",
-            noTableDatas: "Non ci sono dati per la tabella"
+            noTableDatas: "Non ci sono dati per la tabella",
+            comeBack: "Torna indietro",
+            workHours: "Orari di lavoro",
+            add: "Aggiungi",
+            save: "Salva",
+            close: "Chiudi",
+            emailNotVerified: "Email non verificata",
+            view: "Visualizza",
+            delete: "Elimina",
+            resendEmail: "Reinvia email"
         },
         errors: {
             notValidEmail: "Email non valida",
             notMatchPassword: "Le password non coincidono",
             genericError: "Errore generico",
-            serverError: "Errore con il server. Riprova più tardi."
+            serverError: "Errore con il server. Riprova più tardi.",
+            insertValidHours: "Inserisci degli orari di lavoro validi",
+        },
+        weekDays: {
+            1: "Lunedì",
+            2: "Martedì",
+            3: "Mercoledì",
+            4: "Giovedì",
+            5: "Venerdì",
+            6: "Sabato",
+            7: "Domenica"
         },
         auth: {
             signIn: "Accedi",
@@ -178,27 +207,18 @@ export default {
         },
         toasts: {
             successLogin: "Bentornato in BarberBooking",
+            employeeRegistered: "Dipendente registrato correttamente. Dopo la verifica dell'email potrà usare BarberBooking"
         },
         app: {
-            profile: {
-                myOrganizations: "Le mie organizzazioni",
-                addOrganization: "Aggiungi organizzazione",
-                organizationsTable: {
-                    name: "Nome",
-                    createdAt: "Creata il",
-                    members: "Membri",
-                    role: "Ruolo",
-                    action: "Azione",
-                    ownerRole: "Proprietario",
-                    memberRole: "Membro",
-                },
-            },
             salons: {
                 addSalon: "Aggiungi salone",
                 salonAddedSuccessfully: "Salone aggiunto con successo",
                 nameNotAvailable: 'Il nome "%{name}" è già occupato',
                 nameIsAvailableAlert: 'Il nome "%{name}" è disponinile.<br>Ecco come sarà il dominio pubblico del tuo salone: http://localhost:5173/%{slug}',
-                salonNamePlaceholder: "Inserisci il nome del salone"
+                salonNamePlaceholder: "Inserisci il nome del salone",
+                workHoursUpdated: "Orari di lavoro di %{weekday} aggiornati correttamente",
+                addNewEmployee: "Aggiungi nuovo dipendente",
+                addEmployee: "Aggiungi dipendente",
             },
             header: {
                 search: {

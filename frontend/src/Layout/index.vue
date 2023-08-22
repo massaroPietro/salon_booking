@@ -76,7 +76,7 @@ import Button from "@/App.vue";
 export default {
   mixins: [window],
   components: {
-      Button,
+    Button,
     AddFirstSalon,
     Header,
     Footer,
