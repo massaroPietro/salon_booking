@@ -37,16 +37,16 @@
             <span v-if="props.column.field === 'role'">
                                 <span
                                     class="bg-opacity-20 mr-1 capitalize font-normal text-xs leading-4 px-[10px] py-[2px] rounded-full inline-block text-info-500 bg-info-500"
-                                    v-if="isLoggedUser(props.row.user.id)"
+                                    v-if="authStore.isLoggedUser(props.row.user.id)"
                                 >
                     {{ $t('generic.you') }}
                   </span>
                   <span
                       class="bg-opacity-20 capitalize font-normal text-xs leading-4 px-[10px] py-[2px] rounded-full inline-block"
-                      :class="statusClass(props.row.user.id)"
+                      :class="authStore.statusClass(props.row.user.id)"
                   >
                     {{
-                      isOwner(props.row.user.id)
+                      authStore.isOwner(props.row.user.id)
                           ? $t("generic.owner")
                           : $t("generic.employee")
                     }}
@@ -114,8 +114,6 @@
 </template>
 <script>
 import {useAuthStore} from "@/store/auth";
-import apiEndpoints from "@/constant/apiEndpoints";
-import axios from "@/plugins/axios";
 import Card from "@/components/Card";
 import Icon from "@/components/Icon";
 import Tooltip from "@/components/Tooltip";
@@ -124,10 +122,8 @@ import InputGroup from "@/components/InputGroup/index.vue";
 import Textinput from "@/components/Textinput/index.vue";
 import Modal from "@/components/Modal/Modal.vue";
 import Button from "@/components/Button/index.vue";
-import {useCoreStore} from "@/store/core";
 import AddEmployeeModal from "@/components/modals/AddEmployeeModal.vue";
 import addEmployeeModal from "@/components/modals/AddEmployeeModal.vue";
-import {useToast} from "vue-toastification";
 import backendService from "@/utils/backendService";
 
 export default {
@@ -173,35 +169,23 @@ export default {
   },
   setup() {
     const authStore = useAuthStore();
-    const coreStore = useCoreStore();
-    const toast = useToast();
-    return {authStore, coreStore, toast, backendService}
+    return {authStore, backendService}
   },
   created() {
     this.getEmployees();
   },
   methods: {
-    isLoggedUser(id) {
-      return this.authStore.user.id === id;
-    },
-    isOwner(id) {
-      return this.authStore.getCurrentSalon().owner === id;
-    },
-    statusClass(id) {
-      const isOwner = this.isOwner(id);
-      return {
-        "text-success-500 bg-success-500": isOwner,
-        "text-warning-500 bg-warning-500": !isOwner,
-      };
-    },
     getEmployees() {
-      const current_salon = this.authStore.getCurrentSalon();
-      let endpoint = apiEndpoints.salonEmployees(current_salon.slug);
+      const callbacks = {
+        success_callback: (response) => {
+          this.employees = response.data;
+        },
+        finally_callback: () => {
+          this.loading = false;
+        }
+      }
       this.loading = true;
-      axios.get(endpoint).then((response) => {
-        this.employees = response.data;
-        this.loading = false;
-      })
+      backendService.getEmployees(callbacks);
     }
   }
 }

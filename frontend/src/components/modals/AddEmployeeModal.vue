@@ -79,6 +79,7 @@ import formSchemes from "@/constant/formSchemes";
 import apiEndpoints from "@/constant/apiEndpoints";
 import axios from "@/plugins/axios";
 import {useAuthStore} from "@/store/auth";
+import backendService from "@/utils/backendService";
 
 export default {
   name: "AddEmployeeModal",
@@ -103,19 +104,15 @@ export default {
     onSubmit() {
       this.validateForm().then(() => {
         const current_salon_slug = this.authStore.getCurrentSalon().slug
-        const endpoint = apiEndpoints.registerEmployee(current_salon_slug);
-        this.isLoading = true;
-        axios.post(endpoint, this.form).then((response) => {
-          this.$refs.addEmployeeModal.closeModal();
-          this.isLoading = false;
-          this.coreStore.reloadPage();
-          this.toast.success(this.$t("toasts.employeeRegistered"), {
-            timeout: 5000
-          })
-        }).catch((error) => {
-          this.isLoading = false;
-          setBackendResposeErrors(error, this.formErrors)
-        })
+        const callbacks = {
+          success_callback: () => {
+            this.$refs.addEmployeeModal.closeModal();
+          },
+          error_callback: (error) => {
+            setBackendResposeErrors(error, this.formErrors)
+          }
+        }
+        backendService.registerEmployee(current_salon_slug, this.form, callbacks, this.isLoading)
       })
     }
   }

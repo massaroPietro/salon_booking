@@ -71,7 +71,7 @@
             >
               {{ $t('auth.alreadyRegistered') }}
               <router-link
-                  to="/"
+                  :to="{name:'Login'}"
                   class="text-slate-900 dark:text-white font-medium hover:underline"
               >
                 {{ $t('auth.signIn') }}
@@ -92,10 +92,11 @@ import Signup from "../common/Signup";
 import Social from "../common/Social";
 import VerifyEmailComponent from "@/components/VerifyEmailComponent.vue";
 import VerifyEmail from "@/views/auth/verify-email.vue";
+
 export default {
   components: {
-      VerifyEmail,
-      VerifyEmailComponent,
+    VerifyEmail,
+    VerifyEmailComponent,
     Social,
     Signup,
   },

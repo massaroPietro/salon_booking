@@ -2,6 +2,7 @@
 import apiEndpoints from "@/constant/apiEndpoints";
 import axios from "@/plugins/axios";
 import {useToast} from "vue-toastification";
+import backendService from "@/utils/backendService";
 
 export default {
   name: "verify-email",
@@ -23,18 +24,7 @@ export default {
       const pathSegments = this.$route.path.split('/');
       const key = pathSegments[pathSegments.length - 1];
 
-      let endpoint = apiEndpoints.verifyEmail();
-      const data = {
-        key: key,
-      }
-      this.loading = true
-      axios.post(endpoint, data).then(() => {
-        this.toast.success(this.$t('auth.verifyEmailSuccess'));
-        this.$router.push({name: 'Login'})
-      }).catch(() => {
-        this.toast.error(this.$t('auth.verifyEmailError'));
-        this.$router.push({name: 'Login'})
-      })
+      backendService.verifyEmail(key);
     }
   },
 }

@@ -58,6 +58,10 @@
     />
   </main>
   <add-first-salon v-else-if="!this.authStore.user.settings"/>
+<!--  <loading
+      :active="this.authStore.user.settings && !isReady"
+      :can-cancel="false"
+      :is-full-page="true"/>-->
 </template>
 <script>
 import Breadcrumbs from "@/components/Breadcrumbs";
@@ -71,6 +75,7 @@ import FooterMenu from "@/components/Footer/FooterMenu.vue";
 import AddFirstSalon from "@/views/auth/add-first-salon.vue";
 import {useAuthStore} from "@/store/auth";
 import Button from "@/App.vue";
+import Loading from 'vue-loading-overlay';
 
 export default {
   mixins: [window],
@@ -84,6 +89,7 @@ export default {
     Breadcrumbs,
     FooterMenu,
     MobileSidebar,
+    Loading
   },
   setup() {
     const authStore = useAuthStore();

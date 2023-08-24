@@ -3,6 +3,7 @@ import axios from "@/plugins/axios";
 import apiEndpoints from "@/constant/apiEndpoints";
 import router from "@/router";
 import i18n from "@/plugins/i18n";
+import backendService from "@/utils/backendService";
 
 export const useAuthStore = defineStore('authStore', {
     state: () => {
@@ -26,6 +27,21 @@ export const useAuthStore = defineStore('authStore', {
         },
         employeePicBySalon() {
             return this.user.employees.find((employee) => employee.salon === this.user.settings.current_salon).pic || "";
+        },
+        isLoggedUser() {
+            return (id) => this.user.id === id;
+        },
+        isOwner() {
+            return (id) => this.getCurrentSalon().owner === id;
+        },
+        statusClass() {
+            return (id) => {
+                const isOwner = this.isOwner(id);
+                return {
+                    "text-success-500 bg-success-500": isOwner,
+                    "text-warning-500 bg-warning-500": !isOwner,
+                };
+            }
         }
     },
     actions: {
@@ -46,28 +62,11 @@ export const useAuthStore = defineStore('authStore', {
                 localStorage.setItem('token', token)
             }
         },
-        logout() {
-            let endpoint = apiEndpoints.logout();
-            axios.post(endpoint).then(() => {
-                router.push({name: "Login"})
-                const store = useAuthStore();
-                store.removeToken();
-                const lang = navigator.language.substring(0, 2);
-                axios.defaults.headers['Accept-Language'] = lang
-                i18n.locale = lang;
-            })
-        },
         removeToken() {
             this.token = "";
             this.isAuthenticated = false
             axios.defaults.headers['Authorization'] = null;
             localStorage.removeItem('token')
-        },
-        getUser() {
-            let endpoint = apiEndpoints.dashboardUser();
-            axios.get(endpoint).then((response) => {
-                this.user = response.data;
-            })
         },
         getCurrentSalon() {
             return this.user.salons.find((salon) => salon.id === this.user.settings.current_salon);

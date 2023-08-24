@@ -74,6 +74,8 @@ import axios from "@/plugins/axios";
 import {useToast} from "vue-toastification";
 import Alert from "@/components/Alert/index.vue";
 import emitter from "@/plugins/mitt";
+import backendService from "@/utils/backendService";
+
 export default {
   name: "WorkHoursFormRepeaterComponent",
   components: {Alert, Button, Card, Icon, Textinput},
@@ -122,22 +124,23 @@ export default {
       this.workDay.work_ranges.push(workHours);
     },
     onSubmit() {
-      const endpoint = apiEndpoints.workDay(this.workDay.id);
-      axios.put(endpoint, this.workDay).then((response) => {
-        this.setInitWorkDay();
-        this.toast.success(this.$t('app.salons.workHoursUpdated', {weekday: this.$t('weekDays.' + this.workDay.weekday)}))
-      }).catch((err) => {
-        console.log(err)
-      })
+      const callbacks = {
+        success_callback: () => {
+          this.setInitWorkDay();
+          this.toast.success(this.$t('app.salons.workHoursUpdated', {weekday: this.$t('weekDays.' + this.workDay.weekday)}))
+        }
+      }
+
+      backendService.updateWorkDay(this.workDay.id, this.workDay, callbacks);
     },
     setInitWorkDay() {
       this.initWorkDay = JSON.parse(JSON.stringify(this.workDay));
     },
   },
   computed: {
-      emitter() {
-          return emitter
-      },
+    emitter() {
+      return emitter
+    },
     workRangesAreCompatible() {
       let valid = true;
       this.workDay.work_ranges.forEach((workRange) => {

@@ -37,9 +37,12 @@ import Button from "@/components/Button/index.vue";
 import Alert from "@/components/Alert/index.vue";
 import apiEndpoints from "@/constant/apiEndpoints";
 import i18n from "@/plugins/i18n";
-const { t } = i18n.global;
+
+const {t} = i18n.global;
 import {initFormState, setBackendResposeErrors} from "@/utils/utils";
 import {useCoreStore} from "@/store/core";
+import backendService from "@/utils/backendService";
+import formSchemes from "@/constant/formSchemes";
 
 export default {
   name: "AddSalonFormComponent",
@@ -54,11 +57,7 @@ export default {
     const authStore = useAuthStore();
     const coreStore = useCoreStore();
 
-    const FormScheme = yup.object().shape({
-      name: yup
-          .string()
-          .required(t('generic.requiredField')),
-    });
+    const FormScheme = formSchemes.addNewSalon()
 
     const {form, formErrors, validateForm} = initFormState(Object.keys(FormScheme.fields), FormScheme);
 
@@ -79,43 +78,43 @@ export default {
   },
   methods: {
     async checkSalonNameExists() {
-      this.isLoading = false;
+      const callbacks = {
+        success_callback: (response) => {
+          this.salonExistResponse = response.data;
+        },
+        finally_callback: () => {
+          this.isLoading = false;
+        }
+      }
+
       clearTimeout(this.debounceTimeout);
       this.debounceTimeout = setTimeout(async () => {
         this.isLoading = true;
-        try {
-          const response = await axios.post(apiEndpoints.checkSalonExists(), {name: this.form.name});
-          this.salonExistResponse = response.data;
-        } catch (error) {
-          console.error(error);
-        }
-        this.isLoading = false;
+        backendService.checkSalonExists(this.form.name, callbacks)
       }, 600);
     },
     onSubmit() {
       this.validateForm().then(() => {
-        let endpoint = apiEndpoints.salons();
+        const callbacks = {
+          success_callback: (response) => {
+            this.$emit('salonAdded');
 
-        this.isLoading = true;
-        axios.post(endpoint, this.form)
-            .then((response) => {
-              this.$emit('salonAdded');
-              this.isLoading = false;
+            try {
+              this.authStore.user.salons.push(response.data);
+            } catch (e) {
+              this.coreStore.reloadPage();
+            }
 
-              try {
-                this.authStore.user.salons.push(response.data);
-              } catch (e) {
-                this.coreStore.reloadPage();
-              }
+            this.toast.success(this.$t("app.salons.salonAddedSuccessfully"), {
+              timeout: 2000
+            });
+          },
+          error_callback: (error) => {
+            setBackendResposeErrors(error, this.formErrors)
+          }
+        }
 
-              this.toast.success(this.$t("app.salons.salonAddedSuccessfully"), {
-                timeout: 2000
-              });
-            }).catch((error) => {
-
-          this.isLoading = false;
-          setBackendResposeErrors(error, this.formErrors)
-        })
+        backendService.addNewSalon(this.form, callbacks, this.isLoading)
       })
     },
   },

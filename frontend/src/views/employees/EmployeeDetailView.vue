@@ -132,28 +132,31 @@ export default {
   },
   methods: {
     sendVerificationEmail(email) {
-          this.resendVerificationEmailLoading = true;
-          const callbacks = {
-              finally_callback: () => {
-                  this.resendVerificationEmailLoading = false;
-              }
-          }
-          backendService.resendVerificationEmail(email, callbacks)
+      this.resendVerificationEmailLoading = true;
+      const callbacks = {
+        finally_callback: () => {
+          this.resendVerificationEmailLoading = false;
+        }
+      }
+      backendService.resendVerificationEmail(email, callbacks)
     },
     getEmployee() {
-      let endpoint = apiEndpoints.employee(this.employeeID);
       let loader = this.$loading.show();
-      axios.get(endpoint).then((response) => {
-        loader.hide();
-        if (response.data.salon !== this.authStore.getCurrentSalon().id) {
-          emitter.emit('changeSalon', response.data.salon)
-        } else {
-          this.employee = response.data;
-        }
-      }).catch((err) => {
-        console.log(err);
-        loader.hide()
-      })
+
+      const callbacks = {
+        success_callback: (response) => {
+          if (response.data.salon !== this.authStore.getCurrentSalon().id) {
+            emitter.emit('changeSalon', response.data.salon)
+          } else {
+            this.employee = response.data;
+          }
+        },
+        finally_callback: () => {
+          loader.hide()
+        },
+      }
+
+      backendService.getEmployee(this.employeeID, callbacks)
     }
   }
 };

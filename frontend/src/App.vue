@@ -12,6 +12,7 @@ import Modal from "@/components/Modal/Modal.vue";
 import Success from "@/views/auth/success.vue";
 import AddFirstSalon from "@/views/auth/add-first-salon.vue";
 import {useCoreStore} from "@/store/core";
+import backendService from "@/utils/backendService";
 
 export default {
   name: "App",
@@ -30,7 +31,7 @@ export default {
     const token = this.authStore.token;
     if (token) {
       axios.defaults.headers.common['Authorization'] = 'Token ' + token
-      this.authStore.getUser();
+      backendService.getDashboardUser();
     } else {
       axios.defaults.headers.common['Authorization'] = ''
     }

@@ -22,12 +22,12 @@ import vue3GoogleLogin from 'vue3-google-login'
 import {LoadingPlugin} from 'vue-loading-overlay';
 import 'vue-loading-overlay/dist/css/index.css';
 import i18n from "@/plugins/i18n";
-import toast from "@/plugins/toasts";
+import Toast from "vue-toastification";
 // vue use
 const app = createApp(App)
     .use(pinia)
     .use(VueSweetalert2)
-    .use(toast, {
+    .use(Toast, {
         toastClassName: "dashcode-toast",
         bodyClassName: "dashcode-toast-body",
     })

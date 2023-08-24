@@ -20,11 +20,9 @@ axios.interceptors.request.use(
 
 axios.interceptors.response.use(
     response => {
-        console.log(response)
         return response;
     },
     error => {
-        const toast = useToast()
         if (error.response) {
             if (error.response.status === 404) {
                 router.push('/');

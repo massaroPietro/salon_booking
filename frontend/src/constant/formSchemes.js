@@ -1,5 +1,6 @@
 import * as yup from "yup";
 import i18n from "@/plugins/i18n";
+
 const {t} = i18n.global
 
 const FormSchemes = {
@@ -18,6 +19,13 @@ const FormSchemes = {
         return yup.object().shape({
             email: yup.string().email(t('errors.notValidEmail')).required(t('generic.requiredField')),
             password: yup
+                .string()
+                .required(t('generic.requiredField')),
+        });
+    },
+    addNewSalon: () => {
+        return yup.object().shape({
+            name: yup
                 .string()
                 .required(t('generic.requiredField')),
         });

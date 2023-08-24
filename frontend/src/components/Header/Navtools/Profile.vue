@@ -53,6 +53,7 @@ import profileImg from "@/assets/images/all-img/user.png"
 import {useAuthStore} from "@/store/auth";
 import axios from "@/plugins/axios";
 import apiEndpoints from "@/constant/apiEndpoints";
+import backendService from "@/utils/backendService";
 
 export default {
   components: {
@@ -122,8 +123,7 @@ export default {
           label: "Logout",
           icon: "heroicons-outline:login",
           link: () => {
-            const authStore = useAuthStore();
-            authStore.logout();
+            backendService.logout()
           },
         },
       ],

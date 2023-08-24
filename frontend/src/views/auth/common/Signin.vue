@@ -61,12 +61,9 @@
 </template>
 <script>
 import Textinput from "@/components/Textinput";
-import {useToast} from "vue-toastification";
 import {useAuthStore} from "@/store/auth";
-import axios from "@/plugins/axios";
 import Button from "@/components/Button/index.vue";
 import Alert from "@/components/Alert/index.vue";
-import apiEndpoints from "@/constant/apiEndpoints";
 import {initFormState, setBackendResposeErrors} from "@/utils/utils";
 import formSchemes from "@/constant/formSchemes";
 import backendService from "@/utils/backendService";
@@ -79,13 +76,12 @@ export default {
     Textinput,
   },
   setup() {
-    const toast = useToast();
 
     const FormScheme = formSchemes.userLoginFormScheme();
 
     const {form, formErrors, validateForm} = initFormState(Object.keys(FormScheme.fields), FormScheme);
 
-    return {toast, FormScheme, form, formErrors, validateForm};
+    return {FormScheme, form, formErrors, validateForm};
   },
   data() {
     return {
@@ -96,18 +92,17 @@ export default {
   methods: {
     onSubmit() {
       this.validateForm().then(() => {
-        let endpoint = apiEndpoints.login();
-
         const callbacks = {
           error_callback: (error) => {
             setBackendResposeErrors(error, this.formErrors)
           },
           finally_callback: () => {
             this.isLoading = false;
-          }
+          },
         }
 
-        backendService.loginUser(this.form, callbacks)
+        this.isLoading = true;
+        backendService.loginUser(this.form, callbacks, this.checkbox)
       })
     },
   },

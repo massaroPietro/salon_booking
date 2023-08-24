@@ -42,6 +42,7 @@ import Button from "@/components/Button/index.vue";
 import apiEndpoints from "@/constant/apiEndpoints";
 import axios from "@/plugins/axios";
 import {useToast} from "vue-toastification";
+import backendService from "@/utils/backendService";
 
 export default {
   name: "VerifyEmailComponent",
@@ -51,11 +52,6 @@ export default {
       isLoading: false,
     }
   },
-  setup() {
-    const toast = useToast()
-
-    return {toast};
-  },
   props: {
     email: {
       required: true,
@@ -64,15 +60,13 @@ export default {
   },
   methods: {
     resendEmail() {
-      const endpoint = apiEndpoints.resendEmail();
-      const data = {
-        email: this.email
+      this.isLoading = true;
+      const callbacks = {
+        finally_callback: () => {
+          this.isLoading = false;
+        }
       }
-      this.isLoading = true
-
-      axios.post(endpoint, data).then(() => {
-        this.isLoading = false
-      });
+      backendService.resendVerificationEmail(this.email, callbacks)
     }
   }
 };

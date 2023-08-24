@@ -76,6 +76,7 @@ import router from "@/router";
 import {getCurrentInstance} from "vue";
 import {useCoreStore} from "@/store/core";
 import emitter from "@/plugins/mitt";
+import backendService from "@/utils/backendService";
 
 export default {
   name: "Salons",
@@ -109,11 +110,7 @@ export default {
           this.selectedSalon = tmpSalon;
           this.authStore.user.settings.current_salon = salon_id
           if (saveOnDB) {
-            let endpoint = apiEndpoints.userSettings();
-            const data = {
-              current_salon: salon_id
-            }
-            axios.patch(endpoint, data);
+            backendService.changeSalon(salon_id);
             if (!this.authStore.isCurrentSalonOwner()) {
               router.push({name: 'home'}).then(() => {
                 this.coreStore.reloadPage();

@@ -30,9 +30,9 @@
             veniam consequat sunt nostrud amet.
           </div>
 
-            <AddSalonFormComponent @salon-added="authStore.getUser()"/>
+            <AddSalonFormComponent @salon-added="backendService.getDashboardUser()"/>
 
-          <span @click="authStore.logout()" class="btn btn-outline-dark block text-center mt-5">
+          <span @click="backendService.logout()" class="btn btn-outline-dark block text-center mt-5">
             {{ $t('generic.comeBack') }}
           </span>
         </div>
@@ -45,9 +45,15 @@ import {useAuthStore} from "@/store/auth";
 import Alert from "@/components/Alert/index.vue";
 import SignIn from "@/views/auth/common/Signin.vue";
 import AddSalonFormComponent from "@/components/commons/salons/AddSalonFormComponent.vue";
+import backendService from "@/utils/backendService";
 
 export default {
   name: "addFirstSalon",
+    computed: {
+        backendService() {
+            return backendService
+        }
+    },
   components: {AddSalonFormComponent, SignIn, Alert},
   data() {
     return {

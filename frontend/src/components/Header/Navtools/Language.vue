@@ -71,8 +71,9 @@ import {Listbox, ListboxButton, ListboxOption, ListboxOptions} from "@headlessui
 import {useAuthStore} from "@/store/auth";
 import axios from "@/plugins/axios";
 import apiEndpoints from '@/constant/apiEndpoints.js';
-import route from "@/router/route";
-import router from "@/router";
+import it from "@/assets/images/flags/it.png";
+import en from "@/assets/images/flags/en.svg";
+import backendService from "@/utils/backendService";
 
 export default {
   name: "Language",
@@ -86,8 +87,8 @@ export default {
     const store = useAuthStore();
 
     const languages = [
-      {name: "En", image: "/src/assets/images/flags/usa.png", locale: "en"},
-      {name: "It", image: "/src/assets/images/flags/it.png", locale: "it"},
+      {name: "En", image: en, locale: "en"},
+      {name: "It", image: it, locale: "it"},
     ];
 
     return {store, languages};
@@ -108,11 +109,7 @@ export default {
       axios.defaults.headers.common["Accept-Language"] = language;
 
       if (saveOnDB) {
-        let endpoint = apiEndpoints.userSettings();
-        const data = {
-          lang: language
-        }
-        axios.patch(endpoint, data);
+          backendService.changeLanguage(language)
       }
     }
   }
