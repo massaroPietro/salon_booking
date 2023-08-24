@@ -70,7 +70,6 @@ import MobileSidebar from "@/components/Sidebar/MobileSidebar.vue";
 import FooterMenu from "@/components/Footer/FooterMenu.vue";
 import AddFirstSalon from "@/views/auth/add-first-salon.vue";
 import {useAuthStore} from "@/store/auth";
-import {getCurrentInstance, watch} from "vue";
 import Button from "@/App.vue";
 
 export default {

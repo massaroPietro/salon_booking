@@ -3,7 +3,7 @@
       centered
       :title="$t('app.salons.addNewEmployee')"
       :label="$t('app.salons.addEmployee')"
-      :label-class="[coreStore.onMobile ? 'w-full' : '', 'btn-dark']"
+      :label-class="'btn-dark'"
       ref="addEmployeeModal"
   >
     <div class="text-base text-slate-600 dark:text-slate-300">
@@ -74,8 +74,6 @@ import Modal from "@/components/Modal/Modal.vue";
 import Button from "@/components/Button/index.vue";
 import {useCoreStore} from "@/store/core";
 import {useToast} from "vue-toastification";
-import {useI18n} from "vue-i18n";
-import * as yup from "yup";
 import {initFormState, setBackendResposeErrors} from "@/utils/utils";
 import formSchemes from "@/constant/formSchemes";
 import apiEndpoints from "@/constant/apiEndpoints";
@@ -95,7 +93,7 @@ export default {
     const authStore = useAuthStore();
     const toast = useToast();
 
-    const FormScheme = formSchemes.UserRegistrationFormScheme();
+    const FormScheme = formSchemes.userRegistrationFormScheme();
 
     const {form, formErrors, validateForm} = initFormState(Object.keys(FormScheme.fields), FormScheme);
 
@@ -111,7 +109,7 @@ export default {
           this.$refs.addEmployeeModal.closeModal();
           this.isLoading = false;
           this.coreStore.reloadPage();
-          this.toast.success("toast.employeeRegistered", {
+          this.toast.success(this.$t("toasts.employeeRegistered"), {
             timeout: 5000
           })
         }).catch((error) => {

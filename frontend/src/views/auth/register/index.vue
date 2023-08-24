@@ -1,5 +1,5 @@
 <template>
-  <success v-if="registered" :email="email"/>
+  <verify-email-component v-if="registered" :email="email"/>
   <div class="loginwrapper" v-else>
     <div class="lg-inner-column">
       <div class="left-column relative z-[1]">
@@ -55,10 +55,10 @@
             </div>
             <Signup @email-sent="registerCompleted"/>
             <div
-                className=" relative border-b-[#9AA2AF] border-opacity-[16%] border-b pt-6"
+                class=" relative border-b-[#9AA2AF] border-opacity-[16%] border-b pt-6"
             >
               <div
-                  className=" absolute inline-block  bg-white dark:bg-slate-800 left-1/2 top-1/2 transform -translate-x-1/2 px-4 min-w-max text-sm  text-slate-500  dark:text-slate-400font-normal "
+                  class=" absolute inline-block  bg-white dark:bg-slate-800 left-1/2 top-1/2 transform -translate-x-1/2 px-4 min-w-max text-sm  text-slate-500  dark:text-slate-400font-normal "
               >
                 {{ $t('auth.orContinueWith') }}
               </div>
@@ -90,11 +90,12 @@
 <script>
 import Signup from "../common/Signup";
 import Social from "../common/Social";
-import Success from "@/views/auth/register/success.vue";
-
+import VerifyEmailComponent from "@/components/VerifyEmailComponent.vue";
+import VerifyEmail from "@/views/auth/verify-email.vue";
 export default {
   components: {
-    Success,
+      VerifyEmail,
+      VerifyEmailComponent,
     Social,
     Signup,
   },

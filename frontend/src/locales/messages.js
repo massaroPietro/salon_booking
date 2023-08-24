@@ -37,7 +37,9 @@ export default {
             emailNotVerified: "Email not verified",
             view: "View",
             delete: "Delete",
-            resendEmail: "Resend email"
+            resendEmail: "Resend email",
+            verificationEmailSent: "Confirmation email sent successfully",
+            create: "Create"
         },
         auth: {
             signIn: "Sign in",
@@ -159,7 +161,9 @@ export default {
             emailNotVerified: "Email non verificata",
             view: "Visualizza",
             delete: "Elimina",
-            resendEmail: "Reinvia email"
+            resendEmail: "Reinvia email",
+            verificationEmailSent: "Email di verifica inviata correttamente",
+            create: "Crea"
         },
         errors: {
             notValidEmail: "Email non valida",

@@ -1,15 +1,14 @@
 import axios from 'axios';
 import router from '@/router';
-import {useCoreStore} from "@/store/core";
 import {useAuthStore} from "@/store/auth";
 import {useToast} from "vue-toastification";
-import {useI18n} from "vue-i18n";
+
+let lang = navigator.language.substring(0, 2);
 
 axios.defaults.xsrfHeaderName = 'X-CSRFToken'
 axios.defaults.xsrfCookieName = 'csrftoken'
 axios.defaults.baseURL = 'http://127.0.0.1:8000/api'
-
-
+axios.defaults.headers.common["Accept-Language"] = lang;
 axios.interceptors.request.use(
     config => {
         return config;

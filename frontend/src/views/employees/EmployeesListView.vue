@@ -53,7 +53,7 @@
                   </span>
                     <span
                         class="bg-opacity-20 mr-1 capitalize font-normal text-xs leading-4 px-[10px] py-[2px] rounded-full inline-block text-danger-500 bg-danger-500"
-                        v-if="!props.row.user.email_verified"
+                        v-if="!props.row.email_verified"
                     >
                     {{ $t('generic.emailNotVerified') }}
                   </span>
@@ -72,7 +72,7 @@
                       <span>{{ $t('generic.view') }}</span>
                     </Tooltip>
                     <Tooltip placement="top" arrow theme="danger-500"
-                             v-if="!(authStore.getCurrentSalon().owner === props.row.user.id) && props.row.user.email_verified">
+                             v-if="!(authStore.getCurrentSalon().owner === props.row.user.id) && props.row.email_verified">
                       <template #button>
                         <div class="action-btn">
                           <Icon icon="heroicons:trash"/>
@@ -81,9 +81,9 @@
                       <span>{{ $t('generic.delete') }}</span>
                     </Tooltip>
                       <Tooltip placement="top" arrow theme="success-500"
-                               v-if="!(authStore.getCurrentSalon().owner === props.row.user.id) && !props.row.user.email_verified">
+                               v-if="!(authStore.getCurrentSalon().owner === props.row.user.id) && !props.row.email_verified">
                       <template #button>
-                        <div class="action-btn">
+                        <div class="action-btn" @click="backendService.resendVerificationEmail(props.row.user.email)">
                           <Icon icon="heroicons:at-symbol"/>
                         </div>
                       </template>
@@ -120,7 +120,6 @@ import Card from "@/components/Card";
 import Icon from "@/components/Icon";
 import Tooltip from "@/components/Tooltip";
 import Pagination from "@/components/Pagination";
-import router from "@/router";
 import InputGroup from "@/components/InputGroup/index.vue";
 import Textinput from "@/components/Textinput/index.vue";
 import Modal from "@/components/Modal/Modal.vue";
@@ -128,6 +127,8 @@ import Button from "@/components/Button/index.vue";
 import {useCoreStore} from "@/store/core";
 import AddEmployeeModal from "@/components/modals/AddEmployeeModal.vue";
 import addEmployeeModal from "@/components/modals/AddEmployeeModal.vue";
+import {useToast} from "vue-toastification";
+import backendService from "@/utils/backendService";
 
 export default {
   name: "EmployeesListView",
@@ -173,15 +174,13 @@ export default {
   setup() {
     const authStore = useAuthStore();
     const coreStore = useCoreStore();
-    return {authStore, coreStore}
+    const toast = useToast();
+    return {authStore, coreStore, toast, backendService}
   },
   created() {
     this.getEmployees();
   },
   methods: {
-    router() {
-      return router
-    },
     isLoggedUser(id) {
       return this.authStore.user.id === id;
     },

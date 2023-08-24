@@ -1,5 +1,6 @@
 import sys
 
+from allauth.account.models import EmailAddress
 from django.db import transaction
 
 from ..models import *
@@ -11,6 +12,7 @@ from ...core.api.serializers import WithoutSecondsTimeField
 
 class EmployeeSerializer(serializers.ModelSerializer):
     user = serializers.SerializerMethodField(read_only=True)
+    email_verified = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
         model = Employee
@@ -20,11 +22,16 @@ class EmployeeSerializer(serializers.ModelSerializer):
         from salon_booking.users.api.serializers import UserSerializer
         return UserSerializer(instance.user).data
 
+    def get_email_verified(self, instance):
+        try:
+            email_address = EmailAddress.objects.get(user=instance.user, primary=True)
+
+            return email_address.verified
+        except EmailAddress.DoesNotExist:
+            return False
+
 
 class EmployeeWorkRangeSerializer(serializers.ModelSerializer):
-    from_hour = WithoutSecondsTimeField()
-    to_hour = WithoutSecondsTimeField()
-
     class Meta:
         model = EmployeeWorkRange
         fields = "__all__"

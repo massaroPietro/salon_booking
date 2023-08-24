@@ -61,6 +61,7 @@ import axios from "@/plugins/axios";
 import apiEndpoints from "@/constant/apiEndpoints";
 import {useCoreStore} from "@/store/core";
 import formSchemes from "@/constant/formSchemes";
+import backendService from "@/utils/backendService";
 
 export default {
   name: "SignUp",
@@ -71,15 +72,14 @@ export default {
     Textinput,
   },
   setup() {
-    const {t} = useI18n();
     const toast = useToast();
     const coreStore = useCoreStore()
 
-    const FormScheme = formSchemes.UserRegistrationFormScheme();
+    const FormScheme = formSchemes.userRegistrationFormScheme();
 
     const {form, formErrors, validateForm} = initFormState(Object.keys(FormScheme.fields), FormScheme);
 
-    return {form, formErrors, t, validateForm, toast, coreStore};
+    return {form, formErrors, validateForm, toast, coreStore};
   },
   data() {
     return {
@@ -96,15 +96,21 @@ export default {
             timeout: 2000
           })
         } else {
-          const endpoint = apiEndpoints.register();
+
+          const callbacks = {
+            success_callback: () => {
+              this.$emit('emailSent', this.form.email)
+            },
+            error_callback: (error) => {
+              setBackendResposeErrors(error, this.formErrors)
+            },
+            finally_callback: () => {
+              this.isLoading = false;
+            },
+          }
+
           this.isLoading = true;
-          axios.post(endpoint, this.form).then(() => {
-            this.isLoading = false;
-            this.$emit('emailSent', this.form.email)
-          }).catch((error) => {
-            this.isLoading = false;
-            setBackendResposeErrors(error, this.formErrors)
-          })
+          backendService.registerUser(this.form, callbacks);
         }
       })
     },

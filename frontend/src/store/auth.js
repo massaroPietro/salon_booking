@@ -2,7 +2,7 @@ import {defineStore} from "pinia";
 import axios from "@/plugins/axios";
 import apiEndpoints from "@/constant/apiEndpoints";
 import router from "@/router";
-import i18n from "@/main"
+import i18n from "@/plugins/i18n";
 
 export const useAuthStore = defineStore('authStore', {
     state: () => {

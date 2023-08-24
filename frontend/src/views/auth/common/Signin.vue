@@ -61,15 +61,15 @@
 </template>
 <script>
 import Textinput from "@/components/Textinput";
-import * as yup from "yup";
 import {useToast} from "vue-toastification";
 import {useAuthStore} from "@/store/auth";
 import axios from "@/plugins/axios";
 import Button from "@/components/Button/index.vue";
 import Alert from "@/components/Alert/index.vue";
 import apiEndpoints from "@/constant/apiEndpoints";
-import {useI18n} from "vue-i18n";
 import {initFormState, setBackendResposeErrors} from "@/utils/utils";
+import formSchemes from "@/constant/formSchemes";
+import backendService from "@/utils/backendService";
 
 export default {
   name: "SignIn",
@@ -81,14 +81,7 @@ export default {
   setup() {
     const toast = useToast();
 
-    const {t} = useI18n();
-
-    const FormScheme = yup.object().shape({
-      email: yup.string().email(t('errors.notValidEmail')).required(t('generic.requiredField')),
-      password: yup
-          .string()
-          .required(t('generic.requiredField')),
-    });
+    const FormScheme = formSchemes.userLoginFormScheme();
 
     const {form, formErrors, validateForm} = initFormState(Object.keys(FormScheme.fields), FormScheme);
 
@@ -101,50 +94,20 @@ export default {
     };
   },
   methods: {
-    isEmail(email) {
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      return emailRegex.test(email);
-    },
     onSubmit() {
       this.validateForm().then(() => {
         let endpoint = apiEndpoints.login();
-        let data = {};
 
-        if (!this.isEmail(this.form.username)) {
-          data = {
-            password: this.form.password,
-            username: this.form.username
+        const callbacks = {
+          error_callback: (error) => {
+            setBackendResposeErrors(error, this.formErrors)
+          },
+          finally_callback: () => {
+            this.isLoading = false;
           }
-        } else {
-          data = this.form;
         }
 
-        this.isLoading = true;
-        axios.post(endpoint, this.form)
-            .then((response) => {
-              this.isLoading = false;
-              const token = response.data.key;
-              const store = useAuthStore();
-
-              store.setToken(token, this.checkbox);
-              store.user = response.data.user;
-
-              if(response.data.user.settings){
-                this.$i18n.locale = response.data.user.settings.lang;
-              }
-
-              const toPath = this.$route.query.to || '/'
-              this.$router.push(toPath)
-
-
-              this.toast.success(this.$t("toasts.successLogin"), {
-                timeout: 2000
-              });
-            }).catch((error) => {
-
-          this.isLoading = false;
-          setBackendResposeErrors(error, this.formErrors)
-        })
+        backendService.loginUser(this.form, callbacks)
       })
     },
   },

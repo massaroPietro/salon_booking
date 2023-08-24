@@ -1,10 +1,9 @@
 import * as yup from "yup";
-import {useI18n} from "vue-i18n";
-
+import i18n from "@/plugins/i18n";
+const {t} = i18n.global
 
 const FormSchemes = {
-    UserRegistrationFormScheme: () => {
-        const {t} = useI18n();
+    userRegistrationFormScheme: () => {
         return yup.object().shape({
             first_name: yup.string().required(t('generic.requiredField')),
             last_name: yup.string().required(t('generic.requiredField')),
@@ -15,6 +14,14 @@ const FormSchemes = {
             }),
         });
     },
+    userLoginFormScheme: () => {
+        return yup.object().shape({
+            email: yup.string().email(t('errors.notValidEmail')).required(t('generic.requiredField')),
+            password: yup
+                .string()
+                .required(t('generic.requiredField')),
+        });
+    }
 }
 
 export default FormSchemes;

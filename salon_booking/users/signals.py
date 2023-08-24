@@ -1,6 +1,7 @@
 import os
 
 import requests
+from allauth.account.models import EmailAddress
 from allauth.socialaccount.models import SocialAccount
 from django.contrib.auth import get_user_model
 from django.core.files.base import ContentFile
@@ -25,6 +26,9 @@ def merge_social_accounts(sender, request, sociallogin, **kwargs):
             return
 
         if existing_user != sociallogin.user:
+            email = EmailAddress.objects.get(user=existing_user)
+            email.verified = True
+            email.save()
             sociallogin.connect(request, existing_user)
 
     except SocialAccount.DoesNotExist:

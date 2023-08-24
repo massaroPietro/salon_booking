@@ -25,23 +25,14 @@ class UserSettingsSerializer(serializers.ModelSerializer):
 
 class UserSerializer(serializers.ModelSerializer):
     full_name = serializers.SerializerMethodField(read_only=True)
-    email_verified = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
         model = User
-        fields = ["id", "username", "first_name", "last_name", "email", 'full_name', 'email_verified']
+        fields = ["id", "username", "first_name", "last_name", "email", 'full_name']
         read_only_fields = ('username', "email")
 
     def get_full_name(self, instance):
         return instance.first_name + " " + instance.last_name
-
-    def get_email_verified(self, instance):
-        try:
-            email_address = EmailAddress.objects.get(user=instance, primary=True)
-
-            return email_address.verified
-        except EmailAddress.DoesNotExist:
-            return False
 
 
 class UserRegistrationSerializer(RegisterSerializer):
@@ -69,7 +60,7 @@ class CustomTokenSerializer(TokenSerializer):
 
     def get_user(self, instance):
         if Employee.objects.filter(user=instance.user).exists():
-            return DashboardUserSerializer(instance.user).data
+            return DashboardUserSerializer(instance.user, context=self.context).data
         else:
             return UserSerializer(instance.user).data
 

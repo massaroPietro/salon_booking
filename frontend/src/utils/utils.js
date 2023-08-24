@@ -1,4 +1,5 @@
 import {reactive} from "vue";
+
 export function initFormState(fields, validationSchema) {
     const form = reactive({});
     const formErrors = reactive({});
@@ -46,3 +47,4 @@ export function setBackendResposeErrors(err, formErrors) {
         }
     }
 }
+

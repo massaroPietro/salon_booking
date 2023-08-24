@@ -31,51 +31,24 @@
             >
               {{ employee.user.full_name }}
             </div>
-            <div class="text-sm font-light text-slate-600 dark:text-slate-400">
-              Front End Developer
-            </div>
+
+            <span
+                class="bg-opacity-20 mr-1 capitalize font-normal text-xs leading-4 px-[10px] py-[2px] rounded-full inline-block text-info-500 bg-info-500"
+                v-if="employee.user.id === authStore.user.id"
+            >
+                    {{ $t('generic.you') }}
+                  </span>
+
+            <span
+                class="bg-opacity-20 mr-1 capitalize font-normal text-xs leading-4 px-[10px] py-[2px] rounded-full inline-block text-danger-500 bg-danger-500"
+                v-if="!employee.email_verified"
+            >
+                    {{ $t('generic.emailNotVerified') }}
+                  </span>
+
           </div>
         </div>
       </div>
-      <!-- end profile box -->
-      <!--      <div
-                class="profile-info-500 md:flex md:text-start text-center flex-1 max-w-[516px] md:space-y-0 space-y-4"
-            >
-              <div class="flex-1">
-                <div
-                    class="text-base text-slate-900 dark:text-slate-300 font-medium mb-1"
-                >
-                  $32,400
-                </div>
-                <div class="text-sm text-slate-600 font-light dark:text-slate-300">
-                  Total Balance
-                </div>
-              </div>
-              &lt;!&ndash; end single &ndash;&gt;
-              <div class="flex-1">
-                <div
-                    class="text-base text-slate-900 dark:text-slate-300 font-medium mb-1"
-                >
-                  200
-                </div>
-                <div class="text-sm text-slate-600 font-light dark:text-slate-300">
-                  Board Card
-                </div>
-              </div>
-              &lt;!&ndash; end single &ndash;&gt;
-              <div class="flex-1">
-                <div
-                    class="text-base text-slate-900 dark:text-slate-300 font-medium mb-1"
-                >
-                  3200
-                </div>
-                <div class="text-sm text-slate-600 font-light dark:text-slate-300">
-                  Calender Events
-                </div>
-              </div>
-              &lt;!&ndash; end single &ndash;&gt;
-            </div>-->
-      <!-- profile info-500 -->
     </div>
     <div class="grid grid-cols-12 gap-6">
       <div class="lg:col-span-5 col-span-12">
@@ -100,6 +73,12 @@
                   {{ employee.user.email }}
                 </a>
               </div>
+              <Button
+                  v-if="!employee.email_verified"
+                  @click="sendVerificationEmail(employee.user.email)"
+                  :text="$t('generic.resendEmail')"
+                  btnClass="btn-success"
+              />
             </li>
           </ul>
         </Card>
@@ -120,10 +99,13 @@ import apiEndpoints from "@/constant/apiEndpoints";
 import axios from "@/plugins/axios";
 import WorkDaysTabsComponent from "@/components/WorkDaysTabsComponent.vue";
 import emitter from "@/plugins/mitt";
+import Button from "@/components/Button/index.vue";
+import backendService from "@/utils/backendService";
 
 export default {
   name: "EmployeeDetailView",
   components: {
+    Button,
     WorkDaysTabsComponent,
     Card,
     Icon,
@@ -132,6 +114,7 @@ export default {
     return {
       employee: null,
       loading: false,
+      resendVerificationEmailLoading: false
     };
   },
   setup() {
@@ -148,19 +131,28 @@ export default {
     this.getEmployee()
   },
   methods: {
+    sendVerificationEmail(email) {
+          this.resendVerificationEmailLoading = true;
+          const callbacks = {
+              finally_callback: () => {
+                  this.resendVerificationEmailLoading = false;
+              }
+          }
+          backendService.resendVerificationEmail(email, callbacks)
+    },
     getEmployee() {
       let endpoint = apiEndpoints.employee(this.employeeID);
       let loader = this.$loading.show();
       axios.get(endpoint).then((response) => {
         loader.hide();
         if (response.data.salon !== this.authStore.getCurrentSalon().id) {
-            emitter.emit('changeSalon', response.data.salon)
+          emitter.emit('changeSalon', response.data.salon)
         } else {
           this.employee = response.data;
         }
       }).catch((err) => {
-          console.log(err);
-          loader.hide()
+        console.log(err);
+        loader.hide()
       })
     }
   }

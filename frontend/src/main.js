@@ -8,7 +8,6 @@ import VueGoodTablePlugin from "vue-good-table-next";
 import "vue-good-table-next/dist/vue-good-table-next.css";
 import VueSweetalert2 from "vue-sweetalert2";
 import VueTippy from "vue-tippy";
-import Toast from "vue-toastification";
 import "vue-toastification/dist/index.css";
 import VueApexCharts from "vue3-apexcharts";
 import VueClickAway from "vue3-click-away";
@@ -17,34 +16,18 @@ import "./assets/scss/auth.scss";
 import "./assets/scss/tailwind.scss";
 import router from "./router";
 import VCalendar from "v-calendar";
-import {createPinia} from 'pinia'
+import pinia from "@/plugins/pinia";
 import "v-calendar/dist/style.css";
 import vue3GoogleLogin from 'vue3-google-login'
-import messages from "./locales/messages";
-import axios from "@/plugins/axios";
-import {createI18n, useI18n} from 'vue-i18n'
 import {LoadingPlugin} from 'vue-loading-overlay';
 import 'vue-loading-overlay/dist/css/index.css';
-
-const pinia = createPinia()
-let lang = navigator.language.substring(0, 2);
-
-axios.defaults.headers.common["Accept-Language"] = lang;
-
-const i18n = createI18n({
-    legacy: false,
-    locale: lang,
-    messages,
-});
-
-
-
-
+import i18n from "@/plugins/i18n";
+import toast from "@/plugins/toasts";
 // vue use
 const app = createApp(App)
     .use(pinia)
     .use(VueSweetalert2)
-    .use(Toast, {
+    .use(toast, {
         toastClassName: "dashcode-toast",
         bodyClassName: "dashcode-toast-body",
     })
@@ -66,19 +49,8 @@ app.config.globalProperties.$store = {};
 app.mount("#app");
 
 import {useThemeSettingsStore} from "@/store/themeSettings";
-import setupAxiosInterceptors from "@/plugins/axios";
 
 const themeSettingsStore = useThemeSettingsStore()
-if (localStorage.users === undefined) {
-    let users = [
-        {
-            name: "dashcode",
-            email: "dashcode@gmail.com",
-            password: "dashcode",
-        },
-    ];
-    localStorage.setItem("users", JSON.stringify(users));
-}
 
 // check localStorage theme for dark light bordered
 if (localStorage.theme === "dark") {
@@ -128,5 +100,3 @@ if (localStorage.getItem('monochrome') !== null) {
     themeSettingsStore.monochrome = true;
     document.getElementsByTagName('html')[0].classList.add('grayscale');
 }
-
-export default { i18n }

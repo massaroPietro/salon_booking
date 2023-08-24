@@ -2,7 +2,6 @@ import userImg from "@/assets/images/all-img/user.png";
 import user2Img from "@/assets/images/all-img/user2.png";
 import user3Img from "@/assets/images/all-img/user3.png";
 import user4Img from "@/assets/images/all-img/user4.png";
-import i18n from "@/main"
 
 export const menuItems = [
     {
@@ -1223,8 +1222,6 @@ import avatar3 from "@/assets/images/avatar/av-3.svg";
 import avatar4 from "@/assets/images/avatar/av-4.svg";
 import avatar5 from "@/assets/images/avatar/av-5.svg";
 import avatar6 from "@/assets/images/avatar/av-6.svg";
-import {useAuthStore} from "@/store/auth";
-import {useI18n} from "vue-i18n";
 
 export const assignOption = [
     {

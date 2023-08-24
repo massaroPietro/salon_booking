@@ -22,7 +22,7 @@
 
     <Alert v-if="formErrors.non_field_errors" type="danger">{{ formErrors.non_field_errors }}</Alert>
 
-    <Button :text="$t('auth.signIn')" btnClass="btn btn-dark block w-full text-center" :is-loading="isLoading"
+    <Button :text="$t('generic.add')" btnClass="btn btn-dark block w-full text-center" :is-loading="isLoading"
             :is-disabled="isLoading || !this.salonExistResponse.available"/>
 
   </form>
@@ -36,7 +36,8 @@ import axios from "@/plugins/axios";
 import Button from "@/components/Button/index.vue";
 import Alert from "@/components/Alert/index.vue";
 import apiEndpoints from "@/constant/apiEndpoints";
-import {useI18n} from "vue-i18n";
+import i18n from "@/plugins/i18n";
+const { t } = i18n.global;
 import {initFormState, setBackendResposeErrors} from "@/utils/utils";
 import {useCoreStore} from "@/store/core";
 
@@ -52,8 +53,6 @@ export default {
     const toast = useToast();
     const authStore = useAuthStore();
     const coreStore = useCoreStore();
-
-    const {t} = useI18n();
 
     const FormScheme = yup.object().shape({
       name: yup
