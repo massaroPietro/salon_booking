@@ -3,6 +3,7 @@ from django.urls import path
 from rest_framework.routers import DefaultRouter, SimpleRouter
 
 from salon_booking.salons.api.views import *
+from salon_booking.services.api.views import *
 from salon_booking.users.api.views import *
 
 if settings.DEBUG:
@@ -24,8 +25,11 @@ urlpatterns = [
     path("salons/<slug:slug>/employees/register/", EmployeeRegisterAPIView.as_view()),
     path("salons/<slug:slug>/employees/", EmployeeListAPIView.as_view()),
     path("employees/<uuid:pk>/", EmployeeRUDAPIView.as_view()),
-    path("work-days/<uuid:pk>/", EmployeeWorkDayRUAPIView.as_view()),
+    path("employee/work-days/<uuid:pk>/", EmployeeWorkDayRUAPIView.as_view()),
 
+    # Services
+    path("salons/<slug:slug>/services/", ServiceListCreateAPIView.as_view()),
+    path("services/<uuid:pk>/", ServiceRUDAPIView.as_view()),
 ]
 
 app_name = "api"

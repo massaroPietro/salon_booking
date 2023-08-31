@@ -4,6 +4,7 @@ import apiEndpoints from "@/constant/apiEndpoints";
 import router from "@/router";
 import i18n from "@/plugins/i18n";
 import backendService from "@/utils/backendService";
+import {computed} from "vue";
 
 export const useAuthStore = defineStore('authStore', {
     state: () => {
@@ -16,6 +17,7 @@ export const useAuthStore = defineStore('authStore', {
                 },
                 salons: [],
             },
+            currentSalon: null,
         }
     },
     getters: {
@@ -32,8 +34,13 @@ export const useAuthStore = defineStore('authStore', {
             return (id) => this.user.id === id;
         },
         isOwner() {
-            return (id) => this.getCurrentSalon().owner === id;
+            return (id) => this.getCurrentSalon.owner === id;
         },
+        getCurrentSalon: state => {
+            const currentSalonId = state.user.settings.current_salon;
+            return state.user.salons.find(salon => salon.id === currentSalonId);
+        },
+        getSalon: state => id => state.user.salons.find(salon => salon.id === id),
         statusClass() {
             return (id) => {
                 const isOwner = this.isOwner(id);
@@ -42,7 +49,16 @@ export const useAuthStore = defineStore('authStore', {
                     "text-warning-500 bg-warning-500": !isOwner,
                 };
             }
-        }
+        },
+        getService() {
+            return (id) => {
+                if (this.getCurrentSalon && this.getCurrentSalon.services) {
+                    return this.getCurrentSalon?.services?.find((service) => service.id === id)
+                } else {
+                    return null
+                }
+            }
+        },
     },
     actions: {
         initializeStore() {
@@ -68,11 +84,42 @@ export const useAuthStore = defineStore('authStore', {
             axios.defaults.headers['Authorization'] = null;
             localStorage.removeItem('token')
         },
-        getCurrentSalon() {
-            return this.user.salons.find((salon) => salon.id === this.user.settings.current_salon);
+        getEmployee(id) {
+            if (this.getCurrentSalon && this.getCurrentSalon.employees) {
+                return this.getCurrentSalon?.employees?.find((employee) => employee.id === id)
+            } else {
+                return null
+            }
+        },
+        setSalon(id, data) {
+            const salonIndex = this.user.salons.findIndex((salon) => salon.id === id);
+            if (salonIndex !== -1) {
+                this.user.salons[salonIndex] = {...this.user.salons[salonIndex], ...data};
+            }
+        },
+        setService(id, data) {
+            if (this.getCurrentSalon && this.getCurrentSalon.services) {
+                let serviceIndex = this.getCurrentSalon.services.findIndex((service) => service.id === id);
+                if (serviceIndex !== -1) {
+                    this.getCurrentSalon.services[serviceIndex] = {...data}
+                }
+            }
+        },
+        setEmployee(id, data) {
+            let employeeIndex = this.getCurrentSalon.employees.findIndex((employee) => employee.id === id);
+            if (employeeIndex !== -1) {
+                this.getCurrentSalon.employees[employeeIndex] = {...data}
+            }
+
+            if (data.user.id === this.user?.id) {
+                employeeIndex = this.user.employees.findIndex((employee) => employee.id === id);
+                if (employeeIndex !== -1) {
+                    this.user.employees[employeeIndex] = {...data}
+                }
+            }
         },
         isCurrentSalonOwner() {
-            return this.user.id === this.getCurrentSalon().owner;
-        }
+            return this.user.id === this.getCurrentSalon.owner;
+        },
     },
 })

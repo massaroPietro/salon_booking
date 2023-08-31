@@ -51,14 +51,20 @@ const routes = [
                 component: () => import("@/views/employees/EmployeesListView.vue"),
             },
             {
-                path: "employees/create",
-                name: "employee-create",
-                component: () => import("@/views/employees/EmployeesListView.vue"),
-            },
-            {
                 path: "employee/:employeeID/detail",
                 name: "employee-detail",
                 component: () => import("@/views/employees/EmployeeDetailView.vue"),
+                props: true,
+            },
+            {
+                path: "services",
+                name: "services-list",
+                component: () => import("@/views/services/ListView.vue"),
+            },
+            {
+                path: "service/:serviceID/detail",
+                name: "service-detail",
+                component: () => import("@/views/services/DetailView.vue"),
                 props: true,
             },
             {
@@ -411,8 +417,8 @@ const routes = [
             },
             // app
             {
-                path: "calender",
-                name: "calender",
+                path: "calendar",
+                name: "calendar",
                 component: () => import("@/views/app/calendar"),
             },
             {

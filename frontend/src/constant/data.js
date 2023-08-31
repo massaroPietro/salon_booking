@@ -8,7 +8,12 @@ export const menuItems = [
         isHeadr: true,
         title: "menu",
     },
-
+    {
+        title: "app.menuItems.calendar",
+        icon: "heroicons-outline:calendar",
+        link: "/app/calendar",
+        name: "calendar"
+    },
     {
         title: "app.menuItems.employees",
         mustBeOwner: true,
@@ -17,6 +22,18 @@ export const menuItems = [
             {
                 childtitle: "app.menuItems.employeesList",
                 childlink: "/app/employees",
+                name: "employees-list"
+            },
+        ],
+    },
+    {
+        title: "app.menuItems.services",
+        mustBeOwner: true,
+        icon: "heroicons-outline:square-2-stack",
+        child: [
+            {
+                childtitle: "app.menuItems.servicesList",
+                childlink: "/app/services",
             },
         ],
     },
@@ -74,12 +91,6 @@ export const menuItems = [
         icon: "heroicons-outline:view-boards",
         link: "kanban",
     },
-    {
-        title: "Calender",
-        icon: "heroicons-outline:calendar",
-        link: "calender",
-    },
-
     {
         title: "Todo",
         icon: "heroicons-outline:clipboard-check",

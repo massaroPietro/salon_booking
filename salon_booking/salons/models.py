@@ -4,6 +4,8 @@ from salon_booking.core.constants import WEEKDAYS
 from salon_booking.core.models import BaseModel
 from django.contrib.auth import get_user_model
 
+from salon_booking.services.models import Service
+
 User = get_user_model()
 
 
@@ -21,7 +23,7 @@ class Salon(BaseModel):
 
 
 class Employee(BaseModel):
-    pic = models.ImageField(upload_to='users/pics/', default='users/pics/default.png')
+    pic = models.ImageField(upload_to='users/pics/', default='employees/pics/default.png')
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='employees')
     salon = models.ForeignKey(Salon, on_delete=models.CASCADE, related_name='employees')
 

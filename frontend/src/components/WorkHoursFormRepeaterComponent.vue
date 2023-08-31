@@ -4,7 +4,23 @@
         class="pb-5 flex justify-between items-center"
     >
       <h6 class="card-title mb-0">{{ $t('generic.workHours') }}</h6>
-      <div>
+      <div class="flex">
+        <Button
+            v-if="workDay.work"
+            icon="heroicons-outline:check"
+            text="Lavorativo"
+            btnClass="btn-dark mr-3"
+            iconPosition="right"
+            @click="workDay.work = !workDay.work"
+        />
+        <Button
+            v-else
+            icon="heroicons-outline:x"
+            text="Non lavorativo"
+            btnClass="btn-dark mr-3"
+            iconPosition="right"
+            @click="workDay.work = !workDay.work"
+        />
         <Button
             :text="$t('generic.add')"
             icon="heroicons-outline:plus"
@@ -14,7 +30,7 @@
       </div>
     </div>
     <div>
-      <form novalidate @submit.prevent="onSubmit()" class="text-right">
+      <form novalidate @submit.prevent="onSubmit()" class="text-right" v-if="workDay.work">
         <div
             v-for="(field, idx) in workDay.work_ranges"
             :key="field.key"
@@ -69,16 +85,15 @@ import Textinput from "@/components/Textinput/index.vue";
 import Icon from "@/components/Icon/index.vue";
 import Card from "@/components/Card/index.vue";
 import Button from "@/components/Button/index.vue";
-import apiEndpoints from "@/constant/apiEndpoints";
-import axios from "@/plugins/axios";
 import {useToast} from "vue-toastification";
 import Alert from "@/components/Alert/index.vue";
 import emitter from "@/plugins/mitt";
 import backendService from "@/utils/backendService";
+import Switch from "@/components/Switch/index.vue";
 
 export default {
   name: "WorkHoursFormRepeaterComponent",
-  components: {Alert, Button, Card, Icon, Textinput},
+  components: {Switch, Alert, Button, Card, Icon, Textinput},
   data() {
     return {
       initWorkDay: null
@@ -102,12 +117,27 @@ export default {
       this.workDay.work_ranges.splice(index, 1);
     },
     work_ranges_are_changed() {
-      const stringifiedList1 = this.initWorkDay.work_ranges.map((item) =>
-          JSON.stringify(item)
-      );
-      const stringifiedList2 = this.workDay.work_ranges.map((item) =>
-          JSON.stringify(item)
-      );
+      const stringifiedList1 = this.initWorkDay.work_ranges.map((item) => {
+        const newItem = JSON.parse(JSON.stringify(item));
+        if (newItem.from_hour && newItem.from_hour.length === 8) {
+          newItem.from_hour = newItem.from_hour.slice(0, -3);
+        }
+        if (newItem.to_hour && newItem.to_hour.length === 8) {
+          newItem.to_hour = newItem.to_hour.slice(0, -3);
+        }
+        return JSON.stringify(newItem);
+      });
+
+      const stringifiedList2 = this.workDay.work_ranges.map((item) => {
+        const newItem = JSON.parse(JSON.stringify(item));
+        if (newItem.from_hour && newItem.from_hour.length === 8) {
+          newItem.from_hour = newItem.from_hour.slice(0, -3);
+        }
+        if (newItem.to_hour && newItem.to_hour.length === 8) {
+          newItem.to_hour = newItem.to_hour.slice(0, -3);
+        }
+        return JSON.stringify(newItem);
+      });
 
       const sortedList1 = stringifiedList1.slice().sort();
       const sortedList2 = stringifiedList2.slice().sort();
@@ -142,22 +172,36 @@ export default {
       return emitter
     },
     workRangesAreCompatible() {
-      let valid = true;
-      this.workDay.work_ranges.forEach((workRange) => {
-        if (workRange.from_hour !== null && workRange.to_hour !== null) {
+      for (let i = 0; i < this.workDay.work_ranges.length; i++) {
+        const workRange1 = this.workDay.work_ranges[i];
+        if (workRange1.from_hour !== null && workRange1.to_hour !== null) {
+          const [hours1, minutes1] = workRange1.from_hour.split(":");
+          const [hours2, minutes2] = workRange1.to_hour.split(":");
+          const from1 = new Date(0, 0, 0, hours1, minutes1);
+          const to1 = new Date(0, 0, 0, hours2, minutes2);
+          if (from1 >= to1) {
+            return false;
+          }
+          for (let j = i + 1; j < this.workDay.work_ranges.length; j++) {
+            const workRange2 = this.workDay.work_ranges[j];
 
-          const [hours1, minutes1] = workRange.from_hour.split(":");
-          const [hours2, minutes2] = workRange.to_hour.split(":");
+            if (workRange2.from_hour !== null && workRange2.to_hour !== null) {
+              const [hours3, minutes3] = workRange2.from_hour.split(":");
+              const [hours4, minutes4] = workRange2.to_hour.split(":");
 
-          const from = new Date(0, 0, 0, hours1, minutes1);
-          const to = new Date(0, 0, 0, hours2, minutes2);
-          if (from >= to) {
-            valid = false;
+              const from2 = new Date(0, 0, 0, hours3, minutes3);
+              const to2 = new Date(0, 0, 0, hours4, minutes4);
+              if ((from2 >= from1 && from2 < to1) || (to2 > from1 && to2 <= to1)) {
+                return false;
+              }
+            }
           }
         }
-      })
-      return valid;
+      }
+
+      return true;
     },
+
     isChanged() {
       if (this.workDay.work_ranges.length !== this.initWorkDay.work_ranges.length) {
         return true;

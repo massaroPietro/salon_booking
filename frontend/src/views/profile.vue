@@ -101,6 +101,26 @@
                 </a>
               </div>
             </li>
+                          <li class="flex space-x-3 rtl:space-x-reverse">
+              <div
+                class="flex-none text-2xl text-slate-600 dark:text-slate-300"
+              >
+                <Icon icon="heroicons:phone-arrow-up-right" />
+              </div>
+              <div class="flex-1">
+                <div
+                  class="uppercase text-xs text-slate-500 dark:text-slate-300 mb-1 leading-[12px]"
+                >
+                  PHONE
+                </div>
+                <a
+                  href="tel:0189749676767"
+                  class="text-base text-slate-600 dark:text-slate-50"
+                >
+                  +1-202-555-0151
+                </a>
+              </div>
+            </li>
           </ul>
         </Card>
       </div>

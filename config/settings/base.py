@@ -97,7 +97,9 @@ THIRD_PARTY_APPS = [
 LOCAL_APPS = [
     "salon_booking.users",
     "salon_booking.core",
-    "salon_booking.salons"
+    "salon_booking.salons",
+    "salon_booking.appointments",
+    "salon_booking.services",
     # Your stuff: custom apps go here
 ]
 # https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps

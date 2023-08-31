@@ -84,3 +84,15 @@ class EmployeeWorkDayRUAPIView(generics.RetrieveUpdateAPIView):
     serializer_class = EmployeeWorkDaySerializer
     queryset = EmployeeWorkDay.objects.all()
     permission_classes = [IsWorkDaySalonOwner]
+
+    def perform_update(self, serializer):
+        data = serializer.validated_data
+
+        for idx, x in enumerate(data['work_ranges']):
+            if x["from_hour"] >= x["to_hour"]:
+                raise ValidationError({
+                    'index': idx,
+                    'message': _("Invalid time range for work range")
+                })
+
+        serializer.save()

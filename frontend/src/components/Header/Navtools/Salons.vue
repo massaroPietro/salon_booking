@@ -109,10 +109,15 @@ export default {
         if (tmpSalon) {
           this.selectedSalon = tmpSalon;
           this.authStore.user.settings.current_salon = salon_id
+          if (tmpSalon.owner === this.authStore.user.id) {
+            backendService.getSalon(tmpSalon.slug);
+          } else {
+            this.authStore.setSalon(salon_id, tmpSalon)
+          }
           if (saveOnDB) {
             backendService.changeSalon(salon_id);
             if (!this.authStore.isCurrentSalonOwner()) {
-              router.push({name: 'home'}).then(() => {
+              router.push("/").then(() => {
                 this.coreStore.reloadPage();
               })
             } else {

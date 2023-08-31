@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Card title="" noborder v-if="employees.length > 0">
+    <Card title="" noborder v-if="employees?.length > 0">
       <div
           class="md:flex justify-between pb-6 md:space-y-0 space-y-3 items-center"
       >
@@ -17,12 +17,12 @@
             perPage: perpage,
           }"
             :sort-options="{
-            enabled: false,
+            enabled: true,
           }"
         >
           <template v-slot:table-row="props">
-            <span v-if="props.column.field === 'employee'" class="flex justify-center">
-              <span class="w-7 h-7 rounded-full ltr:mr-3 rtl:ml-3 flex-none">
+            <span v-if="props.column.field === 'user.full_name'" class="flex justify-center">
+              <span class="w-7 h-7 rounded-full ltr:mr-3 rtl:ml-3 flex-none  cursor-pointer" @click="$router.push({name:'employee-detail', params:{employeeID: props.row.id}})">
                 <img
                     :src="props.row.pic"
                     :alt="props.row.user.full_name"
@@ -30,7 +30,7 @@
                 />
               </span>
               <span
-                  class="text-sm text-slate-600 dark:text-slate-300 capitalize"
+                  class="text-sm text-slate-600 dark:text-slate-300 capitalize mt-auto mb-auto cursor-pointer" @click="$router.push({name:'employee-detail', params:{employeeID: props.row.id}})"
               >{{ props.row.user.full_name }}</span
               >
             </span>
@@ -52,7 +52,7 @@
                     }}
                   </span>
                     <span
-                        class="bg-opacity-20 mr-1 capitalize font-normal text-xs leading-4 px-[10px] py-[2px] rounded-full inline-block text-danger-500 bg-danger-500"
+                        class="bg-opacity-20 mr-1 ml-1 capitalize font-normal text-xs leading-4 px-[10px] py-[2px] rounded-full inline-block text-danger-500 bg-danger-500"
                         v-if="!props.row.email_verified"
                     >
                     {{ $t('generic.emailNotVerified') }}
@@ -72,7 +72,7 @@
                       <span>{{ $t('generic.view') }}</span>
                     </Tooltip>
                     <Tooltip placement="top" arrow theme="danger-500"
-                             v-if="!(authStore.getCurrentSalon().owner === props.row.user.id) && props.row.email_verified">
+                             v-if="!(authStore.getCurrentSalon.owner === props.row.user.id) && props.row.email_verified">
                       <template #button>
                         <div class="action-btn">
                           <Icon icon="heroicons:trash"/>
@@ -81,7 +81,7 @@
                       <span>{{ $t('generic.delete') }}</span>
                     </Tooltip>
                       <Tooltip placement="top" arrow theme="success-500"
-                               v-if="!(authStore.getCurrentSalon().owner === props.row.user.id) && !props.row.email_verified">
+                               v-if="!(authStore.getCurrentSalon.owner === props.row.user.id) && !props.row.email_verified">
                       <template #button>
                         <div class="action-btn" @click="backendService.resendVerificationEmail(props.row.user.email)">
                           <Icon icon="heroicons:at-symbol"/>
@@ -125,9 +125,12 @@ import Button from "@/components/Button/index.vue";
 import AddEmployeeModal from "@/components/modals/AddEmployeeModal.vue";
 import addEmployeeModal from "@/components/modals/AddEmployeeModal.vue";
 import backendService from "@/utils/backendService";
+import main from "@/mixins/main";
+import emitter from "@/plugins/mitt";
 
 export default {
   name: "EmployeesListView",
+  mixins: [main],
   components: {
     AddEmployeeModal,
     Button,
@@ -142,27 +145,34 @@ export default {
   },
   data() {
     return {
-      loading: false,
-      employees: [],
       current: 1,
       perpage: 10,
       pageRange: 5,
     };
   },
   computed: {
+    employees() {
+      if (this.authStore.getCurrentSalon) {
+        return this.authStore.getCurrentSalon.employees;
+      } else {
+        return []
+      }
+    },
     columns() {
       return [
         {
           label: this.$t('generic.employee'),
-          field: "employee",
+          field: "user.full_name",
         },
         {
           label: this.$t('generic.role'),
           field: "role",
+          sortable: false
         },
         {
           label: this.$t('generic.action'),
           field: "action",
+          sortable: false
         },
       ];
     }
@@ -176,16 +186,18 @@ export default {
   },
   methods: {
     getEmployees() {
-      const callbacks = {
-        success_callback: (response) => {
-          this.employees = response.data;
-        },
+      let loader = null;
+      if (!this.employees || this.employees?.length === 0) {
+        loader = this.$loading.show();
+      }
+      const config = {
         finally_callback: () => {
-          this.loading = false;
+          if (loader) {
+            loader.hide();
+          }
         }
       }
-      this.loading = true;
-      backendService.getEmployees(callbacks);
+      backendService.getEmployees(config)
     }
   }
 }

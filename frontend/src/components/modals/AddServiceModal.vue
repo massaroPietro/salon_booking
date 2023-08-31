@@ -1,64 +1,46 @@
 <template>
   <Modal
       centered
-      :title="$t('app.salons.addNewEmployee')"
-      :label="$t('app.salons.addEmployee')"
+      :title="$t('app.services.addNewService')"
+      :label="$t('app.services.addService')"
       :label-class="'btn-dark'"
-      ref="addEmployeeModal"
+      ref="addServiceModal"
   >
     <div class="text-base text-slate-600 dark:text-slate-300">
       <Textinput
-          :label="$t('generic.firstName')"
+          :label="$t('generic.name')"
           type="text"
           placeholder=""
-          v-model="form.first_name"
-          :error="formErrors.first_name"
+          v-model="form.name"
+          :error="formErrors.name"
           classInput="h-[48px] mb-2"
       />
+      <VueSelect :options="employees" :label="$t('app.services.enabledEmployees')" multiple v-model="selectedEmployees" class="mb-2"/>
       <Textinput
-          :label="$t('generic.lastName')"
+          :label="$t('generic.duration')"
+          type="time"
+          placeholder=""
+          v-model="form.duration"
+          :error="formErrors.duration"
+          classInput="h-[48px] mb-2"
+      />
+      <InputGroup
+          :label="$t('generic.price')"
+          prepend="&euro;"
           type="text"
           placeholder=""
-          v-model="form.last_name"
-          :error="formErrors.last_name"
-          classInput="h-[48px] mb-2"
-      />
-      <Textinput
-          label="Email"
-          type="email"
-          placeholder=""
-          name="emil"
-          v-model="form.email"
-          :error="formErrors.email"
-          classInput="h-[48px] mb-2"
-      />
-      <Textinput
-          :label="$t('generic.password')"
-          type="password"
-          placeholder=""
-          v-model="form.password1"
-          :error="formErrors.password1"
-          hasicon
-          classInput="h-[48px] mb-2"
-      />
-      <Textinput
-          :label="$t('auth.repeatPassword')"
-          type="password"
-          placeholder=""
-          v-model="form.password2"
-          :error="formErrors.password2"
-          hasicon
-          classInput="h-[48px]"
+          v-model="form.price"
+          :error="formErrors.price"
       />
     </div>
     <template v-slot:footer>
       <Button
           :text="$t('generic.close')"
           btnClass="btn-outline-dark"
-          @click="$refs.addEmployeeModal.closeModal()"
+          @click="$refs.addServiceModal.closeModal()"
       />
       <Button
-          text="Login"
+          :text="$t('generic.add')"
           class="align-middle"
           btnClass="btn btn-dark text-center"
           :is-loading="loading"
@@ -74,41 +56,64 @@ import Modal from "@/components/Modal/Modal.vue";
 import Button from "@/components/Button/index.vue";
 import {useCoreStore} from "@/store/core";
 import {useToast} from "vue-toastification";
-import {initFormState, setBackendResposeErrors} from "@/utils/utils";
+import {initFormState} from "@/utils/utils";
 import formSchemes from "@/constant/formSchemes";
-import apiEndpoints from "@/constant/apiEndpoints";
-import axios from "@/plugins/axios";
 import {useAuthStore} from "@/store/auth";
 import backendService from "@/utils/backendService";
 import main from "@/mixins/main";
+import InputGroup from "@/components/InputGroup";
+import vSelect from "vue-select";
+import VueSelect from "@/components/Select/VueSelect.vue";
 
 export default {
-  name: "AddEmployeeModal",
-  components: {Button, Modal, Textinput},
+  name: "AddServiceModal",
+  components: {VueSelect, vSelect, Button, Modal, Textinput, InputGroup},
   mixins: [main],
   setup() {
     const coreStore = useCoreStore();
     const authStore = useAuthStore();
     const toast = useToast();
 
-    const FormScheme = formSchemes.userRegistrationFormScheme();
+    const FormScheme = formSchemes.addServiceFormScheme();
 
     const {form, formErrors, validateForm} = initFormState(Object.keys(FormScheme.fields), FormScheme);
 
     return {toast, FormScheme, form, formErrors, coreStore, validateForm, authStore};
   },
+  data() {
+    return {
+      selectedEmployees: null
+    }
+  },
+  computed: {
+    employees() {
+      const employeesWithLabels = this.authStore.getCurrentSalon.employees.map(item => {
+        return {
+          ...item,
+          label: item.user.full_name
+        };
+      });
+
+      return employeesWithLabels;
+    }
+  },
+
   methods: {
     onSubmit() {
       this.validateForm().then(() => {
-        const current_salon_slug = this.authStore.getCurrentSalon.slug
+        const form = {
+          ...this.form,
+          employees: this.selectedEmployees.map(option => option.id),
+        };
+
         const config = {
           success_callback: () => {
-            this.$refs.addEmployeeModal.closeModal();
+            this.$refs.addServiceModal.closeModal();
           },
           formErrors: this.formErrors,
           loader: this.toggleLoading,
         }
-        backendService.registerEmployee(current_salon_slug, this.form, config)
+        backendService.addService(form, config)
       })
     }
   }

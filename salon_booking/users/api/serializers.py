@@ -16,12 +16,12 @@ User = get_user_model()
 
 
 class UserSettingsSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = UserSettings
         exclude = (
             'user',
         )
-
 
 class UserSerializer(serializers.ModelSerializer):
     full_name = serializers.SerializerMethodField(read_only=True)

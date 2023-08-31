@@ -16,6 +16,12 @@ export default {
             6: "Saturday",
             7: "Sunday"
         },
+        humanizeDuration: {
+            onlyHours: "%{hours} hours",
+            onlySingleHours: "%{hours} hour",
+            onlyMinutes: "%{minutes} minutes",
+            minutesAndHours: "%{hours} hours and %{minutes} minutes",
+        },
         generic: {
             name: "Name",
             firstName: "First name",
@@ -39,7 +45,10 @@ export default {
             delete: "Delete",
             resendEmail: "Resend email",
             verificationEmailSent: "Confirmation email sent successfully",
-            create: "Create"
+            create: "Create",
+            service: "Service",
+            duration: "Duration",
+            price: "Price",
         },
         auth: {
             signIn: "Sign in",
@@ -57,7 +66,7 @@ export default {
             createAccount: "Create an account",
             notAcceptedPrivacy: "You must accept the privacy to continue registration",
             registerCompleted: "Registration completed successfully",
-            successRegisterDescription: "We have sent an email to the following address: {email}. Check your email to confirm your account. To complete the registration, follow the instructions in the email. Once your account is confirmed, you will be able to access all the features of our site.",
+            successRegisterDescription: "We have sent an email to the following address: %{email}. Check your email to confirm your account. To complete the registration, follow the instructions in the email. Once your account is confirmed, you will be able to access all the features of our site.",
             resendEmail: "Resend email",
             emailSent: "Email sent",
             forgotPasswordDescription: "Reset password with BarberBooking",
@@ -71,9 +80,13 @@ export default {
         },
         toasts: {
             successLogin: "Welcome back to BarberBooking",
-            employeeRegistered: "Employee registered successfully. After verifying the email you can use BarberBooking"
+            employeeRegistered: "Employee registered successfully. After verifying the email you can use BarberBooking",
+            serviceAdded: "The services is added successfully",
         },
         app: {
+            employees: {
+                updatedPic: "Pic updated successfully",
+            },
             salons: {
                 addSalon: "Add salon",
                 salonAddedSuccessfully: "Salon added successfully",
@@ -84,6 +97,11 @@ export default {
                 addEmployee: "Add employee",
                 addNewEmployee: "Add new employee",
             },
+            services: {
+                addNewService: "Add new service",
+                addService: "Add service",
+                enabledEmployees: "Enabled employees",
+            },
             header: {
                 search: {
                     placeholder: "Search...",
@@ -93,6 +111,9 @@ export default {
             menuItems: {
                 employees: "Employees",
                 employeesList: "Employees List",
+                services: "Services",
+                servicesList: "Services List",
+                calendar: "Calendar"
             }
         },
         themeCustomizer: {
@@ -163,7 +184,10 @@ export default {
             delete: "Elimina",
             resendEmail: "Reinvia email",
             verificationEmailSent: "Email di verifica inviata correttamente",
-            create: "Crea"
+            create: "Crea",
+            service: "Servizio",
+            duration: "Durata",
+            price: "Prezzo",
         },
         errors: {
             notValidEmail: "Email non valida",
@@ -180,6 +204,12 @@ export default {
             5: "Venerdì",
             6: "Sabato",
             7: "Domenica"
+        },
+        humanizeDuration: {
+            onlyHours: "%{hours} ore",
+            onlySingleHours: "%{hours} ora",
+            onlyMinutes: "%{minutes} minuti",
+            minutesAndHours: "%{hours} ore e %{minutes} minuti",
         },
         auth: {
             signIn: "Accedi",
@@ -211,9 +241,13 @@ export default {
         },
         toasts: {
             successLogin: "Bentornato in BarberBooking",
-            employeeRegistered: "Dipendente registrato correttamente. Dopo la verifica dell'email potrà usare BarberBooking"
+            employeeRegistered: "Dipendente registrato correttamente. Dopo la verifica dell'email potrà usare BarberBooking",
+            serviceAdded: "Il servizio è stato aggiunto correttamente",
         },
         app: {
+            employees: {
+                updatedPic: "Immagine aggiornata con successo",
+            },
             salons: {
                 addSalon: "Aggiungi salone",
                 salonAddedSuccessfully: "Salone aggiunto con successo",
@@ -224,6 +258,11 @@ export default {
                 addNewEmployee: "Aggiungi nuovo dipendente",
                 addEmployee: "Aggiungi dipendente",
             },
+            services: {
+                addNewService: "Aggiungi nuovo servizio",
+                addService: "Aggiungi servizio",
+                enabledEmployees: "Dipendenti abilitati",
+            },
             header: {
                 search: {
                     placeholder: "Cerca...",
@@ -233,6 +272,9 @@ export default {
             menuItems: {
                 employees: "Dipendenti",
                 employeesList: "Lista dipendenti",
+                services: "Servizi",
+                servicesList: "Lista servizi",
+                calendar: "Calendario"
             }
         },
         themeCustomizer: {

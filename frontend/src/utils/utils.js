@@ -1,4 +1,7 @@
 import {reactive} from "vue";
+import i18n from "@/plugins/i18n";
+
+const {t} = i18n.global
 
 export function initFormState(fields, validationSchema) {
     const form = reactive({});
@@ -48,3 +51,20 @@ export function setBackendResposeErrors(err, formErrors) {
     }
 }
 
+export function humanizeDuration(duration) {
+    const [hours, minutes] = duration.split(':').map(Number);
+
+    const obj = {hours: hours, minutes: minutes}
+
+    if (hours > 0 && minutes > 0) {
+        return t("humanizeDuration.minutesAndHours", obj)
+    } else if (hours > 0) {
+        if (hours === 1) {
+            return t("humanizeDuration.onlySingleHours", obj)
+        } else {
+            return t("humanizeDuration.onlyHours", obj)
+        }
+    } else {
+        return t("humanizeDuration.onlyMinutes", obj)
+    }
+}

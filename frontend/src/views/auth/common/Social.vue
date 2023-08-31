@@ -30,7 +30,6 @@ export default {
   },
   methods: {
     callback(response) {
-      let endpoint = apiEndpoints.authGoogle();
       const data = {
         access_token: response.credential
       }

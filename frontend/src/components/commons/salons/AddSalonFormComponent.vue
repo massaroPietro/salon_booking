@@ -22,8 +22,8 @@
 
     <Alert v-if="formErrors.non_field_errors" type="danger">{{ formErrors.non_field_errors }}</Alert>
 
-    <Button :text="$t('generic.add')" btnClass="btn btn-dark block w-full text-center" :is-loading="isLoading"
-            :is-disabled="isLoading || !this.salonExistResponse.available"/>
+    <Button :text="$t('generic.add')" btnClass="btn btn-dark block w-full text-center" :is-loading="loading"
+            :is-disabled="loading || !this.salonExistResponse.available"/>
 
   </form>
 </template>
@@ -43,9 +43,11 @@ import {initFormState, setBackendResposeErrors} from "@/utils/utils";
 import {useCoreStore} from "@/store/core";
 import backendService from "@/utils/backendService";
 import formSchemes from "@/constant/formSchemes";
+import main from "@/mixins/main";
 
 export default {
   name: "AddSalonFormComponent",
+  mixins: [main],
   components: {
     Alert,
     Button,
@@ -65,7 +67,6 @@ export default {
   },
   data() {
     return {
-      isLoading: false,
       checkbox: false,
       submitted: false,
       debounceTimeout: null,
@@ -78,43 +79,32 @@ export default {
   },
   methods: {
     async checkSalonNameExists() {
-      const callbacks = {
-        success_callback: (response) => {
-          this.salonExistResponse = response.data;
-        },
-        finally_callback: () => {
-          this.isLoading = false;
-        }
+      const config = {
+        loader: this.toggleLoading,
+        dataTarget: this.salonExistResponse,
       }
 
       clearTimeout(this.debounceTimeout);
       this.debounceTimeout = setTimeout(async () => {
-        this.isLoading = true;
-        backendService.checkSalonExists(this.form.name, callbacks)
+        backendService.checkSalonExists(this.form.name, config)
       }, 600);
     },
     onSubmit() {
       this.validateForm().then(() => {
-        const callbacks = {
+        const config = {
           success_callback: (response) => {
             this.$emit('salonAdded');
-
             try {
               this.authStore.user.salons.push(response.data);
             } catch (e) {
               this.coreStore.reloadPage();
             }
-
-            this.toast.success(this.$t("app.salons.salonAddedSuccessfully"), {
-              timeout: 2000
-            });
           },
-          error_callback: (error) => {
-            setBackendResposeErrors(error, this.formErrors)
-          }
+          formErrors: this.formErrors,
+          loader: this.toggleLoading,
         }
 
-        backendService.addNewSalon(this.form, callbacks, this.isLoading)
+        backendService.addNewSalon(this.form, config)
       })
     },
   },

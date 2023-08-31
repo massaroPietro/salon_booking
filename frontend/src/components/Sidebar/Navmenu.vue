@@ -6,14 +6,14 @@
         :class="`
       ${item.child ? 'item-has-children' : ''}
       ${activeSubmenu === i ? 'open' : ''}
-      ${this.$route.name === item.link ? 'menu-item-active' : ''}
+      ${this.$route.name === item.name ? 'menu-item-active' : ''}
       `"
         class="single-sidebar-menu"
     >
 
       <!-- ?? single menu with no childred !!  -->
       <router-link
-          :to="`${item.link}`"
+          :to="{name: item.name}"
           class="menu-link"
           v-if="!item.child && !item.isHeadr"
       >

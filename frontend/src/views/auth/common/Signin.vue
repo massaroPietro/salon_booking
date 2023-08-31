@@ -55,7 +55,7 @@
     </div>
     <Alert v-if="formErrors.non_field_errors" type="danger">{{ formErrors.non_field_errors }}</Alert>
 
-    <Button :text="$t('auth.signIn')" btnClass="btn btn-dark block w-full text-center" :is-loading="isLoading"/>
+    <Button :text="$t('auth.signIn')" btnClass="btn btn-dark block w-full text-center" :is-loading="loading"/>
 
   </form>
 </template>
@@ -67,9 +67,11 @@ import Alert from "@/components/Alert/index.vue";
 import {initFormState, setBackendResposeErrors} from "@/utils/utils";
 import formSchemes from "@/constant/formSchemes";
 import backendService from "@/utils/backendService";
+import main from "@/mixins/main";
 
 export default {
   name: "SignIn",
+  mixins: [main],
   components: {
     Alert,
     Button,
@@ -92,17 +94,12 @@ export default {
   methods: {
     onSubmit() {
       this.validateForm().then(() => {
-        const callbacks = {
-          error_callback: (error) => {
-            setBackendResposeErrors(error, this.formErrors)
-          },
-          finally_callback: () => {
-            this.isLoading = false;
-          },
+        const config = {
+          loader: this.toggleLoading,
+          formErrors: this.formErrors,
         }
 
-        this.isLoading = true;
-        backendService.loginUser(this.form, callbacks, this.checkbox)
+        backendService.loginUser(this.form, config, this.checkbox)
       })
     },
   },

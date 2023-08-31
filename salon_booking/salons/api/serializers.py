@@ -8,6 +8,7 @@ from rest_framework import serializers
 from django.utils.translation import gettext as _
 
 from ...core.api.serializers import WithoutSecondsTimeField
+from ...services.api.serializers import ServiceSerializer
 
 
 class EmployeeSerializer(serializers.ModelSerializer):
@@ -47,9 +48,12 @@ class EmployeeWorkDaySerializer(serializers.ModelSerializer):
 
     @transaction.atomic
     def update(self, instance, validated_data):
+
+        work_ranges_data = validated_data.pop('work_ranges', [])
+
         for i in instance.work_ranges.all():
             i.delete()
-        work_ranges_data = validated_data.pop('work_ranges', [])
+
 
         for work_range_data in work_ranges_data:
             EmployeeWorkRange.objects.create(**work_range_data)
@@ -70,6 +74,7 @@ class FriendlySalonSerializer(serializers.ModelSerializer):
 
 class SalonSerializer(serializers.ModelSerializer):
     employees = EmployeeSerializer(read_only=True, many=True)
+    services = ServiceSerializer(read_only=True, many=True)
 
     class Meta:
         model = Salon

@@ -12,23 +12,24 @@
 
     <Alert v-if="formErrors.non_field_errors" type="danger">{{ formErrors.non_field_errors }}</Alert>
 
-    <Alert v-if="recoveryEmailSent" type="success">{{ $t('auth.recoveryEmailSent') }}</Alert>
+    <Alert v-if="response?.detail" type="success">{{ response.detail }}</Alert>
 
-    <Button :text="$t('auth.sendRecoveryEmail')" btn-class="btn btn-dark" class="block w-full text-center"
-            :is-loading="isLoading"/>
+    <Button :text="canSend > 0 ? countdown : $t('auth.sendRecoveryEmail')" btn-class="btn btn-dark" class="block w-full text-center"
+            :is-disabled="canSend"
+            :is-loading="loading"
+            :loading-class="'mr-2'"/>
 
   </form>
 </template>
 <script>
 import Textinput from "@/components/Textinput";
 import * as yup from "yup";
-import {initFormState, setBackendResposeErrors} from "@/utils/utils";
-import apiEndpoints from "@/constant/apiEndpoints";
+import {initFormState} from "@/utils/utils";
 import Button from "@/components/Button/index.vue";
-import axios from "@/plugins/axios";
 import Alert from "@/components/Alert/index.vue";
 import {useI18n} from "vue-i18n";
 import backendService from "@/utils/backendService";
+import main from "@/mixins/main";
 
 export default {
   components: {
@@ -36,10 +37,11 @@ export default {
     Button,
     Textinput,
   },
+  mixins: [main],
   data() {
     return {
-      isLoading: false,
-      recoveryEmailSent: false,
+      response: {},
+      countdown: 15,
     };
   },
   setup() {
@@ -58,16 +60,22 @@ export default {
   methods: {
     onSubmit() {
       this.validateForm().then(() => {
-
-        const callbacks = {
+        this.countdown = 15;
+        const config = {
+          dataTarget: this.response,
+          formErrors: this.formErrors,
+          loader: this.toggleLoading,
           success_callback: () => {
-            this.recoveryEmailSent = true;
-          },
-          error_callback: (error) => {
-            setBackendResposeErrors(error, this.formErrors)
-          },
+            const countdownInterval = setInterval(() => {
+              this.countdown--;
+              if (this.countdown <= 0) {
+                clearInterval(countdownInterval);
+                this.response = {};
+              }
+            }, 1000);
+          }
         }
-        backendService.resetPassword(this.form, callbacks, this.isLoading)
+        backendService.resetPassword(this.form, config)
       })
     }
   }

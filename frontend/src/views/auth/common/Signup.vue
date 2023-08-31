@@ -45,7 +45,7 @@
     />
     <Checkbox :label="$t('auth.acceptPrivacy')" v-model="privacyAccepted" class="my-5"/>
     <Alert v-if="formErrors.non_field_errors" type="danger">{{ formErrors.non_field_errors }}</Alert>
-    <Button :text="$t('auth.createAccount')" btnClass="btn btn-dark block w-full text-center" :is-loading="isLoading"/>
+    <Button :text="$t('auth.createAccount')" btnClass="btn btn-dark block w-full text-center" :is-loading="loading"/>
   </form>
 </template>
 <script>
@@ -62,9 +62,11 @@ import apiEndpoints from "@/constant/apiEndpoints";
 import {useCoreStore} from "@/store/core";
 import formSchemes from "@/constant/formSchemes";
 import backendService from "@/utils/backendService";
+import main from "@/mixins/main";
 
 export default {
   name: "SignUp",
+  mixins: [main],
   components: {
     Checkbox,
     Alert,
@@ -83,7 +85,6 @@ export default {
   },
   data() {
     return {
-      isLoading: false,
       checkbox: false,
       privacyAccepted: false,
     };
@@ -101,15 +102,10 @@ export default {
             success_callback: () => {
               this.$emit('emailSent', this.form.email)
             },
-            error_callback: (error) => {
-              setBackendResposeErrors(error, this.formErrors)
-            },
-            finally_callback: () => {
-              this.isLoading = false;
-            },
+            loader: this.toggleLoading,
+            formErrors: this.formErrors,
           }
 
-          this.isLoading = true;
           backendService.registerUser(this.form, callbacks);
         }
       })

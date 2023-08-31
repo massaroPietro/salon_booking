@@ -30,7 +30,7 @@
 
           <Button @click="resendEmail" :text="$t('auth.resendEmail')"
                   btn-class="btn btn-dark block w-full text-center mt-5"
-                  :is-loading="isLoading"/>
+                  :is-loading="loading"/>
         </div>
 
       </div>
@@ -43,15 +43,12 @@ import apiEndpoints from "@/constant/apiEndpoints";
 import axios from "@/plugins/axios";
 import {useToast} from "vue-toastification";
 import backendService from "@/utils/backendService";
+import main from "@/mixins/main";
 
 export default {
   name: "VerifyEmailComponent",
   components: {Button},
-  data() {
-    return {
-      isLoading: false,
-    }
-  },
+  mixins: [main],
   props: {
     email: {
       required: true,
@@ -60,13 +57,10 @@ export default {
   },
   methods: {
     resendEmail() {
-      this.isLoading = true;
-      const callbacks = {
-        finally_callback: () => {
-          this.isLoading = false;
-        }
+      const config = {
+        loader: this.toggleLoading,
       }
-      backendService.resendVerificationEmail(this.email, callbacks)
+      backendService.resendVerificationEmail(this.email, config)
     }
   }
 };

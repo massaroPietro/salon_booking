@@ -15,6 +15,13 @@ const FormSchemes = {
             }),
         });
     },
+    addServiceFormScheme: () => {
+        return yup.object().shape({
+            name: yup.string().required(t('generic.requiredField')),
+            duration: yup.string().required(t('generic.requiredField')),
+            price: yup.string().required(t('generic.requiredField')),
+        });
+    },
     userLoginFormScheme: () => {
         return yup.object().shape({
             email: yup.string().email(t('errors.notValidEmail')).required(t('generic.requiredField')),
