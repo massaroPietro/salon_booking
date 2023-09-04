@@ -20,6 +20,9 @@ const apiEndpoints = {
     workDay: (id) => `/employee/work-days/${id}/`,
     services: (slug) => `/salons/${slug}/services/`,
     service: (id) => `/services/${id}/`,
+    employeeInvitations: (slug) => `/salons/${slug}/invitations/`,
+    acceptInvitation: (id) => `/invitations/${id}/accept_invitation/`,
+    rejectInvitation: (id) => `/invitations/${id}/reject_invitation/`,
 };
 
 export default apiEndpoints;

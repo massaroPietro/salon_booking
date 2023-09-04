@@ -1,7 +1,6 @@
 import axios from 'axios';
 import router from '@/router';
 import {useAuthStore} from "@/store/auth";
-import {useToast} from "vue-toastification";
 
 let lang = navigator.language.substring(0, 2);
 

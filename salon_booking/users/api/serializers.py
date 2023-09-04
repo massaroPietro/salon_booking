@@ -8,7 +8,9 @@ from django.db import transaction
 from rest_framework import serializers
 from rest_framework.generics import get_object_or_404
 
-from salon_booking.salons.api.serializers import SalonSerializer, FriendlySalonSerializer, EmployeeSerializer
+from salon_booking.core.constants import PENDING_STATUS
+from salon_booking.salons.api.serializers import SalonSerializer, FriendlySalonSerializer, EmployeeSerializer, \
+    EmployeeInvitationForUserSerializer
 from salon_booking.salons.models import Salon, Employee
 from salon_booking.users.models import User as UserType, UserSettings
 
@@ -16,23 +18,29 @@ User = get_user_model()
 
 
 class UserSettingsSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = UserSettings
         exclude = (
             'user',
         )
 
+
 class UserSerializer(serializers.ModelSerializer):
     full_name = serializers.SerializerMethodField(read_only=True)
+    employee_invitations = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
         model = User
-        fields = ["id", "username", "first_name", "last_name", "email", 'full_name']
+        fields = ["id", "username", "first_name", "last_name", "email", 'full_name', "employee_invitations"]
         read_only_fields = ('username', "email")
 
     def get_full_name(self, instance):
         return instance.first_name + " " + instance.last_name
+
+    def get_employee_invitations(self, instance):
+        invitations = instance.employee_invitations.filter(status=PENDING_STATUS).all()
+
+        return EmployeeInvitationForUserSerializer(invitations, many=True, context=self.context).data
 
 
 class UserRegistrationSerializer(RegisterSerializer):

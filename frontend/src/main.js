@@ -23,6 +23,7 @@ import {LoadingPlugin} from 'vue-loading-overlay';
 import 'vue-loading-overlay/dist/css/index.css';
 import i18n from "@/plugins/i18n";
 import Toast from "vue-toastification";
+import timeago from 'vue-timeago3'
 // vue use
 const app = createApp(App)
     .use(pinia)
@@ -43,7 +44,7 @@ const app = createApp(App)
         clientId: '798717259518-194q1iqbltl6jj6eu4rj0cpi5mq6nq9l.apps.googleusercontent.com'
     })
     .use(i18n)
-
+    .use(timeago)
 
 app.config.globalProperties.$store = {};
 app.mount("#app");

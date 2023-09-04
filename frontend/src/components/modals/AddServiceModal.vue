@@ -15,7 +15,8 @@
           :error="formErrors.name"
           classInput="h-[48px] mb-2"
       />
-      <VueSelect :options="employees" :label="$t('app.services.enabledEmployees')" multiple v-model="selectedEmployees" class="mb-2"/>
+      <VueSelect :options="employees" :label="$t('app.services.enabledEmployees')" multiple v-model="selectedEmployees"
+                 class="mb-2"/>
       <Textinput
           :label="$t('generic.duration')"
           type="time"
@@ -33,6 +34,7 @@
           :error="formErrors.price"
       />
     </div>
+    <Alert v-if="formErrors.non_field_errors" class="mt-6" type="danger">{{ formErrors.non_field_errors }}</Alert>
     <template v-slot:footer>
       <Button
           :text="$t('generic.close')"
@@ -64,10 +66,11 @@ import main from "@/mixins/main";
 import InputGroup from "@/components/InputGroup";
 import vSelect from "vue-select";
 import VueSelect from "@/components/Select/VueSelect.vue";
+import Alert from "@/components/Alert/index.vue";
 
 export default {
   name: "AddServiceModal",
-  components: {VueSelect, vSelect, Button, Modal, Textinput, InputGroup},
+  components: {Alert, VueSelect, vSelect, Button, Modal, Textinput, InputGroup},
   mixins: [main],
   setup() {
     const coreStore = useCoreStore();

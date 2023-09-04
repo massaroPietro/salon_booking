@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-08-19 16:44+0000\n"
+"POT-Creation-Date: 2023-08-31 17:32+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -68,9 +68,17 @@ msgstr "Sabato"
 msgid "Sunday"
 msgstr "Domenica"
 
-#: salon_booking/salons/api/views.py:40
+#: salon_booking/salons/api/views.py:38
 msgid "There is already a salon with this name"
 msgstr "Esiste già un salone con questo nome"
+
+#: salon_booking/salons/api/views.py:95
+msgid "Invalid time range for work range"
+msgstr ""
+
+#: salon_booking/services/api/views.py:26
+msgid "Enter valid employees"
+msgstr "Inserisci dipendenti validi"
 
 #: salon_booking/templates/account/account_inactive.html:6
 #: salon_booking/templates/account/account_inactive.html:9

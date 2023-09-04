@@ -258,7 +258,6 @@ export default {
      * Modal open for add event
      */
     dateClicked(info) {
-        console.log(info)
       this.newEventData = info;
       this.showModal = true;
     },

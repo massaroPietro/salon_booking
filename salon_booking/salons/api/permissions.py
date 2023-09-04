@@ -33,3 +33,9 @@ class IsOwnerOrEmployee(permissions.BasePermission):
 class IsWorkDaySalonOwner(permissions.BasePermission):
     def has_object_permission(self, request, view, obj):
         return obj.employee.salon.owner == request.user
+
+
+class IsInvitationUser(permissions.BasePermission):
+
+    def has_object_permission(self, request, view, obj):
+        return obj.user == request.user

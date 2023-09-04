@@ -54,7 +54,7 @@ import * as yup from "yup";
 import Button from "@/components/Button/index.vue";
 import Alert from "@/components/Alert/index.vue";
 import {useI18n} from "vue-i18n";
-import {initFormState, resetObject, setBackendResposeErrors} from "@/utils/utils";
+import {initFormState, resetObject, setBackendResponseErrors} from "@/utils/utils";
 import Checkbox from "@/components/Checkbox";
 import {useToast} from "vue-toastification";
 import axios from "@/plugins/axios";

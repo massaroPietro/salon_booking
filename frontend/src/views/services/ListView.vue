@@ -65,7 +65,7 @@
                     </Tooltip>
                     <Tooltip placement="top" arrow theme="danger-500">
                       <template #button>
-                        <div class="action-btn">
+                        <div class="action-btn" @click="deleteService(props.row)">
                           <Icon icon="heroicons:trash"/>
                         </div>
                       </template>
@@ -171,6 +171,48 @@ export default {
         loader: this.toggleLoading,
       }
       backendService.getServices(config)
+    },
+    deleteService(service) {
+      this.$swal
+          .fire({
+            title: this.$t("alerts.areYouSure"),
+            text: this.$t("alerts.notWillRestoreService"),
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#34c38f",
+            cancelButtonColor: "#f46a6a",
+            cancelButtonText: this.$t("alerts.cancel"),
+            confirmButtonText: this.$t("alerts.confirmDelete"),
+            background: this.$store.themeSettingsStore.isDark
+                ? "#1e293b"
+                : "#fff",
+          })
+          .then((result) => {
+            if (result.value) {
+              let loader = this.$loading.show();
+              const config = {
+                success_callback: () => {
+                    this.services = this.services.filter((srv) => srv.id !== service.id);
+                  this.$swal
+                      .fire({
+                            title: this.$t('alerts.deleted'),
+                            text: this.$t('alerts.serviceDeleted', {name: service.name}),
+                            icon: "success",
+                            confirmButtonColor: "#1e293b",
+                            background: this.$store.themeSettingsStore.isDark
+                                ? "#1e293b"
+                                : "#fff",
+                          }
+                      )
+                },
+                finally_callback: () => {
+                  loader.hide()
+                }
+              }
+
+              backendService.deleteService(service.id, config);
+            }
+          });
     }
   }
 }

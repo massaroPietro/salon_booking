@@ -12,8 +12,8 @@ class ModelNameAdmin(admin.ModelAdmin):
 
 @admin.register(Employee)
 class ModelNameAdmin(admin.ModelAdmin):
-    list_display = ('id', 'user', 'salon', )
-    list_filter = ('user', 'salon', )
+    list_display = ('id', 'user', 'salon', "created_at")
+    list_filter = ('user', 'salon', "created_at")
 
 
 @admin.register(EmployeeWorkDay)
@@ -24,3 +24,7 @@ class ModelNameAdmin(admin.ModelAdmin):
 @admin.register(EmployeeWorkRange)
 class ModelNameAdmin(admin.ModelAdmin):
     pass
+
+@admin.register(EmployeeInvitation)
+class ModelNameAdmin(admin.ModelAdmin):
+    list_display = ('user', 'salon', 'status')

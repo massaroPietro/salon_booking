@@ -2,6 +2,8 @@ import sys
 
 from allauth.account.models import EmailAddress
 from django.db import transaction
+from rest_framework.exceptions import ValidationError
+from rest_framework.generics import get_object_or_404
 
 from ..models import *
 from rest_framework import serializers
@@ -54,7 +56,6 @@ class EmployeeWorkDaySerializer(serializers.ModelSerializer):
         for i in instance.work_ranges.all():
             i.delete()
 
-
         for work_range_data in work_ranges_data:
             EmployeeWorkRange.objects.create(**work_range_data)
 
@@ -99,3 +100,43 @@ class BookingSalonSerializer(serializers.ModelSerializer):
     class Meta:
         model = Salon
         fields = ['name', 'logo', 'employees']
+
+
+class EmployeeInvitationForSalonSerializer(serializers.ModelSerializer):
+    email = serializers.EmailField(write_only=True)
+
+    class Meta:
+        model = EmployeeInvitation
+        exclude = [
+            'user',
+        ]
+        read_only_fields = ['salon', "status"]
+
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+        data['email'] = instance.user.email
+        return data
+
+    def create(self, validated_data):
+        slug = self.context['view'].kwargs['slug']
+        email = validated_data.pop('email')
+        user = get_object_or_404(User, email=email)
+        salon = get_object_or_404(Salon, slug=slug)
+
+        if Employee.objects.filter(user=user, salon=salon).exists():
+            raise ValidationError(_("The user with this email is already part of the salon"))
+
+        if EmployeeInvitation.objects.filter(user=user, salon=salon).exists():
+            raise ValidationError(_("An invitation already exists for this email"))
+
+        employee_invitation = EmployeeInvitation.objects.create(user=user, salon=salon)
+        return employee_invitation
+
+
+class EmployeeInvitationForUserSerializer(serializers.ModelSerializer):
+    salon = FriendlySalonSerializer(read_only=True)
+
+    class Meta:
+        model = EmployeeInvitation
+        fields = "__all__"
+        read_only_fields = ['user', 'status']

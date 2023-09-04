@@ -43,10 +43,21 @@ export function resetObject(object) {
     }
 }
 
-export function setBackendResposeErrors(err, formErrors) {
+export function setBackendResponseErrors(err, formErrors) {
+    console.log("ci sono")
     if (err.response && err.response.data) {
         for (const errorField in err.response.data) {
-            formErrors[errorField] = err.response.data[errorField][0];
+            if (typeof err.response.data[errorField] === "string") {
+                if (isNaN(errorField) && formErrors[errorField].length === 0) {
+                    formErrors[errorField] = err.response.data[errorField];
+                } else {
+                    if (formErrors['non_field_errors'].length === 0) {
+                        formErrors["non_field_errors"] = err.response.data[errorField];
+                    }
+                }
+            } else {
+                formErrors[errorField] = err.response.data[errorField][0];
+            }
         }
     }
 }

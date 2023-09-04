@@ -5,7 +5,12 @@ import router from "@/router";
 import toast from "@/plugins/toasts";
 import {useAuthStore} from "@/store/auth";
 import {useCoreStore} from "@/store/core";
-import {setBackendResposeErrors} from "@/utils/utils";
+import {setBackendResponseErrors} from "@/utils/utils";
+import {useToast} from "vue-toastification";
+import {ref} from "vue";
+import App from "@/App.vue";
+import app from "@/App.vue";
+import emitter from "@/plugins/mitt";
 
 const {t} = i18n.global
 
@@ -24,7 +29,12 @@ function setUserInfoOnLogin(response, rememberUser) {
         timeout: 2000
     });
 
-    router.push("/")
+    const toPath = router.currentRoute.value.query.to || '/'
+
+    router.push(toPath);
+    if (response.data.user.employee_invitations?.length > 0) {
+        emitter.emit("openInvitationsModal")
+    }
 }
 
 function apiCaller(method, endpoint, requestData, config, headers = {}) {
@@ -48,12 +58,12 @@ function apiCaller(method, endpoint, requestData, config, headers = {}) {
             }
         })
         .catch((err) => {
-            if (config?.error_callback) {
-                config.error_callback(err);
+            if (config?.formErrors) {
+                setBackendResponseErrors(err, config.formErrors)
             }
 
-            if (config?.formErrors) {
-                setBackendResposeErrors(err, config.formErrors)
+            if (config?.error_callback) {
+                config.error_callback(err);
             }
         })
         .finally(() => {
@@ -121,7 +131,20 @@ const backendService = {
         if (storeUser) {
             const authStore = useAuthStore();
             config = createSpecificCallbacks(config, (response) => {
+                const currentSalonId = response.data.settings.current_salon;
+                const salons = response.data.salons;
+
+                if (!salons.some(salon => salon.id === currentSalonId)) {
+                    if (salons.length > 0) {
+                        response.data.settings.current_salon = salons[0].id;
+                    }
+                }
+
                 authStore.user = response.data;
+
+                if (response.data.employee_invitations?.length > 0) {
+                    emitter.emit("openInvitationsModal")
+                }
             })
         }
 
@@ -187,6 +210,10 @@ const backendService = {
         const authStore = useAuthStore();
         const currentSalon = authStore.getCurrentSalon;
         const endpoint = apiEndpoints.services(currentSalon?.slug);
+
+        console.log(data)
+        data.employees.push('b648d0eb-ba4b-4392-bc19-96de24bbd3f8')
+        console.log(data)
 
         config = createSpecificCallbacks(config, () => {
             const coreStore = useCoreStore();
@@ -346,6 +373,40 @@ const backendService = {
 
         apiCaller("patch", endpoint, formData, config, headers);
     },
+    deleteService(serviceID, config = null) {
+        const endpoint = apiEndpoints.service(serviceID);
+
+
+        config = createSpecificCallbacks(config, () => {
+            const authStore = useAuthStore();
+            authStore.deleteService(serviceID);
+        });
+
+
+        apiCaller('delete', endpoint, null, config);
+    },
+    sendEmployeeInvitation(email, config) {
+        const authStore = useAuthStore();
+        const current_salon = authStore.getCurrentSalon;
+        const endpoint = apiEndpoints.employeeInvitations(current_salon.slug)
+        const data = {
+            email: email
+        }
+        config = createSpecificCallbacks(config, () => {
+            toast.success(t("toasts.invitationSent"))
+        })
+        apiCaller("post", endpoint, data, config)
+    },
+    acceptEmployeeInvitation(id, config) {
+        const endpoint = apiEndpoints.acceptInvitation(id);
+
+        apiCaller("post", endpoint, null, config);
+    },
+    rejectEmployeeInvitation(id, config) {
+        const endpoint = apiEndpoints.rejectInvitation(id);
+
+        apiCaller("post", endpoint, null, config);
+    }
 };
 
 export default backendService;

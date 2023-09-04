@@ -12,6 +12,7 @@ else:
     router = SimpleRouter()
 
 router.register('salons', SalonViewSet, basename='salons')
+router.register("invitations", EmployeeInvitationViewSet, basename="invitations")
 
 urlpatterns = [
     # User
@@ -24,6 +25,7 @@ urlpatterns = [
     # Employees
     path("salons/<slug:slug>/employees/register/", EmployeeRegisterAPIView.as_view()),
     path("salons/<slug:slug>/employees/", EmployeeListAPIView.as_view()),
+    path("salons/<slug:slug>/invitations/", EmployeeInvitationListCreateAPIView.as_view()),
     path("employees/<uuid:pk>/", EmployeeRUDAPIView.as_view()),
     path("employee/work-days/<uuid:pk>/", EmployeeWorkDayRUAPIView.as_view()),
 

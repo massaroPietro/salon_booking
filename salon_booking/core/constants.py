@@ -14,3 +14,15 @@ WEEKDAYS = [
     (6, _("Saturday")),
     (7, _("Sunday")),
 ]
+
+# -----------------------------
+
+PENDING_STATUS = "pending"
+REJECTED_STATUS = "accepted"
+ACCEPTED_STATUS = "rejected"
+
+INVITATION_STATUS = (
+    (PENDING_STATUS, _("Pending")),
+    (ACCEPTED_STATUS, _("Accepted")),
+    (REJECTED_STATUS, _("Rejected")),
+)

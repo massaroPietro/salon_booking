@@ -7,6 +7,14 @@ export default {
             serverError: "Server error. Try later.",
             insertValidHours: "Please enter valid working hours",
         },
+        alerts: {
+            confirmDelete: "Yes, delete it!",
+            cancel: "Cancel",
+            areYouSure: "Are you sure?",
+            notWillRestoreService: "You won't be able to delete this!",
+            deleted: "Deleted!",
+            serviceDeleted: 'The "%{name}" service has been deleted',
+        },
         weekDays: {
             1: "Monday",
             2: "Tuesday",
@@ -49,6 +57,9 @@ export default {
             service: "Service",
             duration: "Duration",
             price: "Price",
+            accepted: "Accepted",
+            rejected: "Rejected",
+            pending: "Pending",
         },
         auth: {
             signIn: "Sign in",
@@ -82,6 +93,7 @@ export default {
             successLogin: "Welcome back to BarberBooking",
             employeeRegistered: "Employee registered successfully. After verifying the email you can use BarberBooking",
             serviceAdded: "The services is added successfully",
+            invitationSent: "Invitation sent successfully",
         },
         app: {
             employees: {
@@ -96,6 +108,7 @@ export default {
                 workHoursUpdated: "working hours on %{weekday} updated correctly",
                 addEmployee: "Add employee",
                 addNewEmployee: "Add new employee",
+                invitedForSalon: "You have received an invitation to participate"
             },
             services: {
                 addNewService: "Add new service",
@@ -188,6 +201,9 @@ export default {
             service: "Servizio",
             duration: "Durata",
             price: "Prezzo",
+            accepted: "Accettato",
+            rejected: "Rifiutato",
+            pending: "In attesa",
         },
         errors: {
             notValidEmail: "Email non valida",
@@ -195,6 +211,14 @@ export default {
             genericError: "Errore generico",
             serverError: "Errore con il server. Riprova più tardi.",
             insertValidHours: "Inserisci degli orari di lavoro validi",
+        },
+        alerts: {
+            confirmDelete: "Si, elimina!",
+            cancel: "Annulla",
+            areYouSure: "Sei sicuro?",
+            notWillRestoreService: "Non potrai più ripristinare il servizio!",
+            deleted: "Eliminato!",
+            serviceDeleted: 'Il servizio "%{name}" è stato eliminato',
         },
         weekDays: {
             1: "Lunedì",
@@ -243,6 +267,7 @@ export default {
             successLogin: "Bentornato in BarberBooking",
             employeeRegistered: "Dipendente registrato correttamente. Dopo la verifica dell'email potrà usare BarberBooking",
             serviceAdded: "Il servizio è stato aggiunto correttamente",
+            invitationSent: "L'invito è stato inviato correttamente",
         },
         app: {
             employees: {
@@ -257,6 +282,7 @@ export default {
                 workHoursUpdated: "Orari di lavoro di %{weekday} aggiornati correttamente",
                 addNewEmployee: "Aggiungi nuovo dipendente",
                 addEmployee: "Aggiungi dipendente",
+                invitedForSalon: "Hai ricevuto un invito a partecipare"
             },
             services: {
                 addNewService: "Aggiungi nuovo servizio",

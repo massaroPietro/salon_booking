@@ -39,7 +39,7 @@ import apiEndpoints from "@/constant/apiEndpoints";
 import i18n from "@/plugins/i18n";
 
 const {t} = i18n.global;
-import {initFormState, setBackendResposeErrors} from "@/utils/utils";
+import {initFormState, setBackendResponseErrors} from "@/utils/utils";
 import {useCoreStore} from "@/store/core";
 import backendService from "@/utils/backendService";
 import formSchemes from "@/constant/formSchemes";

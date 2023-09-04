@@ -1,14 +1,16 @@
 from allauth.account.models import EmailAddress
-from django.db import transaction
+from allauth.utils import email_address_exists
+from rest_framework import mixins
 from django.utils.text import slugify
 from rest_framework import viewsets, generics
+from rest_framework.decorators import action
 from rest_framework.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
 from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from .permissions import IsOwnerOrReadOnly, IsOwner, IsOwnerOrEmployee, IsWorkDaySalonOwner
+from .permissions import IsOwnerOrReadOnly, IsOwner, IsOwnerOrEmployee, IsWorkDaySalonOwner, IsInvitationUser
 from ..models import *
 from .serializers import *
 from rest_framework import status
@@ -55,6 +57,16 @@ class EmployeeListAPIView(generics.ListAPIView):
 class EmployeeRegisterAPIView(RegisterView):
     permission_classes = [IsOwner]
 
+    def post(self, request, *args, **kwargs):
+        email = request.data['email']
+
+        if email_address_exists(email):
+            response_data = {'email_exists': False,
+                             'email': _('A user is already registered with this e-mail address.')}
+            return Response(response_data, status=status.HTTP_400_BAD_REQUEST)
+
+        super().post(request, *args, **kwargs)
+
     @transaction.atomic
     def perform_create(self, serializer):
         user = super().perform_create(serializer)
@@ -96,3 +108,36 @@ class EmployeeWorkDayRUAPIView(generics.RetrieveUpdateAPIView):
                 })
 
         serializer.save()
+
+
+class EmployeeInvitationListCreateAPIView(generics.ListCreateAPIView):
+    serializer_class = EmployeeInvitationForSalonSerializer
+    permission_classes = [IsOwner]
+
+    def get_queryset(self):
+        salon = get_object_or_404(Salon, slug=self.kwargs['slug'])
+        return salon.employee_invitations.all()
+
+
+class EmployeeInvitationViewSet(viewsets.GenericViewSet):
+    serializer_class = EmployeeInvitationForUserSerializer
+    permission_classes = [IsInvitationUser]
+
+    def get_queryset(self):
+        return EmployeeInvitation.objects.filter(status=PENDING_STATUS)
+
+    @transaction.atomic
+    @action(detail=True, methods=['post'])
+    def accept_invitation(self, request, pk=None):
+        invitation = self.get_object()
+        invitation.status = ACCEPTED_STATUS
+        invitation.save()
+        Employee.objects.create(user=invitation.user, salon=invitation.salon)
+        return Response(status=status.HTTP_200_OK)
+
+    @action(detail=True, methods=['post'])
+    def reject_invitation(self, request, pk=None):
+        invitation = self.get_object()
+        invitation.status = REJECTED_STATUS
+        invitation.save()
+        return Response(status=status.HTTP_200_OK)

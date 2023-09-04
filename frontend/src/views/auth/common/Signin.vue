@@ -64,7 +64,7 @@ import Textinput from "@/components/Textinput";
 import {useAuthStore} from "@/store/auth";
 import Button from "@/components/Button/index.vue";
 import Alert from "@/components/Alert/index.vue";
-import {initFormState, setBackendResposeErrors} from "@/utils/utils";
+import {initFormState, setBackendResponseErrors} from "@/utils/utils";
 import formSchemes from "@/constant/formSchemes";
 import backendService from "@/utils/backendService";
 import main from "@/mixins/main";
@@ -98,7 +98,6 @@ export default {
           loader: this.toggleLoading,
           formErrors: this.formErrors,
         }
-
         backendService.loginUser(this.form, config, this.checkbox)
       })
     },

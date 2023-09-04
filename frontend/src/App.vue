@@ -1,22 +1,18 @@
 <template>
   <router-view :key="coreStore.reload"/>
+  <EmployeeInvitationsModals />
 </template>
 
 <script>
 import {useThemeSettingsStore} from "@/store/themeSettings";
 import {useAuthStore} from "@/store/auth";
 import axios from "@/plugins/axios";
-import Button from "@/components/Button/index.vue";
-import Textinput from "@/components/Textinput/index.vue";
-import Modal from "@/components/Modal/Modal.vue";
-import Success from "@/views/auth/success.vue";
-import AddFirstSalon from "@/views/auth/add-first-salon.vue";
 import {useCoreStore} from "@/store/core";
 import backendService from "@/utils/backendService";
-
+import EmployeeInvitationsModals from "@/components/modals/EmployeeInvitationsModals.vue";
 export default {
   name: "App",
-  components: {AddFirstSalon, Success, Modal, Textinput, Button},
+  components: {EmployeeInvitationsModals},
   mounted() {
     this.$store.themeSettingsStore = useThemeSettingsStore();
   },
@@ -39,4 +35,3 @@ export default {
 }
 </script>
 
-<style></style>

@@ -22,7 +22,8 @@
         >
           <template v-slot:table-row="props">
             <span v-if="props.column.field === 'user.full_name'" class="flex justify-center">
-              <span class="w-7 h-7 rounded-full ltr:mr-3 rtl:ml-3 flex-none  cursor-pointer" @click="$router.push({name:'employee-detail', params:{employeeID: props.row.id}})">
+              <span class="w-7 h-7 rounded-full ltr:mr-3 rtl:ml-3 flex-none  cursor-pointer"
+                    @click="$router.push({name:'employee-detail', params:{employeeID: props.row.id}})">
                 <img
                     :src="props.row.pic"
                     :alt="props.row.user.full_name"
@@ -30,7 +31,8 @@
                 />
               </span>
               <span
-                  class="text-sm text-slate-600 dark:text-slate-300 capitalize mt-auto mb-auto cursor-pointer" @click="$router.push({name:'employee-detail', params:{employeeID: props.row.id}})"
+                  class="text-sm text-slate-600 dark:text-slate-300 capitalize mt-auto mb-auto cursor-pointer"
+                  @click="$router.push({name:'employee-detail', params:{employeeID: props.row.id}})"
               >{{ props.row.user.full_name }}</span
               >
             </span>

@@ -13,15 +13,16 @@
           placeholder=""
           v-model="form.first_name"
           :error="formErrors.first_name"
-          classInput="h-[48px] mb-2"
+          classInput="h-[48px]"
       />
       <Textinput
           :label="$t('generic.lastName')"
           type="text"
+          class-label="mt-3"
           placeholder=""
           v-model="form.last_name"
           :error="formErrors.last_name"
-          classInput="h-[48px] mb-2"
+          classInput="h-[48px]"
       />
       <Textinput
           label="Email"
@@ -30,8 +31,14 @@
           name="emil"
           v-model="form.email"
           :error="formErrors.email"
-          classInput="h-[48px] mb-2"
+          class-label="mt-3"
+          classInput="h-[48px]"
       />
+
+      <span class="text-danger-500 block text-sm" v-if="formErrors.email && !emailExists">
+          Clicca <span @click="sendInvitationLink(email)" class="text-black-500 cursor-pointer">quì</span> per inviare alla mail il link di invito
+      </span>
+
       <Textinput
           :label="$t('generic.password')"
           type="password"
@@ -39,10 +46,12 @@
           v-model="form.password1"
           :error="formErrors.password1"
           hasicon
-          classInput="h-[48px] mb-2"
+          class-label="mt-3"
+          classInput="h-[48px]"
       />
       <Textinput
           :label="$t('auth.repeatPassword')"
+          class-label="mt-3"
           type="password"
           placeholder=""
           v-model="form.password2"
@@ -51,6 +60,9 @@
           classInput="h-[48px]"
       />
     </div>
+
+    <Alert class="mt-5" v-if="formErrors.non_field_errors" type="danger">{{ formErrors.non_field_errors }}</Alert>
+
     <template v-slot:footer>
       <Button
           :text="$t('generic.close')"
@@ -74,17 +86,18 @@ import Modal from "@/components/Modal/Modal.vue";
 import Button from "@/components/Button/index.vue";
 import {useCoreStore} from "@/store/core";
 import {useToast} from "vue-toastification";
-import {initFormState, setBackendResposeErrors} from "@/utils/utils";
+import {initFormState, setBackendResponseErrors} from "@/utils/utils";
 import formSchemes from "@/constant/formSchemes";
 import apiEndpoints from "@/constant/apiEndpoints";
 import axios from "@/plugins/axios";
 import {useAuthStore} from "@/store/auth";
 import backendService from "@/utils/backendService";
 import main from "@/mixins/main";
+import Alert from "@/components/Alert/index.vue";
 
 export default {
   name: "AddEmployeeModal",
-  components: {Button, Modal, Textinput},
+  components: {Alert, Button, Modal, Textinput},
   mixins: [main],
   setup() {
     const coreStore = useCoreStore();
@@ -97,7 +110,24 @@ export default {
 
     return {toast, FormScheme, form, formErrors, coreStore, validateForm, authStore};
   },
+  data() {
+    return {
+      emailExists: true,
+      email: null,
+    }
+  },
   methods: {
+    sendInvitationLink(email) {
+      const config = {
+        formErrors: this.formErrors,
+        loader: this.toggleLoading,
+        success_callback: () => {
+          this.$refs.addEmployeeModal.closeModal();
+        }
+      }
+
+      backendService.sendEmployeeInvitation(email, config);
+    },
     onSubmit() {
       this.validateForm().then(() => {
         const current_salon_slug = this.authStore.getCurrentSalon.slug
@@ -105,9 +135,17 @@ export default {
           success_callback: () => {
             this.$refs.addEmployeeModal.closeModal();
           },
+          error_callback: (err) => {
+            if (err.response.data.hasOwnProperty('email_exists') && err.response.data['email_exists'] === false) {
+              this.emailExists = false;
+              this.email = this.form.email;
+            }
+          },
           formErrors: this.formErrors,
           loader: this.toggleLoading,
         }
+
+        this.emailExists = true;
         backendService.registerEmployee(current_salon_slug, this.form, config)
       })
     }

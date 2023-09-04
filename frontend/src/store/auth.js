@@ -121,5 +121,8 @@ export const useAuthStore = defineStore('authStore', {
         isCurrentSalonOwner() {
             return this.user.id === this.getCurrentSalon.owner;
         },
+        deleteService(id) {
+            this.getCurrentSalon.services = JSON.parse(JSON.stringify(this.getCurrentSalon.services.filter((service) => service.id !== id)))
+        }
     },
 })
