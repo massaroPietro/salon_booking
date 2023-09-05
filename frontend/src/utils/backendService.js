@@ -211,10 +211,6 @@ const backendService = {
         const currentSalon = authStore.getCurrentSalon;
         const endpoint = apiEndpoints.services(currentSalon?.slug);
 
-        console.log(data)
-        data.employees.push('b648d0eb-ba4b-4392-bc19-96de24bbd3f8')
-        console.log(data)
-
         config = createSpecificCallbacks(config, () => {
             const coreStore = useCoreStore();
             coreStore.reloadPage();

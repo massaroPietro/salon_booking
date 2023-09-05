@@ -126,6 +126,9 @@ import interactionPlugin from "@fullcalendar/interaction";
 import listPlugin from "@fullcalendar/list";
 import {calendarEvents, categories} from "./Initialize-event";
 import {Form} from "vee-validate";
+import itLocale from "@fullcalendar/core/locales/it";
+
+import {useAuthStore} from "@/store/auth";
 
 export default {
   name: "calander",
@@ -137,34 +140,16 @@ export default {
     Form,
     Textinput,
   },
+  setup() {
+    const authStore = useAuthStore();
 
+    return {authStore};
+  },
   data() {
     return {
       title: "Calendar",
       errors: [],
       calendarEvents: calendarEvents,
-      calendarOptions: {
-        headerToolbar: {
-          left: "prev,next today",
-          center: "title",
-          right: "dayGridMonth,timeGridWeek,timeGridDay,listWeek",
-        },
-        plugins: [dayGridPlugin, timeGridPlugin, interactionPlugin, listPlugin],
-        initialView: "dayGridMonth",
-        themeSystem: "bootstrap",
-        initialEvents: calendarEvents,
-        editable: true,
-        droppable: true,
-        eventResizableFromStart: true,
-        dateClick: this.dateClicked,
-        eventClick: this.editEvent,
-        eventsSet: this.handleEvents,
-        select: this.dateClicked,
-        weekends: true,
-        selectable: true,
-        selectMirror: true,
-        dayMaxEvents: true,
-      },
       currentEvents: [],
       showModal: false,
       eventModal: false,
@@ -185,6 +170,34 @@ export default {
     };
   },
   computed: {
+    calendarLocale() {
+      return this.$i18n.locale === 'it' ? itLocale : "";
+    },
+    calendarOptions() {
+      return {
+        headerToolbar: {
+          left: "prev,next today",
+          center: "title",
+          right: "dayGridMonth,timeGridWeek,timeGridDay,listWeek",
+        },
+        plugins: [dayGridPlugin, timeGridPlugin, interactionPlugin, listPlugin],
+        initialView: "dayGridMonth",
+        themeSystem: "bootstrap",
+        initialEvents: calendarEvents,
+        locale: this.calendarLocale,
+        editable: true,
+        droppable: true,
+        eventResizableFromStart: true,
+        dateClick: this.dateClicked,
+        eventClick: this.editEvent,
+        eventsSet: this.handleEvents,
+        select: this.dateClicked,
+        weekends: true,
+        selectable: true,
+        selectMirror: true,
+        dayMaxEvents: true,
+      }
+    },
     titleIsvalid() {
       return !!this.event.title;
     },

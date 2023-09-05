@@ -15,7 +15,8 @@
           :error="formErrors.name"
           classInput="h-[48px] mb-2"
       />
-      <VueSelect :options="employees" :label="$t('app.services.enabledEmployees')" multiple v-model="selectedEmployees"
+      <VueSelect :options="employees" :label="$t('app.services.enabledEmployees')" multiple
+                 v-model="selectedEmployees"
                  class="mb-2"/>
       <Textinput
           :label="$t('generic.duration')"
@@ -72,6 +73,12 @@ export default {
   name: "AddServiceModal",
   components: {Alert, VueSelect, vSelect, Button, Modal, Textinput, InputGroup},
   mixins: [main],
+  props: {
+    service: {
+      type: Object,
+      required: false,
+    }
+  },
   setup() {
     const coreStore = useCoreStore();
     const authStore = useAuthStore();
@@ -85,7 +92,20 @@ export default {
   },
   data() {
     return {
-      selectedEmployees: null
+      selectedEmployees: [],
+    }
+  },
+  mounted() {
+    if (this.service) {
+      this.form = JSON.parse(JSON.stringify(this.service));
+
+      this.service.employees.forEach((employeeID) => {
+        const employee = this.authStore.getEmployee(employeeID);
+        if (employee) {
+          employee.label = employee.user.full_name;
+          this.selectedEmployees.push(employee)
+        }
+      })
     }
   },
   computed: {

@@ -20,6 +20,7 @@ class EmployeeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Employee
         fields = "__all__"
+        read_only_fields = ['salon']
 
     def get_user(self, instance):
         from salon_booking.users.api.serializers import UserSerializer

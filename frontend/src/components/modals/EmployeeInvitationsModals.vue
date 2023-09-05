@@ -47,7 +47,7 @@
                 <div v-if="item.accepted">
                   <Badge
                       :label="$t('generic.accepted')"
-                      badgeClass="bg-success-500 text-white"
+                      badgeClass="bg-success-500 text-white mt-4"
                       icon="heroicons-outline:check"
                   />
                 </div>
@@ -58,7 +58,7 @@
                       icon="heroicons-outline:trash"
                   />
                 </div>
-                <div v-else class="space-x-3 text-base text-secondary-500 rtl:space-x-reverse">
+                <div v-else class="space-x-3 text-3xl text-secondary-500 rtl:space-x-reverse">
                   <button type="button" class="duration-300 hover:text-success-500" @click="acceptInvitation(item)">
                     <Icon icon="heroicons-outline:check"/>
                   </button>

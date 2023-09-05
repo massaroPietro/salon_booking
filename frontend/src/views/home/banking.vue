@@ -235,10 +235,6 @@ export default {
     Breadcrumb,
     Textinput,
   },
-
-  created() {
-    console.log("ciao")
-  },
   data() {
     return {
       activeIndex: null,

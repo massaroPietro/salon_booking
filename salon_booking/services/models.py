@@ -2,6 +2,7 @@ from django.db import models
 
 from salon_booking.core.models import BaseModel
 
+
 # Create your models here.
 
 class Service(BaseModel):

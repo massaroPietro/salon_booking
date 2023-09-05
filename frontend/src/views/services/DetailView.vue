@@ -43,7 +43,13 @@
     </div>
     <div class="grid grid-cols-12 gap-6">
       <div class="lg:col-span-5 col-span-12">
-        <Card title="Info">
+        <Card title="">
+          <div
+              class="md:flex justify-between pb-6 md:space-y-0 space-y-3 items-center"
+          >
+            <h5>Info</h5>
+            <add-service-modal v-if="authStore.getCurrentSalon?.employees" :service="service"/>
+          </div>
           <ul class="list space-y-8">
             <li class="flex space-x-3 rtl:space-x-reverse">
               <div
@@ -100,7 +106,10 @@
                     class="text-base text-slate-600 dark:text-slate-50"
                 >
                   <ul>
-                      <li v-for="employee in service.employees">- {{ authStore.getEmployee(employee).user.full_name }}</li>
+                    <li v-for="employee in service.employees">- {{
+                        authStore.getEmployee(employee)?.user?.full_name
+                      }}
+                    </li>
                   </ul>
                 </a>
               </div>
@@ -121,11 +130,13 @@ import Button from "@/components/Button/index.vue";
 import backendService from "@/utils/backendService";
 import main from "@/mixins/main";
 import {humanizeDuration} from "../../utils/utils";
+import AddServiceModal from "@/components/modals/AddServiceModal.vue";
 
 export default {
   name: "DetailView",
   mixins: [main],
   components: {
+    AddServiceModal,
     Button,
     WorkDaysTabsComponent,
     Card,

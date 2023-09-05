@@ -123,6 +123,9 @@ export default {
         loader: this.toggleLoading,
         success_callback: () => {
           this.$refs.addEmployeeModal.closeModal();
+          const {form, formErrors} = initFormState(Object.keys(this.FormScheme.fields), this.FormScheme);
+          this.form = form;
+          this.formErrors = formErrors;
         }
       }
 

@@ -42,13 +42,13 @@
                 class="form-control"
                 placeholder="Da"
                 v-model="field.from_hour"
-                :config="{ enableTime: true, noCalendar: true, dateFormat: 'H:i' }"
+                :config="{ enableTime: true, noCalendar: true, dateFormat: 'H:i'}"
             />
             <flat-pickr
                 class="form-control"
                 placeholder="A"
                 v-model="field.to_hour"
-                :config="{ enableTime: true, noCalendar: true, dateFormat: 'H:i' }"
+                :config="{ enableTime: true, noCalendar: true, dateFormat: 'H:i'}"
             />
           </div>
 

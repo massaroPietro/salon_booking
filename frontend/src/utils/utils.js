@@ -44,7 +44,6 @@ export function resetObject(object) {
 }
 
 export function setBackendResponseErrors(err, formErrors) {
-    console.log("ci sono")
     if (err.response && err.response.data) {
         for (const errorField in err.response.data) {
             if (typeof err.response.data[errorField] === "string") {

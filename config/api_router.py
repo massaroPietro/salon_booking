@@ -5,6 +5,7 @@ from rest_framework.routers import DefaultRouter, SimpleRouter
 from salon_booking.salons.api.views import *
 from salon_booking.services.api.views import *
 from salon_booking.users.api.views import *
+from salon_booking.appointments.api.views import *
 
 if settings.DEBUG:
     router = DefaultRouter()
@@ -26,6 +27,8 @@ urlpatterns = [
     path("salons/<slug:slug>/employees/register/", EmployeeRegisterAPIView.as_view()),
     path("salons/<slug:slug>/employees/", EmployeeListAPIView.as_view()),
     path("salons/<slug:slug>/invitations/", EmployeeInvitationListCreateAPIView.as_view()),
+    path("salons/<slug:slug>/appointments/", AppointmentListCreateAPIView.as_view()),
+    path("appointments/<uuid:pk>/", AppointmentRUDAPIView.as_view()),
     path("employees/<uuid:pk>/", EmployeeRUDAPIView.as_view()),
     path("employee/work-days/<uuid:pk>/", EmployeeWorkDayRUAPIView.as_view()),
 
