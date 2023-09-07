@@ -31,7 +31,7 @@ class Employee(BaseModel):
         unique_together = ('user', 'salon',)
 
     def __str__(self):
-        return self.user.username
+        return self.user.username + " - " + self.salon.name
 
 
 class WorkDay(BaseModel):

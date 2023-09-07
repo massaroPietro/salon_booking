@@ -1,10 +1,8 @@
 import {defineStore} from "pinia";
 import axios from "@/plugins/axios";
-import apiEndpoints from "@/constant/apiEndpoints";
-import router from "@/router";
 import i18n from "@/plugins/i18n";
-import backendService from "@/utils/backendService";
-import {computed} from "vue";
+
+const { t } = i18n.global
 
 export const useAuthStore = defineStore('authStore', {
     state: () => {
@@ -18,6 +16,7 @@ export const useAuthStore = defineStore('authStore', {
                 salons: [],
             },
             currentSalon: null,
+            appointments: [],
         }
     },
     getters: {
@@ -59,8 +58,28 @@ export const useAuthStore = defineStore('authStore', {
                 }
             }
         },
+        getAppointments() {
+            const appointments = this.getCurrentSalon?.appointments || [];
+            if (appointments.length === 0) {
+                return [];
+            } else {
+                return appointments.map(appointment => ({
+                    ...appointment,
+                    title: t("generic.add")
+                }));
+            }
+        }
     },
     actions: {
+        addAppointments(data) {
+            if (this.getCurrentSalon) {
+                if (this.getAppointments.length > 0) {
+                    this.getCurrentSalon.appointments.push(data)
+                } else {
+                    this.getCurrentSalon.appointments = data;
+                }
+            }
+        },
         initializeStore() {
             if (localStorage.getItem('token')) {
                 this.token = localStorage.getItem('token')

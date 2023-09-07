@@ -37,7 +37,7 @@ function setUserInfoOnLogin(response, rememberUser) {
     }
 }
 
-function apiCaller(method, endpoint, requestData, config, headers = {}) {
+function apiCaller(method, endpoint, requestData, config, headers = {}, params = {}) {
     if (config?.loader) {
         config.loader()
     }
@@ -46,6 +46,7 @@ function apiCaller(method, endpoint, requestData, config, headers = {}) {
         method: method,
         url: endpoint,
         data: requestData,
+        params: params,
         headers: headers,
     })
         .then((response) => {
@@ -402,6 +403,20 @@ const backendService = {
         const endpoint = apiEndpoints.rejectInvitation(id);
 
         apiCaller("post", endpoint, null, config);
+    },
+    getAppointments(config, params) {
+        const authStore = useAuthStore();
+        const salonSlug = authStore.getCurrentSalon.slug;
+        const endpoint = apiEndpoints.appointments(salonSlug);
+
+        config = createSpecificCallbacks(config, (response) => {
+            response.data.forEach((event) => {
+                event.className = "bg-success-500 text-white";
+            });
+            this.authStore.addAppointments(response.data);
+        })
+
+        apiCaller("get", endpoint, null, config, null, params);
     }
 };
 

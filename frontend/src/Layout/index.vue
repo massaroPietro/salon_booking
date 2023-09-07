@@ -98,7 +98,7 @@ export default {
   },
   computed: {
     isReady() {
-      return this.authStore.user.salons && this.authStore.user.salons.length > 0 && this.authStore.user.settings;
+      return this.authStore.isAuthenticated && this.authStore.user.salons && this.authStore.user.salons.length > 0 && this.authStore.user.settings;
     }
   },
   methods: {

@@ -25,6 +25,18 @@ class UserSettingsSerializer(serializers.ModelSerializer):
         )
 
 
+class FriendlyUserSerializer(serializers.ModelSerializer):
+    full_name = serializers.SerializerMethodField(read_only=True)
+
+    class Meta:
+        model = User
+        fields = ["email", 'full_name']
+        read_only_fields = ('email', 'full_name',)
+
+    def get_full_name(self, instance):
+        return instance.first_name + " " + instance.last_name
+
+
 class UserSerializer(serializers.ModelSerializer):
     full_name = serializers.SerializerMethodField(read_only=True)
     employee_invitations = serializers.SerializerMethodField(read_only=True)
@@ -36,6 +48,14 @@ class UserSerializer(serializers.ModelSerializer):
 
     def get_full_name(self, instance):
         return instance.first_name + " " + instance.last_name
+
+    def to_representation(self, instance):
+        data = super(UserSerializer, self).to_representation(instance)
+
+        if 'employee_invitations' in data and not data['employee_invitations']:
+            del data['employee_invitations']
+
+        return data
 
     def get_employee_invitations(self, instance):
         invitations = instance.employee_invitations.filter(status=PENDING_STATUS).all()

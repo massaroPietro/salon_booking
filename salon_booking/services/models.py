@@ -12,3 +12,11 @@ class Service(BaseModel):
     price = models.FloatField()
     image = models.ImageField(upload_to="services/pics", default="services/pics/default.png")
     employees = models.ManyToManyField("salons.Employee", blank=True)
+
+    @property
+    def duration_in_seconds(self):
+        return self.duration.seconds
+
+    @property
+    def duration_in_milliseconds(self):
+        return self.duration.seconds * 1000

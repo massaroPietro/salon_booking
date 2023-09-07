@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Card>
+    <Card class-name="mt-5">
       <div class="dashcode-calender">
         <FullCalendar
             ref="fullCalendar"
@@ -110,6 +110,7 @@
         </Form>
       </Modal>
     </Card>
+
   </div>
 </template>
 
@@ -127,8 +128,10 @@ import listPlugin from "@fullcalendar/list";
 import {calendarEvents, categories} from "./Initialize-event";
 import {Form} from "vee-validate";
 import itLocale from "@fullcalendar/core/locales/it";
-
+import Loading from 'vue-loading-overlay';
 import {useAuthStore} from "@/store/auth";
+import backendService from "@/utils/backendService";
+import axios from "@/plugins/axios";
 
 export default {
   name: "calander",
@@ -139,6 +142,7 @@ export default {
     Button,
     Form,
     Textinput,
+    Loading
   },
   setup() {
     const authStore = useAuthStore();
@@ -147,9 +151,9 @@ export default {
   },
   data() {
     return {
+      loading: true,
       title: "Calendar",
       errors: [],
-      calendarEvents: calendarEvents,
       currentEvents: [],
       showModal: false,
       eventModal: false,
@@ -167,12 +171,18 @@ export default {
         editTitle: "",
         editcategory: "",
       },
+      appointments: [],
     };
+  },
+  created() {
+    this.appointments = this.authStore.getCurrentSalon.appointments || [];
+    this.getAppointments();
   },
   computed: {
     calendarLocale() {
       return this.$i18n.locale === 'it' ? itLocale : "";
     },
+
     calendarOptions() {
       return {
         headerToolbar: {
@@ -183,7 +193,7 @@ export default {
         plugins: [dayGridPlugin, timeGridPlugin, interactionPlugin, listPlugin],
         initialView: "dayGridMonth",
         themeSystem: "bootstrap",
-        initialEvents: calendarEvents,
+        events: this.authStore.getAppointments,
         locale: this.calendarLocale,
         editable: true,
         droppable: true,
@@ -191,6 +201,7 @@ export default {
         dateClick: this.dateClicked,
         eventClick: this.editEvent,
         eventsSet: this.handleEvents,
+        datesSet: this.onChangeDates,
         select: this.dateClicked,
         weekends: true,
         selectable: true,
@@ -212,6 +223,12 @@ export default {
     },
   },
   methods: {
+    getAppointments() {
+      backendService.getAppointments();
+    },
+    onChangeDates(prova) {
+      console.log(prova)
+    },
     onSubmit() {
       this.submitted = true;
 
@@ -271,6 +288,7 @@ export default {
      * Modal open for add event
      */
     dateClicked(info) {
+      console.log(info)
       this.newEventData = info;
       this.showModal = true;
     },
