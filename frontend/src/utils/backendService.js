@@ -425,7 +425,7 @@ const backendService = {
         const endpoint = apiEndpoints.appointment(appointment.id);
 
         const data = {
-            date: appointment.start,
+            start: appointment.start,
             employee: appointment.extendedProps.employee,
             services: appointment.extendedProps.services
         }

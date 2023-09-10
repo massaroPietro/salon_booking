@@ -7,4 +7,5 @@ from salon_booking.appointments.models import Appointment
 
 @admin.register(Appointment)
 class ModelNameAdmin(admin.ModelAdmin):
-    exclude = ('start', 'end')
+    list_display = ('id', 'salon', 'employee', 'start', 'end')
+    exclude = ('end_date',)

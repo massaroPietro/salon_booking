@@ -1,5 +1,3 @@
-from rest_framework.exceptions import ValidationError
-
 from salon_booking.salons.models import *
 
 from django.contrib.auth import get_user_model
@@ -14,14 +12,12 @@ class Appointment(BaseModel):
     salon = models.ForeignKey(Salon, on_delete=models.CASCADE, related_name='appointments')
     customer = models.ForeignKey(User, on_delete=models.CASCADE, related_name='appointments')
     services = models.ManyToManyField(Service)
-    date = models.DateTimeField()
-    start = models.PositiveIntegerField(default=0)
-    end = models.PositiveIntegerField(default=0)
+    start = models.DateTimeField()
+    end = models.DateTimeField()
 
     def save(self, *args, **kwargs):
-        self.start = int(self.date.timestamp() * 1000)
-        end_time = self.start
-        for service in self.services.all():
-            end_time += int(service.duration_in_milliseconds)
-        self.end = end_time
+        services = self.services.all()
+        self.end = self.start
+        for i in services:
+            self.end += i.duration
         super().save(*args, **kwargs)

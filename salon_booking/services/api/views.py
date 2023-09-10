@@ -19,12 +19,7 @@ class ServiceListCreateAPIView(generics.ListCreateAPIView):
         salon = get_object_or_404(Salon, slug=self.kwargs['slug'])
         data = serializer.validated_data
 
-        print(data['employees'])
         for i in data['employees']:
-            print(i.id)
-            print(i.salon)
-            print(salon)
-            print("###")
             if i.salon != salon:
                 raise ValidationError(_('Enter valid employees'))
 

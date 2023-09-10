@@ -33,7 +33,7 @@ class AppointmentListCreateAPIView(generics.ListCreateAPIView):
             try:
                 start_date = datetime.fromtimestamp(int(start_date_param) / 1000, tz=timezone.utc)
                 end_date = datetime.fromtimestamp(int(end_date_param) / 1000, tz=timezone.utc)
-                queryset = queryset.filter(date__gte=start_date, date__lte=end_date)
+                queryset = queryset.filter(start__gte=start_date, start__lte=end_date)
             except ValueError:
                 pass
 

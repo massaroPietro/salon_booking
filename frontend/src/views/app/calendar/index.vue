@@ -47,7 +47,6 @@
                 :options="calendarOptions"
             ></FullCalendar>
           </div>
-          <AppointmentModal/>
           <Modal
               labelClass="btn-outline-dark"
               :activeModal="showModal && authStore.isCurrentSalonOwner()"
@@ -99,6 +98,8 @@
           </Modal>
           <Modal :activeModal="eventModal" @close="closeModal" title="Appuntamento di user;"
                  :centered="true">
+
+            {{ edit }}
             <Form @submit="editSubmit">
               <div class="space-y-3">
                 <Textinput
@@ -168,14 +169,13 @@ import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import listPlugin from "@fullcalendar/list";
-import {calendarEvents, categories} from "./Initialize-event";
+import {categories} from "./Initialize-event";
 import {Form} from "vee-validate";
 import itLocale from "@fullcalendar/core/locales/it";
 import Loading from 'vue-loading-overlay';
 import {useAuthStore} from "@/store/auth";
 import backendService from "@/utils/backendService";
 import AppointmentModal from "@/components/modals/AppointmentModal.vue";
-import emitter from "@/plugins/mitt";
 
 export default {
   name: "calander",
@@ -196,9 +196,7 @@ export default {
   },
   data() {
     return {
-      loading: true,
       title: "Calendar",
-      errors: [],
       currentEvents: [],
       showModal: false,
       eventModal: false,
@@ -208,7 +206,6 @@ export default {
       submit: false,
       newEventData: {},
       edit: {},
-      deleteId: {},
       event: {
         title: "",
         category: "",
@@ -236,15 +233,17 @@ export default {
         themeSystem: "bootstrap",
         events: this.authStore.getAppointments,
         locale: this.calendarLocale,
-        editable: this.authStore.isCurrentSalonOwner(),
+        editable: false,
         droppable: true,
-        eventResizableFromStart: true,
         dateClick: this.authStore.isCurrentSalonOwner() ? this.dateClicked : "",
         eventClick: this.editEvent,
         eventsSet: this.handleEvents,
         datesSet: this.onChangeDates,
         eventMouseEnter: this.eventMouseEnter,
         eventDrop: this.onEventDrop,
+        eventDurationEditable: false,
+        eventStartEditable: true,
+        eventResizableFromStart: true,
         eventDragStart: this.onEventDragStart,
         eventMouseLeave: this.eventMouseLeave,
         select: this.dateClicked,
@@ -342,7 +341,6 @@ export default {
         this.showModal = false;
         this.newEventData = {};
       }
-      //console.log(this.errors);
       this.submitted = false;
       this.event = {};
     },
