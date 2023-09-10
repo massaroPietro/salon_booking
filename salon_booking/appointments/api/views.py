@@ -1,9 +1,14 @@
+from datetime import datetime
+from time import sleep
+
+from django.utils import timezone
 from rest_framework import generics
 from rest_framework.generics import get_object_or_404
 
 from .permissions import IsOwnerOrCreateOnly, IsSalonOwnerOrCustomer
 from .serializers import *
 from ..models import *
+from django.utils.translation import gettext as _
 
 
 class AppointmentListCreateAPIView(generics.ListCreateAPIView):
@@ -17,24 +22,48 @@ class AppointmentListCreateAPIView(generics.ListCreateAPIView):
     def get_queryset(self):
         salon = self.get_object()
         if self.request.user == salon.owner:
-            return salon.appointments.all()
-        return Appointment.objects.filter(employee__user=self.request.user, salon=salon)
+            queryset = salon.appointments.all()
+        else:
+            queryset = Appointment.objects.filter(employee__user=self.request.user, salon=salon)
+
+        start_date_param = self.request.query_params.get('start')
+        end_date_param = self.request.query_params.get('end')
+
+        if start_date_param and end_date_param:
+            try:
+                start_date = datetime.fromtimestamp(int(start_date_param) / 1000, tz=timezone.utc)
+                end_date = datetime.fromtimestamp(int(end_date_param) / 1000, tz=timezone.utc)
+                queryset = queryset.filter(date__gte=start_date, date__lte=end_date)
+            except ValueError:
+                pass
+
+        return queryset
 
     def perform_create(self, serializer):
         salon = self.get_object()
         data = serializer.validated_data
-
-        if data['employee'].salon != salon:
-            raise ValidationError("Operatore non valido")
-
-        for i in data['services']:
-            if i.salon != salon:
-                raise ValidationError("Servizio non valido")
-
-        serializer.save(salon=salon, customer=self.request.user)
+        if appointment_is_valid(data, salon):
+            serializer.save(salon=salon, customer=self.request.user)
 
 
 class AppointmentRUDAPIView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = AppointmentSerializer
     permission_classes = [IsSalonOwnerOrCustomer]
     queryset = Appointment.objects.all()
+
+    def perform_update(self, serializer):
+        data = serializer.validated_data
+        salon = self.get_object().salon
+        if appointment_is_valid(data, salon):
+            serializer.save()
+
+
+def appointment_is_valid(appointment, salon):
+    if appointment['employee'].salon != salon:
+        raise ValidationError(_("Employee is not valid"))
+
+    for i in appointment['services']:
+        if i.salon != salon:
+            raise ValidationError(_("Service is not valid"))
+
+    return True

@@ -65,7 +65,7 @@ class EmployeeRegisterAPIView(RegisterView):
                              'email': _('A user is already registered with this e-mail address.')}
             return Response(response_data, status=status.HTTP_400_BAD_REQUEST)
 
-        super().post(request, *args, **kwargs)
+        return super().post(request, *args, **kwargs)
 
     @transaction.atomic
     def perform_create(self, serializer):
@@ -132,8 +132,9 @@ class EmployeeInvitationViewSet(viewsets.GenericViewSet):
         invitation = self.get_object()
         invitation.status = ACCEPTED_STATUS
         invitation.save()
-        Employee.objects.create(user=invitation.user, salon=invitation.salon)
-        return Response(status=status.HTTP_200_OK)
+        employee = Employee.objects.create(user=invitation.user, salon=invitation.salon)
+        serializer = EmployeeSerializer(employee, context={'request': request})
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
     @action(detail=True, methods=['post'])
     def reject_invitation(self, request, pk=None):

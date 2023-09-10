@@ -49,4 +49,4 @@ def create_username(sender, instance, **kwargs):
 @receiver(post_save, sender=Employee)
 def add_info_to_user(sender, instance, created, **kwargs):
     if created and not UserSettings.objects.filter(user=instance.user).exists():
-        UserSettings.objects.create(user=instance.user)
+        UserSettings.objects.create(user=instance.user, current_salon=instance.salon)

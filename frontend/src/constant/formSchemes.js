@@ -36,6 +36,19 @@ const FormSchemes = {
                 .string()
                 .required(t('generic.requiredField')),
         });
+    },
+    appointmentFormScheme: () => {
+        return yup.object().shape({
+            date: yup
+                .date()
+                .required(t('generic.requiredField')),
+            employee: yup
+                .string()
+                .required(t('generic.requiredField')),
+            services: yup
+                .string()
+                .required(t('generic.requiredField')),
+        });
     }
 }
 

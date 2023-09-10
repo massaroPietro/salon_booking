@@ -10,7 +10,6 @@ axios.defaults.baseURL = 'http://127.0.0.1:8000/api'
 axios.defaults.headers.common["Accept-Language"] = lang;
 axios.interceptors.request.use(
     config => {
-        console.log(config)
         return config;
     },
     error => {
@@ -32,7 +31,6 @@ axios.interceptors.response.use(
                 authStore.removeToken();
                 router.push('/auth/login');
             }
-
         }
         return Promise.reject(error);
     }

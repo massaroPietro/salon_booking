@@ -24,6 +24,7 @@ const apiEndpoints = {
     acceptInvitation: (id) => `/invitations/${id}/accept_invitation/`,
     rejectInvitation: (id) => `/invitations/${id}/reject_invitation/`,
     appointments: (slug) => `/salons/${slug}/appointments/`,
+    appointment: (id) => `/appointments/${id}/`,
 };
 
 export default apiEndpoints;

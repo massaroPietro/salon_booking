@@ -43,11 +43,11 @@
                   />
                 </div>
               </div>
-              <div class="flex-0">
+              <div class="flex-0 mt-auto mb-auto">
                 <div v-if="item.accepted">
                   <Badge
                       :label="$t('generic.accepted')"
-                      badgeClass="bg-success-500 text-white mt-4"
+                      badgeClass="bg-success-500 text-white"
                       icon="heroicons-outline:check"
                   />
                 </div>
@@ -93,7 +93,7 @@ import {useAuthStore} from "@/store/auth";
 import {useCoreStore} from "@/store/core";
 import backendService from "@/utils/backendService";
 import Badge from "@/components/Badge/index.vue";
-
+import {it, enUS} from 'date-fns/locale' // import custom locale
 export default {
   name: "EmployeeInvitationsModals",
   components: {Badge, Tooltip, Alert, AddEmployeeModal, AddFirstSalon, Success, Modal, Button, Icon},
@@ -105,7 +105,7 @@ export default {
   setup() {
     const authStore = useAuthStore();
     const coreStore = useCoreStore();
-    return {authStore, coreStore};
+    return {authStore, coreStore, it, enUS};
   },
   methods: {
     openInvitationModal() {
@@ -113,7 +113,8 @@ export default {
     },
     acceptInvitation(invitation) {
       const config = {
-        success_callback: () => {
+        success_callback: (response) => {
+          this.authStore.user.employees.push(response.data)
           this.authStore.user.salons.push(invitation.salon);
           invitation.accepted = true;
         }

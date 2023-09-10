@@ -1,5 +1,5 @@
 <template>
-  <div class="space-y-5 profile-page" v-if="employee">
+  <div class="space-y-5 profile-page" v-if="service">
     <div
         class="profiel-wrap px-[35px] pb-10 md:pt-[84px] pt-10 rounded-lg bg-white dark:bg-slate-800 lg:flex lg:space-y-0 space-y-6 justify-between items-end relative z-[1]"
     >
@@ -10,11 +10,11 @@
         <div class="md:flex items-end md:space-x-6 rtl:space-x-reverse">
           <div class="flex-none">
             <div
-                    @click="selectFile()"
+                @click="selectFile()"
                 class="md:h-[186px] md:w-[186px] h-[140px] w-[140px] md:ml-0 md:mr-0 ml-auto mr-auto md:mb-0 mb-4 rounded-full ring-4 ring-slate-100 relative cursor-pointer"
             >
               <img
-                  :src="employee.pic"
+                  :src="service.image"
                   alt=""
                   class="w-full h-full object-cover rounded-full"
               />
@@ -35,84 +35,108 @@
             <div
                 class="text-2xl font-medium text-slate-900 dark:text-slate-200 mb-[3px]"
             >
-              {{ employee.user.full_name }}
+              {{ service.name }}
             </div>
-
-            <span
-                class="bg-opacity-20 mr-1 capitalize font-normal text-xs leading-4 px-[10px] py-[2px] rounded-full inline-block text-info-500 bg-info-500"
-                v-if="employee.user.id === authStore.user.id"
-            >
-                    {{ $t('generic.you') }}
-                  </span>
-
-            <span
-                class="bg-opacity-20 mr-1 capitalize font-normal text-xs leading-4 px-[10px] py-[2px] rounded-full inline-block text-danger-500 bg-danger-500"
-                v-if="!employee.email_verified"
-            >
-                    {{ $t('generic.emailNotVerified') }}
-                  </span>
-
           </div>
         </div>
       </div>
     </div>
     <div class="grid grid-cols-12 gap-6">
       <div class="lg:col-span-5 col-span-12">
-        <Card title="Info">
+        <Card title="">
+          <div
+              class="md:flex justify-between pb-6 md:space-y-0 space-y-3 items-center"
+          >
+            <h5>Info</h5>
+            <add-service-modal v-if="authStore.getCurrentSalon?.employees" :service="service"/>
+          </div>
           <ul class="list space-y-8">
             <li class="flex space-x-3 rtl:space-x-reverse">
               <div
                   class="flex-none text-2xl text-slate-600 dark:text-slate-300"
               >
-                <Icon icon="heroicons:envelope"/>
+                <Icon icon="heroicons:currency-euro"/>
+              </div>
+
+              <div class="flex-1">
+                <div
+                    class="uppercase text-xs text-slate-500 dark:text-slate-300 mb-1 leading-[12px]"
+                >
+                  {{ $t('generic.price') }}
+                </div>
+                <span
+                    class="text-base text-slate-600 dark:text-slate-50"
+                >
+                  {{ service.price }} &euro;
+                </span>
+              </div>
+            </li>
+            <li class="flex space-x-3 rtl:space-x-reverse">
+              <div
+                  class="flex-none text-2xl text-slate-600 dark:text-slate-300"
+              >
+                <Icon icon="heroicons:clock"/>
               </div>
               <div class="flex-1">
                 <div
                     class="uppercase text-xs text-slate-500 dark:text-slate-300 mb-1 leading-[12px]"
                 >
-                  EMAIL
+                  {{ $t('generic.duration') }}
                 </div>
-                <a
-                    :href="employee.user.email"
+                <span
                     class="text-base text-slate-600 dark:text-slate-50"
                 >
-                  {{ employee.user.email }}
+                  {{ humanizeDuration(service.duration) }}
+                </span>
+              </div>
+            </li>
+            <li class="flex space-x-3 rtl:space-x-reverse">
+              <div
+                  class="flex-none text-2xl text-slate-600 dark:text-slate-300"
+              >
+                <Icon icon="heroicons:user-group"/>
+              </div>
+              <div class="flex-1">
+                <div
+                    class="uppercase text-xs text-slate-500 dark:text-slate-300 mb-1 leading-[12px]"
+                >
+                  {{ $t('app.services.enabledEmployees') }}
+                </div>
+                <a
+                    class="text-base text-slate-600 dark:text-slate-50"
+                >
+                  <ul>
+                    <li v-for="employee in service.employees">- {{
+                        authStore.getEmployee(employee)?.user?.full_name
+                      }}
+                    </li>
+                  </ul>
                 </a>
               </div>
-              <Button
-                  v-if="!employee.email_verified"
-                  @click="sendVerificationEmail(employee.user.email)"
-                  :text="$t('generic.resendEmail')"
-                  btnClass="btn-success"
-              />
             </li>
           </ul>
-        </Card>
-      </div>
-      <div class="lg:col-span-7 col-span-12">
-        <Card title="" noborder>
-          <WorkDaysTabsComponent :key="reload" :work-days="employee.work_days" class=""/>
         </Card>
       </div>
     </div>
   </div>
 </template>
 <script>
-import Card from "@/components/Card";
-import Icon from "@/components/Icon";
+import Card from "@/components/Card/index.vue";
+import Icon from "@/components/Icon/index.vue";
 import {useAuthStore} from "@/store/auth";
-import apiEndpoints from "@/constant/apiEndpoints";
-import axios from "@/plugins/axios";
 import WorkDaysTabsComponent from "@/components/WorkDaysTabsComponent.vue";
 import emitter from "@/plugins/mitt";
 import Button from "@/components/Button/index.vue";
 import backendService from "@/utils/backendService";
 import main from "@/mixins/main";
+import {humanizeDuration} from "../../../utils/utils";
+import AddServiceModal from "@/components/modals/AddServiceModal.vue";
 
 export default {
-  name: "EmployeeDetailView",
+  name: "DetailView",
   mixins: [main],
   components: {
+    AddServiceModal,
     Button,
     WorkDaysTabsComponent,
     Card,
@@ -120,10 +144,7 @@ export default {
   },
   data() {
     return {
-      resendVerificationEmailLoading: false,
-      loading: null,
-      reload: 1,
-      employee: null,
+      service: null,
     };
   },
   setup() {
@@ -131,47 +152,17 @@ export default {
     return {authStore};
   },
   props: {
-    employeeID: {
+    serviceID: {
       type: String,
       required: true,
     }
   },
   created() {
-    this.employee = this.authStore.getEmployee(this.employeeID);
-    this.getEmployee();
+    this.service = this.authStore.getService(this.serviceID);
+    this.getService();
   },
   methods: {
-    sendVerificationEmail(email) {
-      this.resendVerificationEmailLoading = true;
-      const config = {
-        finally_callback: () => {
-          this.resendVerificationEmailLoading = false;
-        }
-      }
-      backendService.resendVerificationEmail(email, config)
-    },
-    getEmployee() {
-      let loader = null;
-      if (!this.employee?.work_days) {
-        loader = this.$loading.show();
-      }
-      const config = {
-        success_callback: (response) => {
-          if (response.data.salon !== this.authStore.getCurrentSalon.id) {
-            emitter.emit('changeSalon', response.data.salon)
-          } else {
-            this.employee = response.data
-          }
-          this.reload += 1;
-        },
-        finally_callback: () => {
-          if (loader) {
-            loader.hide();
-          }
-        }
-      }
-      backendService.getEmployee(this.employeeID, config)
-    },
+    humanizeDuration,
     selectFile() {
       this.$refs.fileInput.click();
     },
@@ -179,13 +170,25 @@ export default {
       const file = event.target.files[0];
       const loader = this.$loading.show();
       const config = {
-          success_callback: (response) => {
-              loader.hide()
-              this.employee.pic = response.data.pic;
-          }
+        success_callback: (response) => {
+          loader.hide()
+          this.service.image = response.data.image;
+        }
       }
-      backendService.updateEmployeePic(this.employeeID, file, config);
+      backendService.updateServiceImage(this.serviceID, file, config);
     },
+    getService() {
+      const config = {
+        success_callback: (response) => {
+          if (response.data.salon !== this.authStore.getCurrentSalon.id) {
+            emitter.emit('changeSalon', response.data.salon)
+          } else {
+            this.service = response.data
+          }
+        },
+      }
+      backendService.getService(this.serviceID, config)
+    }
   }
 };
 </script>

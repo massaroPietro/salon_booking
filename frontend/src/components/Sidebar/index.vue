@@ -7,7 +7,7 @@
           : 'shadow-base'
       }   ${this.$store.themeSettingsStore.sidebarCollasp ? this.closeClass : this.openClass}
       ${this.$store.themeSettingsStore.isMouseHovered ? 'sidebar-hovered' : ''}
-      
+
       `"
       @mouseenter="this.$store.themeSettingsStore.isMouseHovered = true"
       @mouseleave="this.$store.themeSettingsStore.isMouseHovered = false"
@@ -21,7 +21,7 @@
             : ' border-none'
         }
         ${this.$store.themeSettingsStore.isMouseHovered ? 'logo-hovered' : ''}
-        
+
         `"
       >
         <router-link
@@ -97,7 +97,7 @@
         "
       >
         <Navmenu :items="menuItems" />
-        <Transition @enter="enterWidget" @leave="leaveWidget">
+<!--        <Transition @enter="enterWidget" @leave="leaveWidget">
           <div
             class="bg-slate-900 mb-10 mt-24 p-4 relative text-center rounded-2xl text-white"
             v-if="!this.$store.themeSettingsStore.sidebarCollasp"
@@ -121,7 +121,7 @@
               </button>
             </div>
           </div>
-        </Transition>
+        </Transition>-->
       </SimpleBar>
     </div>
   </div>

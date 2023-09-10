@@ -6,7 +6,7 @@
       :label-class="'btn-dark'"
       ref="addEmployeeModal"
   >
-    <div class="text-base text-slate-600 dark:text-slate-300">
+    <form class="text-base text-slate-600 dark:text-slate-300" @submit.prevent="onSubmit()">
       <Textinput
           :label="$t('generic.firstName')"
           type="text"
@@ -59,7 +59,7 @@
           hasicon
           classInput="h-[48px]"
       />
-    </div>
+    </form>
 
     <Alert class="mt-5" v-if="formErrors.non_field_errors" type="danger">{{ formErrors.non_field_errors }}</Alert>
 
@@ -70,7 +70,7 @@
           @click="$refs.addEmployeeModal.closeModal()"
       />
       <Button
-          text="Login"
+          :text="$t('generic.add')"
           class="align-middle"
           btnClass="btn btn-dark text-center"
           :is-loading="loading"

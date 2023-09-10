@@ -37,7 +37,7 @@ function setUserInfoOnLogin(response, rememberUser) {
     }
 }
 
-function apiCaller(method, endpoint, requestData, config, headers = {}, params = {}) {
+function apiCaller(method, endpoint, requestData, config, headers = {}) {
     if (config?.loader) {
         config.loader()
     }
@@ -46,8 +46,9 @@ function apiCaller(method, endpoint, requestData, config, headers = {}, params =
         method: method,
         url: endpoint,
         data: requestData,
-        params: params,
         headers: headers,
+        params: config?.params,
+        signal: config?.signal
     })
         .then((response) => {
             if (config?.dataTarget) {
@@ -404,19 +405,38 @@ const backendService = {
 
         apiCaller("post", endpoint, null, config);
     },
-    getAppointments(config, params) {
+    getAppointments(config) {
         const authStore = useAuthStore();
         const salonSlug = authStore.getCurrentSalon.slug;
         const endpoint = apiEndpoints.appointments(salonSlug);
 
         config = createSpecificCallbacks(config, (response) => {
-            response.data.forEach((event) => {
-                event.className = "bg-success-500 text-white";
-            });
-            this.authStore.addAppointments(response.data);
+            if (response.data.length > 0) {
+                response.data.forEach((event) => {
+                    event.className = "bg-success-500 fc-daygrid-block-event";
+                });
+                authStore.addAppointments(response.data);
+            }
         })
 
-        apiCaller("get", endpoint, null, config, null, params);
+        apiCaller("get", endpoint, null, config);
+    },
+    updateAppointment(appointment, config) {
+        const endpoint = apiEndpoints.appointment(appointment.id);
+
+        const data = {
+            date: appointment.start,
+            employee: appointment.extendedProps.employee,
+            services: appointment.extendedProps.services
+        }
+
+        config = createSpecificCallbacks(config, null, (error) => {
+            if (error.response.data && error.response.status === 400) {
+                toast.error(error.response.data[0])
+            }
+        })
+
+        apiCaller("put", endpoint, data, config)
     }
 };
 

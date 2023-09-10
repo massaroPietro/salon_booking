@@ -2,7 +2,7 @@ import {defineStore} from "pinia";
 import axios from "@/plugins/axios";
 import i18n from "@/plugins/i18n";
 
-const { t } = i18n.global
+const {t} = i18n.global
 
 export const useAuthStore = defineStore('authStore', {
     state: () => {
@@ -74,7 +74,14 @@ export const useAuthStore = defineStore('authStore', {
         addAppointments(data) {
             if (this.getCurrentSalon) {
                 if (this.getAppointments.length > 0) {
-                    this.getCurrentSalon.appointments.push(data)
+                    data.forEach(appointment => {
+                        const index = this.getCurrentSalon.appointments.findIndex(existingAppointment => existingAppointment.id === appointment.id);
+                        if (index !== -1) {
+                            this.getCurrentSalon.appointments[index] = appointment;
+                        } else {
+                            this.getCurrentSalon.appointments.push(appointment);
+                        }
+                    });
                 } else {
                     this.getCurrentSalon.appointments = data;
                 }

@@ -7,4 +7,4 @@ from salon_booking.appointments.models import Appointment
 
 @admin.register(Appointment)
 class ModelNameAdmin(admin.ModelAdmin):
-    pass
+    exclude = ('start', 'end')

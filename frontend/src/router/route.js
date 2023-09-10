@@ -33,7 +33,7 @@ const routes = [
     {
         path: "/app",
         name: "Layout",
-        redirect: "/app/home",
+        redirect: "/app/calendar",
         component: () => import("@/Layout/index.vue"),
         meta: {
             middleware: [auth],
@@ -48,23 +48,23 @@ const routes = [
             {
                 path: "employees",
                 name: "employees-list",
-                component: () => import("@/views/employees/EmployeesListView.vue"),
+                component: () => import("@/views/app/employees/EmployeesListView.vue"),
             },
             {
                 path: "employee/:employeeID/detail",
                 name: "employee-detail",
-                component: () => import("@/views/employees/EmployeeDetailView.vue"),
+                component: () => import("@/views/app/employees/EmployeeDetailView.vue"),
                 props: true,
             },
             {
                 path: "services",
                 name: "services-list",
-                component: () => import("@/views/services/ListView.vue"),
+                component: () => import("@/views/app/services/ListView.vue"),
             },
             {
                 path: "service/:serviceID/detail",
                 name: "service-detail",
-                component: () => import("@/views/services/DetailView.vue"),
+                component: () => import("@/views/app/services/DetailView.vue"),
                 props: true,
             },
             {
@@ -78,7 +78,8 @@ const routes = [
             {
                 path: "home",
                 name: "home",
-                component: () => import("@/views/home/index.vue"),
+                redirect: "/app/calendar",
+                // component: () => import("@/views/home/index.vue"),
                 meta: {
                     hide: true,
                 },

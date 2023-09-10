@@ -96,10 +96,10 @@
 </template>
 <script>
 import {useAuthStore} from "@/store/auth";
-import Card from "@/components/Card";
-import Icon from "@/components/Icon";
-import Tooltip from "@/components/Tooltip";
-import Pagination from "@/components/Pagination";
+import Card from "@/components/Card/index.vue";
+import Icon from "@/components/Icon/index.vue";
+import Tooltip from "@/components/Tooltip/index.vue";
+import Pagination from "@/components/Pagination/index.vue";
 import InputGroup from "@/components/InputGroup/index.vue";
 import Textinput from "@/components/Textinput/index.vue";
 import Modal from "@/components/Modal/Modal.vue";

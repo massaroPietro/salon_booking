@@ -60,6 +60,7 @@ export default {
             accepted: "Accepted",
             rejected: "Rejected",
             pending: "Pending",
+            operator: "Operator",
         },
         auth: {
             signIn: "Sign in",
@@ -204,6 +205,7 @@ export default {
             accepted: "Accettato",
             rejected: "Rifiutato",
             pending: "In attesa",
+            operator: "Operatore",
         },
         errors: {
             notValidEmail: "Email non valida",

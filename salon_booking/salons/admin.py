@@ -27,4 +27,4 @@ class ModelNameAdmin(admin.ModelAdmin):
 
 @admin.register(EmployeeInvitation)
 class ModelNameAdmin(admin.ModelAdmin):
-    list_display = ('user', 'salon', 'status')
+    list_display = ('id', 'user', 'salon', 'status')
