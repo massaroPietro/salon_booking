@@ -48,7 +48,8 @@
               class="md:flex justify-between pb-6 md:space-y-0 space-y-3 items-center"
           >
             <h5>Info</h5>
-            <add-service-modal v-if="authStore.getCurrentSalon?.employees" :service="service"/>
+            <add-service-modal v-if="authStore.getCurrentSalon?.employees" :service="service"
+                               @serviceSubmitted="updateService"/>
           </div>
           <ul class="list space-y-8">
             <li class="flex space-x-3 rtl:space-x-reverse">
@@ -162,6 +163,9 @@ export default {
     this.getService();
   },
   methods: {
+    updateService(service) {
+      this.service = service
+    },
     humanizeDuration,
     selectFile() {
       this.$refs.fileInput.click();

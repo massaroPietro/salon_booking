@@ -147,6 +147,7 @@ export default {
         {
           label: this.$t('generic.price'),
           field: "price",
+          type: 'decimal',
         },
         {
           label: this.$t('generic.action'),
@@ -192,7 +193,7 @@ export default {
               let loader = this.$loading.show();
               const config = {
                 success_callback: () => {
-                    this.services = this.services.filter((srv) => srv.id !== service.id);
+                  this.services = this.services.filter((srv) => srv.id !== service.id);
                   this.$swal
                       .fire({
                             title: this.$t('alerts.deleted'),

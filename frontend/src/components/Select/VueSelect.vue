@@ -145,7 +145,14 @@ export default {
     options: {
       type: Array,
     },
+    preSelectedValue: {
+      required: false,
+    }
   },
+  created() {
+      if(this.preSelectedValue)
+        this.selectedValue = this.preSelectedValue;
+  }
 };
 </script>
 <style lang="scss">

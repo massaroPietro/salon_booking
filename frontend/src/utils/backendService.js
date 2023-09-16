@@ -216,11 +216,19 @@ const backendService = {
         config = createSpecificCallbacks(config, () => {
             const coreStore = useCoreStore();
             coreStore.reloadPage();
-            toast.success(t("toasts.serviceAdded"), {
-                timeout: 5000
-            })
+            toast.success(t("toasts.serviceAdded"))
         })
         apiCaller("post", endpoint, data, config);
+    },
+    updateService: (id, data, config) => {
+        const endpoint = apiEndpoints.service(id);
+        const authStore = useAuthStore();
+        config = createSpecificCallbacks(config, (response) => {
+            authStore.setService(id, response.data);
+            toast.success(t('toasts.serviceUpdated'))
+        })
+
+        apiCaller("patch", endpoint, data, config);
     },
     getService: (id, config) => {
         let endpoint = apiEndpoints.service(id);
@@ -286,7 +294,7 @@ const backendService = {
     updateWorkDay(workDayID, data, config) {
         const endpoint = apiEndpoints.workDay(workDayID);
 
-        apiCaller("put", endpoint, data, config);
+        apiCaller("patch", endpoint, data, config);
     },
     verifyEmail(key, config) {
         let endpoint = apiEndpoints.verifyEmail();
@@ -351,8 +359,6 @@ const backendService = {
             authStore.setEmployee(employeeID, response.data)
             toast.success(t('app.employees.updatedPic'));
         })
-
-
         apiCaller("patch", endpoint, formData, config, headers);
     },
     updateServiceImage(serviceID, file, config) {
@@ -411,26 +417,23 @@ const backendService = {
         const endpoint = apiEndpoints.appointments(salonSlug);
 
         config = createSpecificCallbacks(config, (response) => {
-            if (response.data.length > 0) {
-                response.data.forEach((event) => {
-                    event.className = "bg-success-500 fc-daygrid-block-event";
-                });
-                authStore.addAppointments(response.data);
-            }
+            authStore.addAppointments(response.data);
         })
 
         apiCaller("get", endpoint, null, config);
     },
     updateAppointment(appointment, config) {
         const endpoint = apiEndpoints.appointment(appointment.id);
-
+        const authStore = useAuthStore();
         const data = {
             start: appointment.start,
             employee: appointment.extendedProps.employee,
             services: appointment.extendedProps.services
         }
 
-        config = createSpecificCallbacks(config, null, (error) => {
+        config = createSpecificCallbacks(config, (response) => {
+            authStore.setAppointment(response.data);
+        }, (error) => {
             if (error.response.data && error.response.status === 400) {
                 toast.error(error.response.data[0])
             }

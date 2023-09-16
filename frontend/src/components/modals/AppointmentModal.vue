@@ -46,7 +46,6 @@ export default {
   },
   created() {
     emitter.on('openAppointmentModal', () => {
-        console.log("ciao")
       if (this.$refs?.appointmentModal){
         this.$refs.appointmentModal.openModal();
       }

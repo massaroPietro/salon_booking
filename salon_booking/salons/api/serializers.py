@@ -42,7 +42,7 @@ class EmployeeWorkRangeSerializer(serializers.ModelSerializer):
 
 
 class EmployeeWorkDaySerializer(serializers.ModelSerializer):
-    work_ranges = EmployeeWorkRangeSerializer(many=True)
+    work_ranges = EmployeeWorkRangeSerializer(many=True, required=False)
 
     class Meta:
         model = EmployeeWorkDay
@@ -53,12 +53,15 @@ class EmployeeWorkDaySerializer(serializers.ModelSerializer):
     def update(self, instance, validated_data):
 
         work_ranges_data = validated_data.pop('work_ranges', [])
+        if len(work_ranges_data) > 0:
+            for i in instance.work_ranges.all():
+                i.delete()
 
-        for i in instance.work_ranges.all():
-            i.delete()
+            for work_range_data in work_ranges_data:
+                EmployeeWorkRange.objects.create(**work_range_data)
 
-        for work_range_data in work_ranges_data:
-            EmployeeWorkRange.objects.create(**work_range_data)
+        instance.work = validated_data.get('work', instance.work)
+        instance.save()
 
         return instance
 

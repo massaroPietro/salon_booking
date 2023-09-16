@@ -6,6 +6,7 @@ export default {
             genericError: "Generic error",
             serverError: "Server error. Try later.",
             insertValidHours: "Please enter valid working hours",
+            employeesArrayIsMandatory: "You must include at least one employee"
         },
         alerts: {
             confirmDelete: "Yes, delete it!",
@@ -61,6 +62,8 @@ export default {
             rejected: "Rejected",
             pending: "Pending",
             operator: "Operator",
+            date: "Date",
+            edit: "Modifica",
         },
         auth: {
             signIn: "Sign in",
@@ -95,10 +98,14 @@ export default {
             employeeRegistered: "Employee registered successfully. After verifying the email you can use BarberBooking",
             serviceAdded: "The services is added successfully",
             invitationSent: "Invitation sent successfully",
+            serviceUpdated: "Service updated successfully"
         },
         app: {
             employees: {
                 updatedPic: "Pic updated successfully",
+            },
+            appointments: {
+                appointmentDetail: "Appointment detail",
             },
             salons: {
                 addSalon: "Add salon",
@@ -115,6 +122,7 @@ export default {
                 addNewService: "Add new service",
                 addService: "Add service",
                 enabledEmployees: "Enabled employees",
+                editService: "Edit service",
             },
             header: {
                 search: {
@@ -206,6 +214,8 @@ export default {
             rejected: "Rifiutato",
             pending: "In attesa",
             operator: "Operatore",
+            date: "Date",
+            edit: "Modifica",
         },
         errors: {
             notValidEmail: "Email non valida",
@@ -213,6 +223,7 @@ export default {
             genericError: "Errore generico",
             serverError: "Errore con il server. Riprova più tardi.",
             insertValidHours: "Inserisci degli orari di lavoro validi",
+            employeesArrayIsMandatory: "Devi inserire almeno un dipendente"
         },
         alerts: {
             confirmDelete: "Si, elimina!",
@@ -270,10 +281,14 @@ export default {
             employeeRegistered: "Dipendente registrato correttamente. Dopo la verifica dell'email potrà usare BarberBooking",
             serviceAdded: "Il servizio è stato aggiunto correttamente",
             invitationSent: "L'invito è stato inviato correttamente",
+            serviceUpdated: "Servizio aggiornato correttamente"
         },
         app: {
             employees: {
                 updatedPic: "Immagine aggiornata con successo",
+            },
+            appointments: {
+                appointmentDetail: "Dettagli appuntamento",
             },
             salons: {
                 addSalon: "Aggiungi salone",
@@ -290,6 +305,7 @@ export default {
                 addNewService: "Aggiungi nuovo servizio",
                 addService: "Aggiungi servizio",
                 enabledEmployees: "Dipendenti abilitati",
+                editService: "Modifica servizio",
             },
             header: {
                 search: {

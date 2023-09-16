@@ -20,6 +20,9 @@ const FormSchemes = {
             name: yup.string().required(t('generic.requiredField')),
             duration: yup.string().required(t('generic.requiredField')),
             price: yup.string().required(t('generic.requiredField')),
+            employees: yup.array().required(t('generic.requiredField')).test('employees-length', t('errors.employeesArrayIsMandatory'), function (value) {
+                return value.length > 0;
+            }),
         });
     },
     userLoginFormScheme: () => {

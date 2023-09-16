@@ -1,8 +1,8 @@
 <template>
   <Modal
       centered
-      :title="$t('app.services.addNewService')"
-      :label="$t('app.services.addService')"
+      :title="service ? $t('app.services.editService') : $t('app.services.addNewService')"
+      :label="service ? $t('app.services.editService') : $t('app.services.addService')"
       :label-class="'btn-dark'"
       ref="addServiceModal"
   >
@@ -15,8 +15,10 @@
           :error="formErrors.name"
           classInput="h-[48px] mb-2"
       />
-      <VueSelect :options="employees" :label="$t('app.services.enabledEmployees')" multiple
-                 v-model="selectedEmployees"
+      <VueSelect :pre-selected-value="selectedEmployees" :options="employees"
+                 :label="$t('app.services.enabledEmployees')" multiple
+                 v-model="form.employees"
+                 :error="formErrors.employees"
                  class="mb-2"/>
       <Textinput
           :label="$t('generic.duration')"
@@ -43,7 +45,7 @@
           @click="$refs.addServiceModal.closeModal()"
       />
       <Button
-          :text="$t('generic.add')"
+          :text="service ? $t('generic.edit') : $t('generic.add')"
           class="align-middle"
           btnClass="btn btn-dark text-center"
           :is-loading="loading"
@@ -73,6 +75,7 @@ export default {
   name: "AddServiceModal",
   components: {Alert, VueSelect, vSelect, Button, Modal, Textinput, InputGroup},
   mixins: [main],
+  emits: ['serviceSubmitted'],
   props: {
     service: {
       type: Object,
@@ -97,15 +100,7 @@ export default {
   },
   mounted() {
     if (this.service) {
-      this.form = JSON.parse(JSON.stringify(this.service));
-
-      this.service.employees.forEach((employeeID) => {
-        const employee = this.authStore.getEmployee(employeeID);
-        if (employee) {
-          employee.label = employee.user.full_name;
-          this.selectedEmployees.push(employee)
-        }
-      })
+      this.initService(this.service);
     }
   },
   computed: {
@@ -122,21 +117,42 @@ export default {
   },
 
   methods: {
+    initService(service) {
+      this.form.name = service.name;
+      this.form.duration = service.duration;
+      this.form.price = service.price;
+
+      this.selectedEmployees = [];
+      service.employees.forEach((employeeID) => {
+        const employee = this.authStore.getEmployee(employeeID);
+        if (employee) {
+          employee.label = employee.user.full_name;
+          this.selectedEmployees.push(employee)
+        }
+      })
+    },
     onSubmit() {
       this.validateForm().then(() => {
         const form = {
           ...this.form,
-          employees: this.selectedEmployees.map(option => option.id),
+          employees: this.form.employees.map(option => option.id),
         };
 
         const config = {
-          success_callback: () => {
+          success_callback: (response) => {
             this.$refs.addServiceModal.closeModal();
+            this.$emit('serviceSubmitted', response.data)
+            this.initService(response.data)
           },
           formErrors: this.formErrors,
           loader: this.toggleLoading,
         }
-        backendService.addService(form, config)
+
+        if (this.service) {
+          backendService.updateService(this.service.id, form, config)
+        } else {
+          backendService.addService(form, config)
+        }
       })
     }
   }

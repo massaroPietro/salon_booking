@@ -68,7 +68,15 @@ export const useAuthStore = defineStore('authStore', {
                     title: t("generic.add")
                 }));
             }
-        }
+        },
+        getServicesForSelect() {
+            return this.getCurrentSalon.services.map(item => {
+                return {
+                    ...item,
+                    label: item.name
+                };
+            });
+        },
     },
     actions: {
         addAppointments(data) {
@@ -84,6 +92,14 @@ export const useAuthStore = defineStore('authStore', {
                     });
                 } else {
                     this.getCurrentSalon.appointments = data;
+                }
+            }
+        },
+        setAppointment(x) {
+            if (this.getCurrentSalon && this.getAppointments.length > 0) {
+                let index = this.getCurrentSalon.appointments.findIndex((appointment) => appointment.id === x.id);
+                if (index !== -1) {
+                    this.getCurrentSalon.appointments[index] = {...x}
                 }
             }
         },

@@ -1,9 +1,9 @@
 <template>
   <div>
     <div
-        class="pb-5 flex justify-between items-center"
+        class="pb-5 flex justify-between items-center lg:mt-0 mt-5 mb-4"
     >
-      <h6 class="card-title mb-0">{{ $t('generic.workHours') }}</h6>
+      <h6 class="card-title mb-0" v-if="workDay.work">{{ $t('generic.workHours') }}</h6>
       <div class="flex">
         <Button
             v-if="workDay.work"
@@ -11,17 +11,11 @@
             text="Lavorativo"
             btnClass="btn-dark mr-3"
             iconPosition="right"
-            @click="workDay.work = !workDay.work"
+            :is-loading="isWorkDayLoading"
+            @click="updateWorkingDay(false)"
         />
         <Button
-            v-else
-            icon="heroicons-outline:x"
-            text="Non lavorativo"
-            btnClass="btn-dark mr-3"
-            iconPosition="right"
-            @click="workDay.work = !workDay.work"
-        />
-        <Button
+            v-if="workDay.work"
             :text="$t('generic.add')"
             icon="heroicons-outline:plus"
             btnClass="btn-dark"
@@ -29,53 +23,62 @@
         />
       </div>
     </div>
-    <div>
-      <form novalidate @submit.prevent="onSubmit()" class="text-right" v-if="workDay.work">
-        <div
-            v-for="(field, idx) in workDay.work_ranges"
-            :key="field.key"
-            class="grid grid-cols-12 gap-5 mb-5 items-end"
-        >
-          <div class="grid grid-cols-2 gap-5 items-end justify-end justify-items-end"
-               :class="{'col-span-11': workDay.work_ranges.length > 1, 'col-span-12': workDay.work_ranges.length < 2}">
-            <flat-pickr
-                class="form-control"
-                placeholder="Da"
-                v-model="field.from_hour"
-                :config="{ enableTime: true, noCalendar: true, dateFormat: 'H:i'}"
-            />
-            <flat-pickr
-                class="form-control"
-                placeholder="A"
-                v-model="field.to_hour"
-                :config="{ enableTime: true, noCalendar: true, dateFormat: 'H:i'}"
-            />
-          </div>
-
-          <div class="flex items-center" v-if="workDay.work_ranges.length > 1">
-            <button
-                type="button"
-                class="inline-flex items-center justify-center h-10 w-10 bg-danger-500 text-lg border rounded border-danger-500 text-white"
-                @click="remove(idx)"
-            >
-              <Icon icon="heroicons-outline:trash"/>
-            </button>
-          </div>
-        </div>
-
-        <div class="ltr:text-right rtl:text-left">
-          <Button
-              :text="$t('generic.save')"
-              btnClass="btn-dark"
-              type="submit"
-              v-if="isChanged && workRangesAreValid"
+    <form novalidate @submit.prevent="onSubmit()" class="text-right" v-if="workDay.work">
+      <div
+          v-for="(field, idx) in workDay.work_ranges"
+          :key="field.key"
+          class="grid grid-cols-12 gap-5 mb-5 items-end"
+      >
+        <div class="grid grid-cols-2 gap-5 items-end justify-end justify-items-end"
+             :class="{'col-span-11': workDay.work_ranges.length > 1, 'col-span-12': workDay.work_ranges.length < 2}">
+          <flat-pickr
+              class="form-control"
+              placeholder="Da"
+              v-model="field.from_hour"
+              :config="{ enableTime: true, noCalendar: true, dateFormat: 'H:i'}"
+          />
+          <flat-pickr
+              class="form-control"
+              placeholder="A"
+              v-model="field.to_hour"
+              :config="{ enableTime: true, noCalendar: true, dateFormat: 'H:i'}"
           />
         </div>
 
-        <Alert v-if="!workRangesAreCompatible" type="danger" class="text-center">
-          {{ $t('errors.insertValidHours') }}
-        </Alert>
-      </form>
+        <div class="flex items-center" v-if="workDay.work_ranges.length > 1">
+          <button
+              type="button"
+              class="inline-flex items-center justify-center h-10 w-10 bg-danger-500 text-lg border rounded border-danger-500 text-white"
+              @click="remove(idx)"
+          >
+            <Icon icon="heroicons-outline:trash"/>
+          </button>
+        </div>
+      </div>
+
+      <div class="ltr:text-right rtl:text-left">
+        <Button
+            :text="$t('generic.save')"
+            btnClass="btn-dark"
+            type="submit"
+            v-if="isChanged && workRangesAreValid"
+        />
+      </div>
+
+      <Alert v-if="!workRangesAreCompatible" type="danger" class="text-center">
+        {{ $t('errors.insertValidHours') }}
+      </Alert>
+    </form>
+    <div class="flex mb-auto lg:mt-28 mt-5" v-if="!workDay.work">
+      <Button
+          icon="heroicons-outline:x"
+          text="Non lavorativo"
+          class="ml-auto mr-auto"
+          btnClass="btn-danger"
+          iconPosition="right"
+          :is-loading="isWorkDayLoading"
+          @click="updateWorkingDay(true)"
+      />
     </div>
   </div>
 </template>
@@ -96,7 +99,8 @@ export default {
   components: {Switch, Alert, Button, Card, Icon, Textinput},
   data() {
     return {
-      initWorkDay: null
+      initWorkDay: null,
+      isWorkDayLoading: false,
     };
   },
   props: {
@@ -162,6 +166,22 @@ export default {
       }
 
       backendService.updateWorkDay(this.workDay.id, this.workDay, callbacks);
+    },
+    updateWorkingDay(isWorkDay) {
+      const data = {
+        work: isWorkDay
+      }
+
+      const config = {
+        success_callback: () => {
+          this.workDay.work = isWorkDay
+        },
+        finally_callback: () => {
+          this.isWorkDayLoading = false;
+        }
+      }
+      this.isWorkDayLoading = true;
+      backendService.updateWorkDay(this.workDay.id, data, config);
     },
     setInitWorkDay() {
       this.initWorkDay = JSON.parse(JSON.stringify(this.workDay));

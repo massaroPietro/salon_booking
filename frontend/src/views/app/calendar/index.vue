@@ -96,36 +96,42 @@
               </div>
             </Form>
           </Modal>
-          <Modal :activeModal="eventModal" @close="closeModal" title="Appuntamento di user;"
+          <Modal :activeModal="eventModal" @close="closeModal" :title="$t('app.appointments.appointmentDetail')"
                  :centered="true">
-
-            {{ edit }}
             <Form @submit="editSubmit">
               <div class="space-y-3">
-                <Textinput
-                    v-model="editevent.editTitle"
-                    is-readonly
-                    type="text"
-                    :label="$t('generic.operator')"
-                />
-                <div class="fromGroup" v-if="authStore.isCurrentSalonOwner()">
-                  <label class="form-label">Category</label>
-                  <select
-                      v-model="editevent.editcategory"
+                <FromGroup :label="$t('generic.date')">
+                  <flat-pickr
+                      v-model="editevent.start"
                       class="form-control"
-                      name="category"
+                      placeholder="Date & Time"
+                      id="d2"
+                      :config="{ enableTime: true, dateFormat: $i18n.locale === 'it' ? 'd-m-Y H:i' : 'm-d-Y H:i' }"
+                  />
+                </FromGroup>
+                <FromGroup :label="$t('generic.employee')">
+                  <select
+                      v-model="editevent.employee"
+                      class="form-control"
+                      name="employee"
                   >
                     <option
-                        v-for="option in categories"
-                        :key="option.backgroundColor"
-                        :value="`${option.value}`"
+                        v-for="employee in authStore.getCurrentSalon.employees"
+                        :key="employee.id"
+                        :value="employee.id"
                     >
-                      {{ option.name }}
+                      {{ employee.user.full_name }}
                     </option>
                   </select>
-                </div>
+                </FromGroup>
+                <VueSelect :pre-selected-value="editevent.services" :options="authStore.getServicesForSelect"
+                           :label="$t('app.menuItems.services')"
+                           multiple
+                           v-model="editevent.services"
+                           class="mb-2"/>
+
               </div>
-              <div class="flex justify-between items-center mt-5">
+              <div class="flex justify-between items-center mt-10">
                 <div>
                   <Button
                       text="Delete"
@@ -145,7 +151,7 @@
                       text="save"
                       btnClass="btn-success"
                       @click="editSubmit"
-                      :isDisabled="!editformvIsvalid"
+                      :isDisabled="appointmentIsChanged"
                   />
                 </div>
               </div>
@@ -176,10 +182,15 @@ import Loading from 'vue-loading-overlay';
 import {useAuthStore} from "@/store/auth";
 import backendService from "@/utils/backendService";
 import AppointmentModal from "@/components/modals/AppointmentModal.vue";
+import {events} from "vuedraggable/src/core/sortableEvents";
+import FromGroup from "@/components/FromGroup/index.vue";
+import VueSelect from "@/components/Select/VueSelect.vue";
 
 export default {
   name: "calander",
   components: {
+    VueSelect,
+    FromGroup,
     AppointmentModal,
     FullCalendar,
     Card,
@@ -218,6 +229,15 @@ export default {
     };
   },
   computed: {
+    events() {
+      return events
+    },
+    appointmentIsChanged() {
+      if (this.editevent.date && this.editevent.employee && this.editevent.services && this.editevent.services.length > 0) {
+        return this.editevent.employee !== this.edit.employee || this.edit.title !== this.editevent.editTitle;
+      }
+      return false;
+    },
     calendarLocale() {
       return this.$i18n.locale === 'it' ? itLocale : "";
     },
@@ -274,6 +294,10 @@ export default {
     onEventDrop(dropEvent) {
       this.eventOvered = null;
       const config = {
+        success_callback: (response) => {
+          dropEvent.event.setStart(response.data.start)
+          dropEvent.event.setEnd(response.data.end)
+        },
         error_callback: () => {
           dropEvent.revert();
         },
@@ -389,6 +413,15 @@ export default {
       this.edit = info.event;
       this.editevent.editTitle = this.edit.title;
       this.editevent.editcategory = this.edit.classNames[0];
+
+      this.editevent.start = this.edit.start;
+      this.editevent.services = [];
+      this.edit.extendedProps.services.forEach((id) => {
+        const srv = this.authStore.getService(id);
+        srv.label = srv.name;
+        this.editevent.services.push(srv)
+      });
+      this.editevent.employee = this.edit.extendedProps.employee;
       this.eventModal = true;
     },
 

@@ -100,7 +100,9 @@ class EmployeeWorkDayRUAPIView(generics.RetrieveUpdateAPIView):
     def perform_update(self, serializer):
         data = serializer.validated_data
 
-        for idx, x in enumerate(data['work_ranges']):
+        work_ranges_data = data.get('work_ranges', [])
+
+        for idx, x in enumerate(work_ranges_data):
             if x["from_hour"] >= x["to_hour"]:
                 raise ValidationError({
                     'index': idx,

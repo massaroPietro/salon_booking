@@ -689,7 +689,7 @@ msgstr ""
 
 #: venv/lib/python3.10/site-packages/click/types.py:635
 msgid "{value!r} is not a valid UUID."
-msgstr ""
+msgstr "%(value)s non è un UUID valido."
 
 #: venv/lib/python3.10/site-packages/click/types.py:822
 msgid "file"
@@ -1132,7 +1132,7 @@ msgstr ""
 #: venv/lib/python3.10/site-packages/django/db/models/fields/__init__.py:2653
 #, python-format
 msgid "“%(value)s” is not a valid UUID."
-msgstr ""
+msgstr "“%(value)s” non è un UUID valido."
 
 #: venv/lib/python3.10/site-packages/django/db/models/fields/__init__.py:2655
 msgid "Universally unique identifier"
@@ -1189,7 +1189,7 @@ msgstr ""
 
 #: venv/lib/python3.10/site-packages/django/forms/fields.py:91
 msgid "This field is required."
-msgstr ""
+msgstr "Questo campo è obbligatorio"
 
 #: venv/lib/python3.10/site-packages/django/forms/fields.py:298
 msgid "Enter a whole number."
@@ -1267,7 +1267,7 @@ msgstr ""
 
 #: venv/lib/python3.10/site-packages/django/forms/fields.py:1310
 msgid "Enter a valid UUID."
-msgstr ""
+msgstr "Inserisci un uuid valido"
 
 #: venv/lib/python3.10/site-packages/django/forms/fields.py:1340
 msgid "Enter a valid JSON."
