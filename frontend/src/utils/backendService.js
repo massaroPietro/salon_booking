@@ -90,12 +90,15 @@ const createSpecificCallbacks = (config, success_callback = null, error_callback
                 config.success_callback(response);
             }
         },
-        error_callback: (response) => {
+        error_callback: (err) => {
+            if (Array.isArray(err.response.data) && !config.formErrors) {
+                toast.error(err.response.data[0])
+            }
             if (error_callback) {
-                error_callback(response);
+                error_callback(err);
             }
             if (config?.error_callback) {
-                config.error_callback(response);
+                config.error_callback(err);
             }
         },
         finally_callback: (response) => {

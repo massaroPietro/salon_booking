@@ -44,13 +44,14 @@ class AppointmentListCreateAPIView(generics.ListCreateAPIView):
         salon = self.get_object()
         data = serializer.validated_data
 
-        if appointment_is_valid(data, salon):
+        services = data.get('services', [])
+        end = data['start']
+        for i in services:
+            end += i.duration
 
-            services = data.get('services', [])
-            end = data['start']
-            for i in services:
-                end += i.duration
+        data['end'] = end
 
+        if appointment_is_valid(dict(data), salon, edit_mode=False):
             serializer.save(salon=salon, customer=self.request.user, end=end)
 
 
@@ -62,23 +63,30 @@ class AppointmentRUDAPIView(generics.RetrieveUpdateDestroyAPIView):
     def perform_update(self, serializer):
         data = serializer.validated_data
         salon = self.get_object().salon
-        if appointment_is_valid(data, salon):
 
-            services = data.get('services', self.get_object().services)
-            end = data['start']
-            for i in services:
-                end += i.duration
+        services = data.get('services', self.get_object().services.all())
 
+        end = data['start']
+        for i in services:
+            end += i.duration
+
+        data['end'] = end
+
+        if appointment_is_valid(dict(data), salon):
             serializer.save(end=end)
 
 
-def appointment_is_valid(appointment, salon):
+def appointment_is_valid(appointment, salon, edit_mode=True):
     employee = appointment.get('employee', None)
 
     if employee and employee.salon != salon:
         raise ValidationError(_("Employee is not valid"))
 
     services = appointment.get('services', [])
+
+    if len(services) < 1:
+        raise ValidationError(_('You must select at least one service'))
+
     for i in services:
         if i.salon != salon:
             raise ValidationError(_("Service is not valid"))
