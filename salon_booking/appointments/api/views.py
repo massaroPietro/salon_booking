@@ -43,8 +43,15 @@ class AppointmentListCreateAPIView(generics.ListCreateAPIView):
     def perform_create(self, serializer):
         salon = self.get_object()
         data = serializer.validated_data
+
         if appointment_is_valid(data, salon):
-            serializer.save(salon=salon, customer=self.request.user)
+
+            services = data.get('services', [])
+            end = data['start']
+            for i in services:
+                end += i.duration
+
+            serializer.save(salon=salon, customer=self.request.user, end=end)
 
 
 class AppointmentRUDAPIView(generics.RetrieveUpdateDestroyAPIView):
@@ -56,11 +63,18 @@ class AppointmentRUDAPIView(generics.RetrieveUpdateDestroyAPIView):
         data = serializer.validated_data
         salon = self.get_object().salon
         if appointment_is_valid(data, salon):
-            serializer.save()
+
+            services = data.get('services', self.get_object().services)
+            end = data['start']
+            for i in services:
+                end += i.duration
+
+            serializer.save(end=end)
 
 
 def appointment_is_valid(appointment, salon):
     employee = appointment.get('employee', None)
+
     if employee and employee.salon != salon:
         raise ValidationError(_("Employee is not valid"))
 

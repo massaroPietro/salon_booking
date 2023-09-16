@@ -41,11 +41,9 @@
                      class="mb-2"/>
         </FromGroup>
 
-
-        <Alert v-if="formErrors.non_field_errors" class="mt-6" type="danger">{{ formErrors.non_field_errors }}</Alert>
-
       </div>
-      <div class="flex justify-between items-center mt-10">
+        <Alert v-if="formErrors.non_field_errors" class="mt-6" type="danger">{{ formErrors.non_field_errors }}</Alert>
+      <div class="flex justify-between items-center mt-6">
         <div>
           <Button
               text="Delete"

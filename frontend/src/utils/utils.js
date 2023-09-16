@@ -45,6 +45,9 @@ export function resetObject(object) {
 
 export function setBackendResponseErrors(err, formErrors) {
     if (err.response && err.response.data) {
+        if(err.response.status === 500){
+            formErrors["non_field_errors"] = t('errors.serverError')
+        }else if(err.response.data){
         for (const errorField in err.response.data) {
             if (typeof err.response.data[errorField] === "string") {
                 if (isNaN(errorField) && formErrors[errorField].length === 0) {
@@ -57,6 +60,7 @@ export function setBackendResponseErrors(err, formErrors) {
             } else {
                 formErrors[errorField] = err.response.data[errorField][0];
             }
+        }
         }
     }
 }

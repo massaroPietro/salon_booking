@@ -14,10 +14,3 @@ class Appointment(BaseModel):
     services = models.ManyToManyField(Service)
     start = models.DateTimeField()
     end = models.DateTimeField()
-
-    def save(self, *args, **kwargs):
-        services = self.services.all()
-        self.end = self.start
-        for i in services:
-            self.end += i.duration
-        super().save(*args, **kwargs)

@@ -1,16 +1,11 @@
-import os
-
-import requests
 from allauth.account.models import EmailAddress
 from allauth.socialaccount.models import SocialAccount
 from django.contrib.auth import get_user_model
-from django.core.files.base import ContentFile
 from django.db.models.signals import pre_save, post_save
 from django.dispatch import receiver
 from django.utils.text import slugify
 from allauth.socialaccount.signals import *
 
-from config.settings.base import MEDIA_ROOT
 from salon_booking.salons.models import Employee
 from salon_booking.users.models import UserSettings
 
