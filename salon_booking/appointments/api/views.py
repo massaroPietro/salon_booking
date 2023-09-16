@@ -3,6 +3,7 @@ from time import sleep
 
 from django.utils import timezone
 from rest_framework import generics
+from rest_framework.exceptions import ValidationError
 from rest_framework.generics import get_object_or_404
 
 from .permissions import IsOwnerOrCreateOnly, IsSalonOwnerOrCustomer
@@ -59,10 +60,12 @@ class AppointmentRUDAPIView(generics.RetrieveUpdateDestroyAPIView):
 
 
 def appointment_is_valid(appointment, salon):
-    if appointment['employee'].salon != salon:
+    employee = appointment.get('employee', None)
+    if employee and employee.salon != salon:
         raise ValidationError(_("Employee is not valid"))
 
-    for i in appointment['services']:
+    services = appointment.get('services', [])
+    for i in services:
         if i.salon != salon:
             raise ValidationError(_("Service is not valid"))
 

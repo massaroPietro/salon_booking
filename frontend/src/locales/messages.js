@@ -6,7 +6,8 @@ export default {
             genericError: "Generic error",
             serverError: "Server error. Try later.",
             insertValidHours: "Please enter valid working hours",
-            employeesArrayIsMandatory: "You must include at least one employee"
+            employeesArrayIsMandatory: "You must include at least one employee",
+            servicesArrayIsMandatory: "You must include at least one service",
         },
         alerts: {
             confirmDelete: "Yes, delete it!",
@@ -15,6 +16,7 @@ export default {
             notWillRestoreService: "You won't be able to delete this!",
             deleted: "Deleted!",
             serviceDeleted: 'The "%{name}" service has been deleted',
+            appointmentDeleted: "The appointment has been deleted"
         },
         weekDays: {
             1: "Monday",
@@ -106,6 +108,9 @@ export default {
             },
             appointments: {
                 appointmentDetail: "Appointment detail",
+                addAppointment: "Add appointment",
+                appointmentUpdated: "Appointment updated successfully",
+                appointmentAdded: "Appointment added successfully",
             },
             salons: {
                 addSalon: "Add salon",
@@ -223,7 +228,8 @@ export default {
             genericError: "Errore generico",
             serverError: "Errore con il server. Riprova più tardi.",
             insertValidHours: "Inserisci degli orari di lavoro validi",
-            employeesArrayIsMandatory: "Devi inserire almeno un dipendente"
+            employeesArrayIsMandatory: "Devi inserire almeno un dipendente",
+            servicesArrayIsMandatory: "Devi inserire almeno un servizio"
         },
         alerts: {
             confirmDelete: "Si, elimina!",
@@ -232,6 +238,7 @@ export default {
             notWillRestoreService: "Non potrai più ripristinare il servizio!",
             deleted: "Eliminato!",
             serviceDeleted: 'Il servizio "%{name}" è stato eliminato',
+            appointmentDeleted: "L'appuntamento è stato eliminato"
         },
         weekDays: {
             1: "Lunedì",
@@ -289,6 +296,9 @@ export default {
             },
             appointments: {
                 appointmentDetail: "Dettagli appuntamento",
+                addAppointment: "Aggiungi appuntamento",
+                appointmentUpdated: "Appuntamento aggiornato correttamente",
+                appointmentAdded: "Appuntamento aggiunto correttamente",
             },
             salons: {
                 addSalon: "Aggiungi salone",

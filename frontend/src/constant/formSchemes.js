@@ -42,15 +42,15 @@ const FormSchemes = {
     },
     appointmentFormScheme: () => {
         return yup.object().shape({
-            date: yup
-                .date()
+            start: yup
+                .string()
                 .required(t('generic.requiredField')),
             employee: yup
                 .string()
                 .required(t('generic.requiredField')),
-            services: yup
-                .string()
-                .required(t('generic.requiredField')),
+            services: yup.array().required(t('generic.requiredField')).test('services-length', t('errors.servicesArrayIsMandatory'), function (value) {
+                return value.length > 0;
+            }),
         });
     }
 }

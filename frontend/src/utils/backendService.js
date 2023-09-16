@@ -422,24 +422,30 @@ const backendService = {
 
         apiCaller("get", endpoint, null, config);
     },
-    updateAppointment(appointment, config) {
-        const endpoint = apiEndpoints.appointment(appointment.id);
+    addAppointment(data, config) {
         const authStore = useAuthStore();
-        const data = {
-            start: appointment.start,
-            employee: appointment.extendedProps.employee,
-            services: appointment.extendedProps.services
-        }
+        const salonSlug = authStore.getCurrentSalon.slug;
+        const endpoint = apiEndpoints.appointments(salonSlug);
+
+        config = createSpecificCallbacks(config, (response) => {
+            authStore.addAppointments([response.data]);
+        })
+
+        apiCaller("post", endpoint, data, config)
+    },
+    updateAppointment(data, config) {
+        const endpoint = apiEndpoints.appointment(data.id);
+        const authStore = useAuthStore();
 
         config = createSpecificCallbacks(config, (response) => {
             authStore.setAppointment(response.data);
-        }, (error) => {
-            if (error.response.data && error.response.status === 400) {
-                toast.error(error.response.data[0])
-            }
         })
 
-        apiCaller("put", endpoint, data, config)
+        apiCaller("patch", endpoint, data, config)
+    },
+    deleteAppointment(id, config) {
+        const endpoint = apiEndpoints.appointment(id);
+        apiCaller("delete", endpoint, null, config)
     }
 };
 

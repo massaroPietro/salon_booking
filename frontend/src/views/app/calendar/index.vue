@@ -47,116 +47,8 @@
                 :options="calendarOptions"
             ></FullCalendar>
           </div>
-          <Modal
-              labelClass="btn-outline-dark"
-              :activeModal="showModal && authStore.isCurrentSalonOwner()"
-              @close="hideModal"
-              title="Event"
-          >
-            <!-- :validation-schema="schema" -->
-            <Form @submit="onSubmit">
-              <div class="space-y-3">
-                <Textinput
-                    v-model="event.title"
-                    type="text"
-                    label="Event Name"
-                    placeholder="Insert Event name"
-                />
-
-                <div class="fromGroup">
-                  <label class="form-label">Category</label>
-                  <select
-                      v-model="event.category"
-                      class="form-control"
-                      name="category"
-                  >
-                    <option
-                        v-for="option in categories"
-                        :key="option.backgroundColor"
-                        :value="`${option.value}`"
-                    >
-                      {{ option.name }}
-                    </option>
-                  </select>
-                </div>
-              </div>
-              <div class="flex justify-between items-center mt-5">
-                <Button
-                    text="close"
-                    btnClass="btn-light"
-                    @click="hideModal"
-                    type="button"
-                />
-                <Button
-                    text="save"
-                    btnClass="btn-success"
-                    type="submit"
-                    :isDisabled="!formisValid"
-                />
-              </div>
-            </Form>
-          </Modal>
-          <Modal :activeModal="eventModal" @close="closeModal" :title="$t('app.appointments.appointmentDetail')"
-                 :centered="true">
-            <Form @submit="editSubmit">
-              <div class="space-y-3">
-                <FromGroup :label="$t('generic.date')">
-                  <flat-pickr
-                      v-model="editevent.start"
-                      class="form-control"
-                      placeholder="Date & Time"
-                      id="d2"
-                      :config="{ enableTime: true, dateFormat: $i18n.locale === 'it' ? 'd-m-Y H:i' : 'm-d-Y H:i' }"
-                  />
-                </FromGroup>
-                <FromGroup :label="$t('generic.employee')">
-                  <select
-                      v-model="editevent.employee"
-                      class="form-control"
-                      name="employee"
-                  >
-                    <option
-                        v-for="employee in authStore.getCurrentSalon.employees"
-                        :key="employee.id"
-                        :value="employee.id"
-                    >
-                      {{ employee.user.full_name }}
-                    </option>
-                  </select>
-                </FromGroup>
-                <VueSelect :pre-selected-value="editevent.services" :options="authStore.getServicesForSelect"
-                           :label="$t('app.menuItems.services')"
-                           multiple
-                           v-model="editevent.services"
-                           class="mb-2"/>
-
-              </div>
-              <div class="flex justify-between items-center mt-10">
-                <div>
-                  <Button
-                      text="Delete"
-                      btnClass="btn-danger"
-                      type="button"
-                      @click="confirm"
-                  />
-                </div>
-                <div class="flex space-x-5">
-                  <Button
-                      text="close"
-                      btnClass="btn-light"
-                      @click="closeModal"
-                      type="button"
-                  />
-                  <Button
-                      text="save"
-                      btnClass="btn-success"
-                      @click="editSubmit"
-                      :isDisabled="appointmentIsChanged"
-                  />
-                </div>
-              </div>
-            </Form>
-          </Modal>
+          <appointment-modal :appointment="appointment" :edit-mode="appointmentModalEditMode"
+                             @deleted="deleteAppointment"/>
         </Card>
       </div>
     </div>
@@ -182,9 +74,9 @@ import Loading from 'vue-loading-overlay';
 import {useAuthStore} from "@/store/auth";
 import backendService from "@/utils/backendService";
 import AppointmentModal from "@/components/modals/AppointmentModal.vue";
-import {events} from "vuedraggable/src/core/sortableEvents";
 import FromGroup from "@/components/FromGroup/index.vue";
 import VueSelect from "@/components/Select/VueSelect.vue";
+import emitter from "@/plugins/mitt";
 
 export default {
   name: "calander",
@@ -208,36 +100,14 @@ export default {
   data() {
     return {
       title: "Calendar",
-      currentEvents: [],
-      showModal: false,
-      eventModal: false,
       eventOvered: null,
-      categories: categories,
-      submitted: false,
-      submit: false,
-      newEventData: {},
-      edit: {},
-      event: {
-        title: "",
-        category: "",
-      },
-      editevent: {
-        editTitle: "",
-        editcategory: "",
-      },
       abortController: null,
+      appointment: {},
+      appointmentModalEditMode: false,
+      event: null
     };
   },
   computed: {
-    events() {
-      return events
-    },
-    appointmentIsChanged() {
-      if (this.editevent.date && this.editevent.employee && this.editevent.services && this.editevent.services.length > 0) {
-        return this.editevent.employee !== this.edit.employee || this.edit.title !== this.editevent.editTitle;
-      }
-      return false;
-    },
     calendarLocale() {
       return this.$i18n.locale === 'it' ? itLocale : "";
     },
@@ -256,8 +126,7 @@ export default {
         editable: false,
         droppable: true,
         dateClick: this.authStore.isCurrentSalonOwner() ? this.dateClicked : "",
-        eventClick: this.editEvent,
-        eventsSet: this.handleEvents,
+        eventClick: this.onClickEvent,
         datesSet: this.onChangeDates,
         eventMouseEnter: this.eventMouseEnter,
         eventDrop: this.onEventDrop,
@@ -266,7 +135,6 @@ export default {
         eventResizableFromStart: true,
         eventDragStart: this.onEventDragStart,
         eventMouseLeave: this.eventMouseLeave,
-        select: this.dateClicked,
         weekends: true,
         selectable: this.authStore.isCurrentSalonOwner(),
         selectMirror: true,
@@ -274,22 +142,30 @@ export default {
         eventDisplay: "block"
       }
     },
-    titleIsvalid() {
-      return !!this.event.title;
-    },
-    categoryIsvalid() {
-      return !!this.event.category;
-    },
-    formisValid() {
-      return this.titleIsvalid && this.categoryIsvalid;
-    },
-    editformvIsvalid() {
-      return this.editevent.editTitle && this.editevent.editcategory;
-    },
   },
   methods: {
+    dateClicked(event) {
+      this.appointment.start = event.date;
+      this.appointment.employee = null;
+      this.appointment.services = []
+      this.appointmentModalEditMode = false;
+      this.event = event
+      emitter.emit('openAppointmentModal')
+    },
+    onClickEvent(event) {
+      this.event = event
+      this.appointment.id = event.event.id;
+      this.appointment.start = event.event.start;
+      this.appointment.services = event.event.extendedProps.services;
+      this.appointment.employee = event.event.extendedProps.employee;
+      this.appointmentModalEditMode = true;
+      emitter.emit('openAppointmentModal')
+    },
     onEventDragStart() {
       this.eventOvered = null;
+    },
+    deleteAppointment() {
+      this.event.event.remove();
     },
     onEventDrop(dropEvent) {
       this.eventOvered = null;
@@ -305,8 +181,14 @@ export default {
           this.removeToolbarLoader();
         }
       }
+
+      const data = {
+        id: dropEvent.event.id,
+        start: dropEvent.event.start,
+      }
+
       this.setToolbarLoader();
-      backendService.updateAppointment(dropEvent.event, config)
+      backendService.updateAppointment(data, config)
     },
     eventMouseEnter(event) {
       if (event) {
@@ -345,123 +227,6 @@ export default {
       }
       backendService.getAppointments(config)
     },
-    onSubmit() {
-      this.submitted = true;
-
-      if (this.formisValid) {
-        const title = this.event.title;
-        const category = this.event.category;
-        let calendarApi = this.newEventData.view.calendar;
-
-        this.currentEvents = calendarApi.addEvent({
-          id: this.newEventData.length + 1,
-          title,
-          start: this.newEventData.date,
-          end: this.newEventData.date,
-          classNames: [category],
-        });
-        this.successmsg();
-
-        this.showModal = false;
-        this.newEventData = {};
-      }
-      this.submitted = false;
-      this.event = {};
-    },
-    // this.$swal
-    // eslint-disable-next-line no-unused-vars
-    hideModal(e) {
-      this.submitted = false;
-      this.showModal = false;
-      this.event = {};
-    },
-    /**
-     * Edit event modal submit
-     */
-    // eslint-disable-next-line no-unused-vars
-    editSubmit(e) {
-      this.submit = true;
-      if (this.editformvIsvalid) {
-        const editTitle = this.editevent.editTitle;
-        const editcategory = this.editevent.editcategory;
-
-        this.edit.setProp("title", editTitle);
-        this.edit.setProp("classNames", editcategory);
-        this.successmsg();
-        this.eventModal = false;
-      }
-    },
-
-    /**
-     * Delete event
-     */
-    deleteEvent() {
-      this.edit.remove();
-      this.eventModal = false;
-    },
-    /**
-     * Modal open for add event
-     */
-    dateClicked(info) {
-      this.newEventData = info;
-      this.showModal = true;
-    },
-    /**
-     * Modal open for edit event
-     */
-    editEvent(info) {
-      this.edit = info.event;
-      this.editevent.editTitle = this.edit.title;
-      this.editevent.editcategory = this.edit.classNames[0];
-
-      this.editevent.start = this.edit.start;
-      this.editevent.services = [];
-      this.edit.extendedProps.services.forEach((id) => {
-        const srv = this.authStore.getService(id);
-        srv.label = srv.name;
-        this.editevent.services.push(srv)
-      });
-      this.editevent.employee = this.edit.extendedProps.employee;
-      this.eventModal = true;
-    },
-
-    closeModal() {
-      this.eventModal = false;
-    },
-
-    confirm() {
-      this.closeModal();
-      this.$swal
-          .fire({
-            title: "Are you sure?",
-            text: "You won't be able to delete this!",
-            icon: "warning",
-            showCancelButton: true,
-            confirmButtonColor: "#34c38f",
-            cancelButtonColor: "#f46a6a",
-            confirmButtonText: "Yes, delete it!",
-            background: this.$store.themeSettingsStore.isDark
-                ? "#1e293b"
-                : "#fff",
-          })
-          .then((result) => {
-            if (result.value) {
-              this.deleteEvent();
-              this.$swal.fire("Deleted!", "Event has been deleted.", "success");
-            }
-          });
-    },
-
-    /**
-     * Show list of events
-     */
-    handleEvents(events) {
-      this.currentEvents = events;
-    },
-
-    /**
-     * Show success-500full Save Dialog
-     */
     successmsg() {
       this.$swal.fire({
         position: "center",
@@ -472,8 +237,6 @@ export default {
         timer: 1000,
       });
     },
-
-
     setToolbarLoader() {
       const loadingElement = this.$refs.fullCalendar.$el.querySelector('#fc-button-loading');
       if (!loadingElement) {
