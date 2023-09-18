@@ -29,9 +29,6 @@ axios.interceptors.response.use(
             if (status === 404) {
                 router.push('/');
             }
-            if (status === 500) {
-                toast.error(t('errors.serverError'))
-            }
             if (status === 403) {
                 const authStore = useAuthStore();
                 authStore.removeToken();

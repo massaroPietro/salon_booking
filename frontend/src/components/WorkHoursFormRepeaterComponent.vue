@@ -93,6 +93,7 @@ import Alert from "@/components/Alert/index.vue";
 import emitter from "@/plugins/mitt";
 import backendService from "@/utils/backendService";
 import Switch from "@/components/Switch/index.vue";
+import {getClientTimezoneOffset} from "@/utils/utils";
 
 export default {
   name: "WorkHoursFormRepeaterComponent",

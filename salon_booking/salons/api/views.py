@@ -100,6 +100,8 @@ class EmployeeWorkDayRUAPIView(generics.RetrieveUpdateAPIView):
     def perform_update(self, serializer):
         data = serializer.validated_data
 
+        print(self.request.headers)
+
         work_ranges_data = data.get('work_ranges', [])
 
         for idx, x in enumerate(work_ranges_data):

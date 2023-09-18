@@ -1,6 +1,5 @@
 from datetime import datetime
-from time import sleep
-
+from django.forms.models import model_to_dict
 from django.utils import timezone
 from rest_framework import generics
 from rest_framework.exceptions import ValidationError
@@ -41,18 +40,12 @@ class AppointmentListCreateAPIView(generics.ListCreateAPIView):
         return queryset
 
     def perform_create(self, serializer):
-        salon = self.get_object()
         data = serializer.validated_data
 
-        services = data.get('services', [])
-        end = data['start']
-        for i in services:
-            end += i.duration
+        data['salon'] = self.get_object()
+        data['customer'] = self.request.user
 
-        data['end'] = end
-
-        if appointment_is_valid(dict(data), salon, edit_mode=False):
-            serializer.save(salon=salon, customer=self.request.user, end=end)
+        serializer.save(**validated_appointment(data))
 
 
 class AppointmentRUDAPIView(generics.RetrieveUpdateDestroyAPIView):
@@ -61,34 +54,60 @@ class AppointmentRUDAPIView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Appointment.objects.all()
 
     def perform_update(self, serializer):
-        data = serializer.validated_data
-        salon = self.get_object().salon
+        updated_data = serializer.validated_data
+        obj = self.get_object()
 
-        services = data.get('services', self.get_object().services.all())
+        data = model_to_dict(obj)
+        data['employee'] = obj.employee
+        data['customer'] = obj.customer
+        data['salon'] = obj.salon
+        data.update(updated_data)
 
-        end = data['start']
-        for i in services:
-            end += i.duration
-
-        data['end'] = end
-
-        if appointment_is_valid(dict(data), salon):
-            serializer.save(end=end)
+        serializer.save(**validated_appointment(data))
 
 
-def appointment_is_valid(appointment, salon, edit_mode=True):
-    employee = appointment.get('employee', None)
+def validated_appointment(data):
+    end = data['start']
+    for i in data['services']:
+        end += i.duration
 
-    if employee and employee.salon != salon:
+    data['end'] = end
+    employee = data['employee']
+    employee_services = employee.services.all()
+
+    if employee.salon != data['salon']:
         raise ValidationError(_("Employee is not valid"))
 
-    services = appointment.get('services', [])
+    for i in data['services']:
 
-    if len(services) < 1:
-        raise ValidationError(_('You must select at least one service'))
-
-    for i in services:
-        if i.salon != salon:
+        if i.salon != data['salon']:
             raise ValidationError(_("Service is not valid"))
 
-    return True
+        if i not in employee_services:
+            raise ValidationError(_("The selected employee is not authorized for the chosen service"))
+
+    if Appointment.objects.filter(employee=employee, end__gt=data['start'], start__lt=data['end']).exists():
+        raise ValidationError(
+            _("The employee is already busy with another appointment during this time slot. Please choose a different time or another available employee"))
+
+    start_time = data['start'].time()
+    end_time = data['end'].time()
+    weekday = data['start'].weekday()
+    work_day = EmployeeWorkDay.objects.get(employee=employee, weekday=weekday)
+    if not work_day.work:
+        raise ValidationError(_("The selected day is not a working day for the chosen employee"))
+
+    print(start_time)
+    print(end)
+    print(weekday)
+    print(work_day)
+
+    work_ranges = work_day.work_ranges.all()
+    for work_range in work_ranges:
+        if work_range.from_hour <= start_time < work_range.to_hour and work_range.from_hour < end_time <= work_range.to_hour:
+            break
+        else:
+            raise ValidationError(
+                _("The selected time is not within the employee's working hours for this day. Please choose a different time"))
+
+    return data

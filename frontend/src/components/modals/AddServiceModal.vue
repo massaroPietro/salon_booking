@@ -22,14 +22,16 @@
                  class="mb-2"/>
       <Textinput
           :label="$t('generic.duration')"
+          :description="$t('app.services.timeFormatDescription')"
           type="time"
-          placeholder=""
+          placeholder="hh:mm"
           v-model="form.duration"
           :error="formErrors.duration"
-          classInput="h-[48px] mb-2"
+          classInput="h-[48px]"
       />
       <InputGroup
           :label="$t('generic.price')"
+          class="mt-2"
           prepend="&euro;"
           type="text"
           placeholder=""

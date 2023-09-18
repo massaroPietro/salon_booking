@@ -15,7 +15,7 @@
               class="form-control"
               placeholder="Date & Time"
               id="d2"
-              :config="{ enableTime: true, dateFormat: $i18n.locale === 'it' ? 'd-m-Y H:i' : 'm-d-Y H:i' }"
+              :config="{ enableTime: true, dateFormat: 'd-m-Y H:i'}"
           />
         </FromGroup>
         <FromGroup :label="$t('generic.employee')" :error="formErrors.employee">
@@ -38,15 +38,20 @@
                      :label="''"
                      multiple
                      v-model="form.services"
-                     class="mb-2"/>
+                     class="mb-2" />
+<!--
+    <div slot="no-options">
+        {{ $t('app.services.noRegisteredServices') }}
+    </div>-->
+
         </FromGroup>
 
       </div>
-        <Alert v-if="formErrors.non_field_errors" class="mt-6" type="danger">{{ formErrors.non_field_errors }}</Alert>
+      <Alert v-if="formErrors.non_field_errors" class="mt-6" type="danger">{{ formErrors.non_field_errors }}</Alert>
       <div class="flex justify-between items-center mt-6">
         <div>
           <Button
-              text="Delete"
+              :text="$t('generic.delete')"
               btnClass="btn-danger"
               type="button"
               @click="deleteAppointment()"
@@ -54,7 +59,7 @@
         </div>
         <div class="flex space-x-5">
           <Button
-              text="close"
+              :text="$t('generic.close')"
               btnClass="btn-light"
               @click="$refs.appointmentModal.closeModal()"
               type="button"
@@ -120,6 +125,11 @@ export default {
   created() {
     emitter.on('openAppointmentModal', () => {
       if (this.$refs?.appointmentModal) {
+        for (const key in this.formErrors) {
+          if (this.formErrors.hasOwnProperty(key)) {
+            this.formErrors[key] = '';
+          }
+        }
         this.$refs.appointmentModal.openModal();
         this.initAppointment(this.appointment);
       }
@@ -164,6 +174,7 @@ export default {
             confirmButtonColor: "#34c38f",
             cancelButtonColor: "#f46a6a",
             confirmButtonText: this.$t('alerts.confirmDelete'),
+              cancelButtonText: this.$t('alerts.cancel'),
             background: this.$store.themeSettingsStore.isDark
                 ? "#1e293b"
                 : "#fff",
@@ -240,15 +251,13 @@ export default {
     },
     toIsoDate(dateStr) {
       const parts = dateStr.split(/[- :]/);
-
-      const inputDate = new Date(
+      return new Date(
           parts[2],
-          parts[1] - 1,
+          parts[1],
           parts[0],
           parts[3],
           parts[4]
       );
-      return inputDate.toISOString();
     }
   }
 }

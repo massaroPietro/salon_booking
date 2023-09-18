@@ -25,9 +25,7 @@
           <div
               class="text-slate-600 dark:text-slate-300 font-normal text-base mb-10 text-center"
           >
-            Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet
-            sint. Velit officia consequat duis enim velit mollit. Exercitation
-            veniam consequat sunt nostrud amet.
+            {{ $t('app.salons.firstSalonDescription') }}
           </div>
 
             <AddSalonFormComponent @salon-added="backendService.getDashboardUser()"/>

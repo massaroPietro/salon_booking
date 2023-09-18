@@ -65,7 +65,6 @@ export const useAuthStore = defineStore('authStore', {
             } else {
                 return appointments.map(appointment => ({
                     ...appointment,
-                    title: t("generic.add")
                 }));
             }
         },

@@ -82,3 +82,10 @@ export function humanizeDuration(duration) {
         return t("humanizeDuration.onlyMinutes", obj)
     }
 }
+
+export function getClientTimezoneOffset() {
+  const userTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+  const now = new Date();
+  const userTimezoneOffsetMinutes = now.getTimezoneOffset();
+  return userTimezoneOffsetMinutes / 60;
+}

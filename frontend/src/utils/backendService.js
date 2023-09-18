@@ -28,7 +28,6 @@ function setUserInfoOnLogin(response, rememberUser) {
     toast.success(t("toasts.successLogin"), {
         timeout: 2000
     });
-
     const toPath = router.currentRoute.value.query.to || '/'
 
     router.push(toPath);
@@ -61,7 +60,7 @@ function apiCaller(method, endpoint, requestData, config, headers = {}) {
         })
         .catch((err) => {
             if (config?.formErrors) {
-                setBackendResponseErrors(err, config.formErrors)
+                setBackendResponseErrors(err, config?.formErrors)
             }
 
             if (config?.error_callback) {
@@ -91,8 +90,14 @@ const createSpecificCallbacks = (config, success_callback = null, error_callback
             }
         },
         error_callback: (err) => {
-            if (Array.isArray(err.response.data) && !config.formErrors) {
-                toast.error(err.response.data[0])
+            if (!config?.formErrors) {
+                if (Array.isArray(err?.response?.data) && err?.response?.status === 400) {
+                    toast.error(err.response.data[0], {
+                        timeout: err.response.data[0].length > 70 ? 6000 : 5000,
+                    })
+                } else if (err.response.status === 500) {
+                    toast.error(t('errors.serverError'))
+                }
             }
             if (error_callback) {
                 error_callback(err);

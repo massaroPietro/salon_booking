@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-08-31 17:32+0000\n"
+"POT-Creation-Date: 2023-09-18 09:48+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,6 +17,40 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: salon_booking/appointments/api/views.py:79
+msgid "Employee is not valid"
+msgstr "Il dipendente non è valido"
+
+#: salon_booking/appointments/api/views.py:84
+#, fuzzy
+#| msgid "{value!r} is not a valid UUID."
+msgid "Service is not valid"
+msgstr "%(value)s non è un UUID valido."
+
+#: salon_booking/appointments/api/views.py:87
+msgid "The selected employee is not authorized for the chosen service"
+msgstr "Il dipendente selezionato non è abilitato al servizio scelto"
+
+#: salon_booking/appointments/api/views.py:91
+msgid ""
+"The employee is already busy with another appointment during this time slot. "
+"Please choose a different time or another available employee"
+msgstr ""
+"L'orario selezionato non rientra nell'orario di lavoro del dipendente per "
+"questo giorno. Scegli un orario diverso"
+
+#: salon_booking/appointments/api/views.py:98
+msgid "The selected day is not a working day for the chosen employee"
+msgstr "Il giorno selezionato non è lavorativo per il dipendente scelto"
+
+#: salon_booking/appointments/api/views.py:111
+msgid ""
+"The selected time is not within the employee's working hours for this day. "
+"Please choose a different time"
+msgstr ""
+"L'orario selezionato non rientra nell'orario di lavoro del dipendente per "
+"questo giorno. Si prega di scegliere un orario diverso"
 
 #: salon_booking/core/constants.py:4
 msgid "English"
@@ -27,56 +61,82 @@ msgid "Italian"
 msgstr "Italiano"
 
 #: salon_booking/core/constants.py:9
-#: venv/lib/python3.10/site-packages/django/utils/dates.py:7
-#: venv/lib/python3.10/site-packages/tornado/locale.py:295
-msgid "Monday"
-msgstr "Lunedì"
-
-#: salon_booking/core/constants.py:10
 #: venv/lib/python3.10/site-packages/django/utils/dates.py:8
 #: venv/lib/python3.10/site-packages/tornado/locale.py:296
 msgid "Tuesday"
 msgstr "Martedì"
 
-#: salon_booking/core/constants.py:11
+#: salon_booking/core/constants.py:10
 #: venv/lib/python3.10/site-packages/django/utils/dates.py:9
 #: venv/lib/python3.10/site-packages/tornado/locale.py:297
 msgid "Wednesday"
 msgstr "Mercoledì"
 
-#: salon_booking/core/constants.py:12
+#: salon_booking/core/constants.py:11
 #: venv/lib/python3.10/site-packages/django/utils/dates.py:10
 #: venv/lib/python3.10/site-packages/tornado/locale.py:298
 msgid "Thursday"
 msgstr "Giovedì"
 
-#: salon_booking/core/constants.py:13
+#: salon_booking/core/constants.py:12
 #: venv/lib/python3.10/site-packages/django/utils/dates.py:11
 #: venv/lib/python3.10/site-packages/tornado/locale.py:299
 msgid "Friday"
 msgstr "Venerdì"
 
-#: salon_booking/core/constants.py:14
+#: salon_booking/core/constants.py:13
 #: venv/lib/python3.10/site-packages/django/utils/dates.py:12
 #: venv/lib/python3.10/site-packages/tornado/locale.py:300
 msgid "Saturday"
 msgstr "Sabato"
 
-#: salon_booking/core/constants.py:15
+#: salon_booking/core/constants.py:14
 #: venv/lib/python3.10/site-packages/django/utils/dates.py:13
 #: venv/lib/python3.10/site-packages/tornado/locale.py:301
 msgid "Sunday"
 msgstr "Domenica"
 
-#: salon_booking/salons/api/views.py:38
+#: salon_booking/core/constants.py:15
+#: venv/lib/python3.10/site-packages/django/utils/dates.py:7
+#: venv/lib/python3.10/site-packages/tornado/locale.py:295
+msgid "Monday"
+msgstr "Lunedì"
+
+#: salon_booking/core/constants.py:25
+msgid "Pending"
+msgstr ""
+
+#: salon_booking/core/constants.py:26
+msgid "Accepted"
+msgstr ""
+
+#: salon_booking/core/constants.py:27
+msgid "Rejected"
+msgstr ""
+
+#: salon_booking/salons/api/serializers.py:131
+msgid "The user with this email is already part of the salon"
+msgstr ""
+
+#: salon_booking/salons/api/serializers.py:134
+msgid "An invitation already exists for this email"
+msgstr ""
+
+#: salon_booking/salons/api/views.py:40
 msgid "There is already a salon with this name"
 msgstr "Esiste già un salone con questo nome"
 
-#: salon_booking/salons/api/views.py:95
+#: salon_booking/salons/api/views.py:65
+#, fuzzy
+#| msgid "There is already a salon with this name"
+msgid "A user is already registered with this e-mail address."
+msgstr "Esiste già un salone con questo nome"
+
+#: salon_booking/salons/api/views.py:109
 msgid "Invalid time range for work range"
 msgstr ""
 
-#: salon_booking/services/api/views.py:26
+#: salon_booking/services/api/views.py:24
 msgid "Enter valid employees"
 msgstr "Inserisci dipendenti validi"
 

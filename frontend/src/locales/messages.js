@@ -19,13 +19,13 @@ export default {
             appointmentDeleted: "The appointment has been deleted"
         },
         weekDays: {
-            1: "Monday",
-            2: "Tuesday",
-            3: "Wednesday",
-            4: "Thursday",
-            5: "Friday",
-            6: "Saturday",
-            7: "Sunday"
+            0: "Tuesday",
+            1: "Wednesday",
+            2: "Thursday",
+            3: "Friday",
+            4: "Saturday",
+            5: "Sunday",
+            6: "Monday",
         },
         humanizeDuration: {
             onlyHours: "%{hours} hours",
@@ -121,13 +121,16 @@ export default {
                 workHoursUpdated: "working hours on %{weekday} updated correctly",
                 addEmployee: "Add employee",
                 addNewEmployee: "Add new employee",
-                invitedForSalon: "You have received an invitation to participate"
+                invitedForSalon: "You have received an invitation to participate",
+                firstSalonDescription: "Welcome to our application! To access the dashboard, we kindly ask you to register your business",
             },
             services: {
                 addNewService: "Add new service",
                 addService: "Add service",
                 enabledEmployees: "Enabled employees",
                 editService: "Edit service",
+                noRegisteredServices: "There are no registered services yet",
+                timeFormatDescription: "Input format hh:mm"
             },
             header: {
                 search: {
@@ -241,13 +244,13 @@ export default {
             appointmentDeleted: "L'appuntamento è stato eliminato"
         },
         weekDays: {
-            1: "Lunedì",
-            2: "Martedì",
-            3: "Mercoledì",
-            4: "Giovedì",
-            5: "Venerdì",
-            6: "Sabato",
-            7: "Domenica"
+            0: "Martedì",
+            1: "Mercoledì",
+            2: "Giovedì",
+            3: "Venerdì",
+            4: "Sabato",
+            5: "Domenica",
+            6: "Lunedì",
         },
         humanizeDuration: {
             onlyHours: "%{hours} ore",
@@ -309,13 +312,16 @@ export default {
                 workHoursUpdated: "Orari di lavoro di %{weekday} aggiornati correttamente",
                 addNewEmployee: "Aggiungi nuovo dipendente",
                 addEmployee: "Aggiungi dipendente",
-                invitedForSalon: "Hai ricevuto un invito a partecipare"
+                invitedForSalon: "Hai ricevuto un invito a partecipare",
+                firstSalonDescription: "Benvenuto alla nostra applicazione! Per accedere alla dashboard, ti chiediamo gentilmente di registrare la tua attività",
             },
             services: {
                 addNewService: "Aggiungi nuovo servizio",
                 addService: "Aggiungi servizio",
                 enabledEmployees: "Dipendenti abilitati",
                 editService: "Modifica servizio",
+                noRegisteredServices: "Non ci sono ancora servizi registrati",
+                timeFormatDescription: "Formato di inserimento hh:mm"
             },
             header: {
                 search: {
