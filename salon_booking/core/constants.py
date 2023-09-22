@@ -6,13 +6,13 @@ LANGUAGES = (
 )
 
 WEEKDAYS = [
-    (0, _("Tuesday")),
-    (1, _("Wednesday")),
-    (2, _("Thursday")),
-    (3, _("Friday")),
-    (4, _("Saturday")),
-    (5, _("Sunday")),
-    (6, _("Monday")),
+    (0, _("Monday")),
+    (1, _("Tuesday")),
+    (2, _("Wednesday")),
+    (3, _("Thursday")),
+    (4, _("Friday")),
+    (5, _("Saturday")),
+    (6, _("Sunday")),
 ]
 
 # -----------------------------

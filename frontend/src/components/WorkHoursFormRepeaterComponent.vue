@@ -197,7 +197,13 @@ export default {
         const workRange1 = this.workDay.work_ranges[i];
         if (workRange1.from_hour !== null && workRange1.to_hour !== null) {
           const [hours1, minutes1] = workRange1.from_hour.split(":");
-          const [hours2, minutes2] = workRange1.to_hour.split(":");
+          let [hours2, minutes2] = workRange1.to_hour.split(":");
+
+          // Gestisce il caso in cui to_hour sia "00:00"
+          if (hours2 === "00") {
+            hours2 = "24";
+          }
+
           const from1 = new Date(0, 0, 0, hours1, minutes1);
           const to1 = new Date(0, 0, 0, hours2, minutes2);
           if (from1 >= to1) {

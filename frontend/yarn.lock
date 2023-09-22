@@ -2914,6 +2914,11 @@ mkdirp@^0.5.6:
   dependencies:
     minimist "^1.2.6"
 
+moment@^2.19.2, moment@^2.29.4:
+  version "2.29.4"
+  resolved "https://registry.npmjs.org/moment/-/moment-2.29.4.tgz"
+  integrity sha512-5LC9SOxjSc2HF6vO2CyuTDNivEdoz2IvyJJGj6X8DJ0eFyfszE0QiEd+iXmBvUP3WHxSjFH/vIsA0EN00cgr8w==
+
 mpd-parser@0.21.1:
   version "0.21.1"
   resolved "https://registry.npmjs.org/mpd-parser/-/mpd-parser-0.21.1.tgz"
@@ -4111,6 +4116,13 @@ vue-loading-overlay@^6.0.3:
   resolved "https://registry.npmjs.org/vue-loading-overlay/-/vue-loading-overlay-6.0.3.tgz"
   integrity sha512-Ab0hqnVKasVS2mNUo8Wkm95mSbk5fXp/karZmMou5yP0hTUOox/kZuBLNwgzJ4kFP829wFJl7O7FN1Dr0kRaVQ==
 
+vue-moment@^4.1.0:
+  version "4.1.0"
+  resolved "https://registry.npmjs.org/vue-moment/-/vue-moment-4.1.0.tgz"
+  integrity sha512-Gzisqpg82ItlrUyiD9d0Kfru+JorW2o4mQOH06lEDZNgxci0tv/fua1Hl0bo4DozDV2JK1r52Atn/8QVCu8qQw==
+  dependencies:
+    moment "^2.19.2"
+
 vue-router@^4.0.3:
   version "4.0.16"
   resolved "https://registry.npmjs.org/vue-router/-/vue-router-4.0.16.tgz"
@@ -4156,7 +4168,7 @@ vue-toastification@^2.0.0-rc.5:
   resolved "https://registry.npmjs.org/vue-toastification/-/vue-toastification-2.0.0-rc.5.tgz"
   integrity sha512-q73e5jy6gucEO/U+P48hqX+/qyXDozAGmaGgLFm5tXX4wJBcVsnGp4e/iJqlm9xzHETYOilUuwOUje2Qg1JdwA==
 
-vue@*, "vue@^2.6.14 || ^3.2.0", vue@^3.0.0, "vue@^3.0.0-0 || ^2.6.0", vue@^3.0.1, vue@^3.0.11, vue@^3.0.2, vue@^3.0.3, vue@^3.1.0, vue@^3.2.0, vue@^3.2.13, vue@^3.2.25, vue@^3.2.37, vue@^3.2.38, vue@^3.2.41, vue@^3.2.6, "vue@> 3.0.0", vue@>=3, vue@3.2.45, vue@3.x:
+vue@*, "vue@^2.6.14 || ^3.2.0", vue@^3.0.0, "vue@^3.0.0-0 || ^2.6.0", vue@^3.0.1, vue@^3.0.11, vue@^3.0.2, vue@^3.0.3, vue@^3.1.0, vue@^3.2.0, vue@^3.2.13, vue@^3.2.25, vue@^3.2.37, vue@^3.2.38, vue@^3.2.41, vue@^3.2.6, "vue@> 3.0.0", vue@>=1.x.x, vue@>=3, vue@3.2.45, vue@3.x:
   version "3.2.45"
   resolved "https://registry.npmjs.org/vue/-/vue-3.2.45.tgz"
   integrity sha512-9Nx/Mg2b2xWlXykmCwiTUCWHbWIj53bnkizBxKai1g61f2Xit700A1ljowpTIM11e3uipOeiPcSqnmBg6gyiaA==

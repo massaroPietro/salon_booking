@@ -6,10 +6,6 @@ import toast from "@/plugins/toasts";
 import {useAuthStore} from "@/store/auth";
 import {useCoreStore} from "@/store/core";
 import {setBackendResponseErrors} from "@/utils/utils";
-import {useToast} from "vue-toastification";
-import {ref} from "vue";
-import App from "@/App.vue";
-import app from "@/App.vue";
 import emitter from "@/plugins/mitt";
 
 const {t} = i18n.global
@@ -95,7 +91,7 @@ const createSpecificCallbacks = (config, success_callback = null, error_callback
                     toast.error(err.response.data[0], {
                         timeout: err.response.data[0].length > 70 ? 6000 : 5000,
                     })
-                } else if (err.response.status === 500) {
+                } else if (err?.response?.status === 500) {
                     toast.error(t('errors.serverError'))
                 }
             }
@@ -178,6 +174,11 @@ const backendService = {
 
         apiCaller("get", endpoint, null, config)
     },
+    getSalons: (config) => {
+        const endpoint = apiEndpoints.salons();
+
+        apiCaller("get", endpoint, null, config);
+    },
     getSalon: (slug, config = null) => {
         let endpoint = apiEndpoints.salon(slug);
         config = createSpecificCallbacks(config, (response) => {
@@ -190,7 +191,6 @@ const backendService = {
         let endpoint = apiEndpoints.employee(id);
 
         config = createSpecificCallbacks(config, (response) => {
-
             const authStore = useAuthStore();
             if (authStore.getCurrentSalon && authStore.getCurrentSalon.employees) {
                 authStore.setEmployee(id, response.data)
@@ -301,7 +301,6 @@ const backendService = {
     },
     updateWorkDay(workDayID, data, config) {
         const endpoint = apiEndpoints.workDay(workDayID);
-
         apiCaller("patch", endpoint, data, config);
     },
     verifyEmail(key, config) {
@@ -421,7 +420,7 @@ const backendService = {
     },
     getAppointments(config) {
         const authStore = useAuthStore();
-        const salonSlug = authStore.getCurrentSalon.slug;
+        const salonSlug = authStore.getCurrentSalon?.slug;
         const endpoint = apiEndpoints.appointments(salonSlug);
 
         config = createSpecificCallbacks(config, (response) => {

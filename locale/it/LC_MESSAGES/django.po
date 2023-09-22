@@ -134,7 +134,7 @@ msgstr "Esiste già un salone con questo nome"
 
 #: salon_booking/salons/api/views.py:109
 msgid "Invalid time range for work range"
-msgstr ""
+msgstr "Orario di lavoro non valido"
 
 #: salon_booking/services/api/views.py:24
 msgid "Enter valid employees"

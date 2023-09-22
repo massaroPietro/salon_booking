@@ -102,6 +102,9 @@ export default {
       this.openInvitationModal();
     })
   },
+  beforeUnmount() {
+    emitter.off('openInvitationsModal')
+  },
   setup() {
     const authStore = useAuthStore();
     const coreStore = useCoreStore();

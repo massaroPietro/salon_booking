@@ -1,5 +1,3 @@
-import sys
-
 from allauth.account.models import EmailAddress
 from django.db import transaction
 from rest_framework.exceptions import ValidationError
@@ -8,8 +6,6 @@ from rest_framework.generics import get_object_or_404
 from ..models import *
 from rest_framework import serializers
 from django.utils.translation import gettext as _
-
-from ...core.api.serializers import WithoutSecondsTimeField
 from ...services.api.serializers import ServiceSerializer
 
 

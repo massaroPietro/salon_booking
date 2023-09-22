@@ -38,6 +38,16 @@ export const menuItems = [
         ],
     },
     {
+        title: "app.menuItems.salons",
+        icon: "heroicons-outline:rectangle-group",
+        child: [
+            {
+                childtitle: "app.menuItems.salonsList",
+                childlink: "/app/salons",
+            },
+        ],
+    },
+    {
         title: "Dashboard",
         icon: "heroicons-outline:home",
         child: [

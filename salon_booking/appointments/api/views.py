@@ -97,11 +97,6 @@ def validated_appointment(data):
     if not work_day.work:
         raise ValidationError(_("The selected day is not a working day for the chosen employee"))
 
-    print(start_time)
-    print(end)
-    print(weekday)
-    print(work_day)
-
     work_ranges = work_day.work_ranges.all()
     for work_range in work_ranges:
         if work_range.from_hour <= start_time < work_range.to_hour and work_range.from_hour < end_time <= work_range.to_hour:

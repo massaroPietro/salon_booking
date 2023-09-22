@@ -8,6 +8,7 @@ export default {
             insertValidHours: "Please enter valid working hours",
             employeesArrayIsMandatory: "You must include at least one employee",
             servicesArrayIsMandatory: "You must include at least one service",
+            serverOffline: "Our servers are offline, sorry for the inconvenience, please try again later"
         },
         alerts: {
             confirmDelete: "Yes, delete it!",
@@ -66,6 +67,7 @@ export default {
             operator: "Operator",
             date: "Date",
             edit: "Modifica",
+            salon: "Salon"
         },
         auth: {
             signIn: "Sign in",
@@ -224,6 +226,7 @@ export default {
             operator: "Operatore",
             date: "Date",
             edit: "Modifica",
+            salon: "Salone"
         },
         errors: {
             notValidEmail: "Email non valida",
@@ -232,7 +235,8 @@ export default {
             serverError: "Errore con il server. Riprova più tardi.",
             insertValidHours: "Inserisci degli orari di lavoro validi",
             employeesArrayIsMandatory: "Devi inserire almeno un dipendente",
-            servicesArrayIsMandatory: "Devi inserire almeno un servizio"
+            servicesArrayIsMandatory: "Devi inserire almeno un servizio",
+            serverOffline: "I nostri server sono offline, ci scusiamo per l'inconveniente, riprova più tardi",
         },
         alerts: {
             confirmDelete: "Si, elimina!",
@@ -334,6 +338,8 @@ export default {
                 employeesList: "Lista dipendenti",
                 services: "Servizi",
                 servicesList: "Lista servizi",
+                salons: "Saloni",
+                salonsList: "Lista saloni",
                 calendar: "Calendario"
             }
         },

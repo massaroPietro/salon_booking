@@ -70,10 +70,7 @@
 <script>
 import {Listbox, ListboxButton, ListboxOption, ListboxOptions} from "@headlessui/vue";
 import {useAuthStore} from "@/store/auth";
-import axios from "@/plugins/axios";
-import apiEndpoints from '@/constant/apiEndpoints.js';
 import router from "@/router";
-import {getCurrentInstance} from "vue";
 import {useCoreStore} from "@/store/core";
 import emitter from "@/plugins/mitt";
 import backendService from "@/utils/backendService";
@@ -102,6 +99,9 @@ export default {
       this.changeSalon(id);
     })
   },
+  beforeUnmount() {
+    emitter.off('changeSalon');
+  },
   methods: {
     changeSalon(salon_id, saveOnDB = true) {
       if (this.selectedSalon === null || salon_id !== this.selectedSalon.id) {
@@ -116,7 +116,7 @@ export default {
           }
           if (saveOnDB) {
             backendService.changeSalon(salon_id);
-            if (!this.authStore.isCurrentSalonOwner()) {
+            if (!this.authStore.isCurrentSalonOwner() && this.$route?.meta?.mustBeOwner) {
               router.push("/").then(() => {
                 this.coreStore.reloadPage();
               })

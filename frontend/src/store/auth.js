@@ -33,7 +33,7 @@ export const useAuthStore = defineStore('authStore', {
             return (id) => this.user.id === id;
         },
         isOwner() {
-            return (id) => this.getCurrentSalon.owner === id;
+            return (id, salon_id=this.getCurrentSalon.id) => this.getSalon(salon_id).owner === id;
         },
         getCurrentSalon: state => {
             const currentSalonId = state.user.settings.current_salon;
@@ -41,8 +41,8 @@ export const useAuthStore = defineStore('authStore', {
         },
         getSalon: state => id => state.user.salons.find(salon => salon.id === id),
         statusClass() {
-            return (id) => {
-                const isOwner = this.isOwner(id);
+            return (id, salon_id=this.getCurrentSalon.id) => {
+                const isOwner = this.isOwner(id, salon_id);
                 return {
                     "text-success-500 bg-success-500": isOwner,
                     "text-warning-500 bg-warning-500": !isOwner,

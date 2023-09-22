@@ -24,8 +24,8 @@ axios.interceptors.response.use(
         return response;
     },
     error => {
-        if (error.response) {
-            const status = error.response.status;
+        if (error?.response) {
+            const status = error?.response?.status;
             if (status === 404) {
                 router.push('/');
             }
@@ -34,6 +34,9 @@ axios.interceptors.response.use(
                 authStore.removeToken();
                 router.push('/auth/login');
             }
+        }
+        if (error?.code === 'ERR_NETWORK') {
+            toast.error(t('errors.serverOffline'))
         }
         return Promise.reject(error);
     }

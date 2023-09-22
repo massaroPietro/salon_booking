@@ -45,22 +45,22 @@ export function resetObject(object) {
 
 export function setBackendResponseErrors(err, formErrors) {
     if (err.response && err.response.data) {
-        if(err.response.status === 500){
+        if (err.response.status === 500) {
             formErrors["non_field_errors"] = t('errors.serverError')
-        }else if(err.response.data){
-        for (const errorField in err.response.data) {
-            if (typeof err.response.data[errorField] === "string") {
-                if (isNaN(errorField) && formErrors[errorField].length === 0) {
-                    formErrors[errorField] = err.response.data[errorField];
-                } else {
-                    if (formErrors['non_field_errors'].length === 0) {
-                        formErrors["non_field_errors"] = err.response.data[errorField];
+        } else if (err.response.data) {
+            for (const errorField in err.response.data) {
+                if (typeof err.response.data[errorField] === "string") {
+                    if (isNaN(errorField) && formErrors[errorField].length === 0) {
+                        formErrors[errorField] = err.response.data[errorField];
+                    } else {
+                        if (formErrors['non_field_errors'].length === 0) {
+                            formErrors["non_field_errors"] = err.response.data[errorField];
+                        }
                     }
+                } else {
+                    formErrors[errorField] = err.response.data[errorField][0];
                 }
-            } else {
-                formErrors[errorField] = err.response.data[errorField][0];
             }
-        }
         }
     }
 }
@@ -84,8 +84,52 @@ export function humanizeDuration(duration) {
 }
 
 export function getClientTimezoneOffset() {
-  const userTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-  const now = new Date();
-  const userTimezoneOffsetMinutes = now.getTimezoneOffset();
-  return userTimezoneOffsetMinutes / 60;
+    return new Date().getTimezoneOffset();
+}
+
+export function formatWorkDays(workDays, x = 1) {
+    if (Array.isArray(workDays)) {
+        return workDays.map((work_day) => {
+            return formatSingleWorkDay(work_day, x)
+        });
+    } else if (typeof workDays === 'object') {
+        return formatSingleWorkDay(workDays, x);
+    }
+
+    return [];
+}
+
+
+function formatSingleWorkDay(workDay, x) {
+    const formattedWorkRanges = workDay.work_ranges.map(workRange => {
+        let [fromHours, fromMinutes] = workRange.from_hour.split(':');
+        let [toHours, toMinutes] = workRange.to_hour.split(':');
+
+        let fromHour = new Date();
+        fromHour.setHours(parseInt(fromHours, 10));
+        fromHour.setMinutes(parseInt(fromMinutes, 10));
+        fromHour = new Date(fromHour.getTime() - getClientTimezoneOffset() * 60 * 1000 * x);
+
+        let toHour = new Date();
+        toHour.setHours(parseInt(toHours, 10));
+        toHour.setMinutes(parseInt(toMinutes, 10));
+        toHour = new Date(toHour.getTime() - getClientTimezoneOffset() * 60 * 1000 * x);
+        return {
+            ...workRange,
+            from_hour: formatTime(fromHour),
+            to_hour: formatTime(toHour),
+        };
+    });
+
+    return {
+        ...workDay,
+        work_ranges: formattedWorkRanges,
+    };
+}
+
+
+function formatTime(date) {
+    const hours = String(date.getHours()).padStart(2, '0');
+    const minutes = String(date.getMinutes()).padStart(2, '0');
+    return `${hours}:${minutes}:00`;
 }

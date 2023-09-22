@@ -49,23 +49,40 @@ const routes = [
                 path: "employees",
                 name: "employees-list",
                 component: () => import("@/views/app/employees/EmployeesListView.vue"),
+                meta: {
+                    mustBeOwner: true
+                }
             },
             {
                 path: "employee/:employeeID/detail",
                 name: "employee-detail",
                 component: () => import("@/views/app/employees/EmployeeDetailView.vue"),
                 props: true,
+                meta: {
+                    mustBeOwner: true
+                }
             },
             {
                 path: "services",
                 name: "services-list",
                 component: () => import("@/views/app/services/ListView.vue"),
+                meta: {
+                    mustBeOwner: true
+                }
             },
             {
                 path: "service/:serviceID/detail",
                 name: "service-detail",
                 component: () => import("@/views/app/services/DetailView.vue"),
                 props: true,
+                meta: {
+                    mustBeOwner: true
+                }
+            },
+            {
+                path: "salons",
+                name: "salons-list",
+                component: () => import("@/views/app/salons/ListView.vue"),
             },
             {
                 path: "notifications",
