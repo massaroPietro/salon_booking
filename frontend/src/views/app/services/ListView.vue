@@ -27,6 +27,7 @@
             <span v-if="props.column.field === 'name'" class="flex justify-center">
               <span class="w-7 h-7 rounded-full ltr:mr-3 rtl:ml-3 flex-none">
                 <img
+                        v-if="props.row.image"
                     :src="props.row.image"
                     :alt="props.row.name"
                     class="object-cover w-full h-full rounded-full"

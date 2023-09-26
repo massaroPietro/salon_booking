@@ -311,7 +311,7 @@ export default {
                 addSalon: "Aggiungi salone",
                 salonAddedSuccessfully: "Salone aggiunto con successo",
                 nameNotAvailable: 'Il nome "%{name}" è già occupato',
-                nameIsAvailableAlert: 'Il nome "%{name}" è disponinile.<br>Ecco come sarà il dominio pubblico del tuo salone: http://localhost:5173/%{slug}',
+                nameIsAvailableAlert: 'Il nome "%{name}" è disponibile.<br>Ecco come sarà il dominio pubblico del tuo salone: http://localhost:5173/%{slug}',
                 salonNamePlaceholder: "Inserisci il nome del salone",
                 workHoursUpdated: "Orari di lavoro di %{weekday} aggiornati correttamente",
                 addNewEmployee: "Aggiungi nuovo dipendente",
