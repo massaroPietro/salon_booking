@@ -3,6 +3,7 @@ import router from '@/router';
 import {useAuthStore} from "@/store/auth";
 import toast from "@/plugins/toasts";
 import i18n from "@/plugins/i18n";
+import {useCoreStore} from "@/store/core";
 
 let lang = navigator.language.substring(0, 2);
 const {t} = i18n.global
@@ -27,16 +28,14 @@ axios.interceptors.response.use(
         if (error?.response) {
             const status = error?.response?.status;
             if (status === 404) {
-                router.push('/');
+                const coreStore = useCoreStore();
+                router.push('/').then(coreStore.reloadPage());
             }
             if (status === 403) {
                 const authStore = useAuthStore();
                 authStore.removeToken();
                 router.push('/auth/login');
             }
-        }
-        if (error?.code === 'ERR_NETWORK') {
-            toast.error(t('errors.serverOffline'))
         }
         return Promise.reject(error);
     }

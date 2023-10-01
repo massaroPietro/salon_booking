@@ -87,7 +87,9 @@ const createSpecificCallbacks = (config, success_callback = null, error_callback
         },
         error_callback: (err) => {
             if (!config?.formErrors) {
-                if (Array.isArray(err?.response?.data) && err?.response?.status === 400) {
+                if (err?.code === 'ERR_NETWORK') {
+                    toast.error(t('errors.serverOffline'))
+                } else if (Array.isArray(err?.response?.data) && err?.response?.status === 400) {
                     toast.error(err.response.data[0], {
                         timeout: err.response.data[0].length > 70 ? 6000 : 5000,
                     })

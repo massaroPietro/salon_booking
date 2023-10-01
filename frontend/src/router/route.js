@@ -85,6 +85,11 @@ const routes = [
                 component: () => import("@/views/app/salons/ListView.vue"),
             },
             {
+                path: "salon/:salonID/detail",
+                name: "salon-detail",
+                component: () => import("@/views/app/salons/DetailView.vue"),
+            },
+            {
                 path: "notifications",
                 name: "notifications",
                 component: () => import("@/views/notifications.vue"),

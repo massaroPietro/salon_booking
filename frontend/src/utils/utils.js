@@ -1,5 +1,6 @@
 import {reactive} from "vue";
 import i18n from "@/plugins/i18n";
+import toast from "@/plugins/toasts";
 
 const {t} = i18n.global
 
@@ -44,7 +45,9 @@ export function resetObject(object) {
 }
 
 export function setBackendResponseErrors(err, formErrors) {
-    if (err.response && err.response.data) {
+    if (err?.code === 'ERR_NETWORK') {
+        formErrors["non_field_errors"] = t('errors.serverOffline')
+    } else if (err.response && err.response.data) {
         if (err.response.status === 500) {
             formErrors["non_field_errors"] = t('errors.serverError')
         } else if (err.response.data) {

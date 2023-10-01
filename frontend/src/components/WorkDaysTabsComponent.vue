@@ -59,13 +59,14 @@ export default {
   },
   computed: {
     dynamicWorkDays() {
-      if (this.workDays && this.workDays.length > 6) {
-        if (this.$i18n.locale === 'it') {
-          return this.workDays.slice(6).concat(this.workDays.slice(0, 6))
-        } else {
-          return this.workDays.slice(5).concat(this.workDays.slice(0, 5))
-        }
-      }
+      // if (this.workDays && this.workDays.length > 6) {
+      //   if (this.$i18n.locale === 'it') {
+      //     return this.workDays.slice(6).concat(this.workDays.slice(0, 6))
+      //   } else {
+      //     return this.workDays.slice(5).concat(this.workDays.slice(0, 5))
+      //   }
+      // }
+      return this.workDays
     }
   }
 }

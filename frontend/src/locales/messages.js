@@ -20,13 +20,13 @@ export default {
             appointmentDeleted: "The appointment has been deleted"
         },
         weekDays: {
-            0: "Tuesday",
-            1: "Wednesday",
-            2: "Thursday",
-            3: "Friday",
-            4: "Saturday",
-            5: "Sunday",
-            6: "Monday",
+            0: "Monday",
+            1: "Tuesday",
+            2: "Wednesday",
+            3: "Thursday",
+            4: "Friday",
+            5: "Saturday",
+            6: "Sunday",
         },
         humanizeDuration: {
             onlyHours: "%{hours} hours",
@@ -248,13 +248,13 @@ export default {
             appointmentDeleted: "L'appuntamento è stato eliminato"
         },
         weekDays: {
-            0: "Martedì",
-            1: "Mercoledì",
-            2: "Giovedì",
-            3: "Venerdì",
-            4: "Sabato",
-            5: "Domenica",
-            6: "Lunedì",
+            0: "Lunedì",
+            1: "Martedì",
+            2: "Mercoledì",
+            3: "Giovedì",
+            4: "Venerdì",
+            5: "Sabato",
+            6: "Domenica",
         },
         humanizeDuration: {
             onlyHours: "%{hours} ore",

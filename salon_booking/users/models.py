@@ -16,7 +16,7 @@ class User(AbstractUser, BaseModel):
 
 class UserSettings(BaseModel):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='settings')
-    lang = models.CharField(max_length=64, choices=LANGUAGES, default="en")
+    lang = models.CharField(max_length=64, choices=LANGUAGES, default="it")
     dark_theme = models.BooleanField(default=False)
     monochrome_theme = models.BooleanField(default=False)
     current_salon = models.ForeignKey('salons.Salon', on_delete=models.CASCADE, blank=True, null=True)
