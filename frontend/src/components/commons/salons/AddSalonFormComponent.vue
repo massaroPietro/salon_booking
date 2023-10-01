@@ -4,7 +4,6 @@
         :label="$t('generic.name')"
         type="text"
         :placeholder="$t('app.salons.salonNamePlaceholder')"
-        name="emil"
         v-model="form.name"
         :error="formErrors.name"
         classInput="h-[48px]"
@@ -87,13 +86,13 @@ export default {
       clearTimeout(this.debounceTimeout);
       this.debounceTimeout = setTimeout(async () => {
         backendService.checkSalonExists(this.form.name, config)
-      }, 600);
+      }, 300);
     },
     onSubmit() {
       this.validateForm().then(() => {
         const config = {
           success_callback: (response) => {
-            this.$emit('salonAdded');
+            this.$emit('salonAdded', response.data);
             try {
               this.authStore.user.salons.push(response.data);
             } catch (e) {

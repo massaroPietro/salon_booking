@@ -1,7 +1,7 @@
 import {createI18n} from "vue-i18n";
 import messages from "@/locales/messages";
 
-let lang = navigator.language.substring(0, 2);
+let lang = localStorage.getItem('lang')|| navigator.language.substring(0, 2);
 
 const i18n = createI18n({
     legacy: false,

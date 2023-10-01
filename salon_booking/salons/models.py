@@ -1,3 +1,5 @@
+from datetime import timedelta
+
 from django.db import models
 
 from salon_booking.core.constants import *
@@ -20,6 +22,12 @@ class Salon(BaseModel):
 
     def __str__(self):
         return self.name
+
+
+class SalonSettings(BaseModel):
+    salon = models.OneToOneField(Salon, on_delete=models.CASCADE, related_name='settings')
+    slot_time = models.DurationField(default=timedelta(minutes=15))
+    booking_enabled = models.BooleanField(default=True)
 
 
 class Employee(BaseModel):

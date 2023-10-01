@@ -5,7 +5,7 @@
           class="md:flex justify-between pb-6 md:space-y-0 space-y-3 items-center"
       >
         <h5>{{ $t('app.menuItems.salonsList') }}</h5>
-        <add-service-modal/>
+        <add-salon-modal/>
       </div>
       <div class="-mx-6">
         <vue-good-table
@@ -24,7 +24,7 @@
             This will show up when there are no rows
           </div>
           <template v-slot:table-row="props">
-            <span v-if="props.column.field === 'name'" class="flex justify-center">
+            <span v-if="props.column.field === 'name'" class="flex justify-center align-middle">
               <span class="w-7 h-7 rounded-full ltr:mr-3 rtl:ml-3 flex-none">
                 <img
                     :src="props.row.logo"
@@ -37,7 +37,7 @@
               >{{ props.row.name }}</span
               >
             </span>
-            <span v-if="props.column.field === 'role'">
+            <span v-if="props.column.field === 'role'" class="align-middle">
                                     <span
                                         class="bg-opacity-20 capitalize font-normal text-xs leading-4 px-[10px] py-[2px] rounded-full inline-block"
                                         :class="authStore.statusClass(authStore.user.id, props.row.id)"
@@ -49,19 +49,21 @@
                                       }}
                   </span>
               </span>
-            <span v-if="props.column.field === 'action'">
-                                <div class="flex space-x-3 justify-center">
-                    <Tooltip placement="top" arrow theme="dark">
+            <span v-if="props.column.field === 'action'" class="align-middle">
+                                <div class="flex space-x-3 justify-center align-middle">
+                    <Tooltip placement="top" arrow theme="dark"
+                             v-if="authStore.getSalon(props.row.id)?.owner === authStore?.user?.id">
                       <template #button>
                         <div
-                            @click="$router.push({name:'service-detail', params:{serviceID: props.row.id}})"
+                            @click="$router.push({name:'salon-detail', params:{salonSlug: props.row.slug}})"
                             class="action-btn">
                           <Icon icon="heroicons:eye"/>
                         </div>
                       </template>
                       <span>{{ $t('generic.view') }}</span>
                     </Tooltip>
-                                                        <Tooltip placement="top" arrow theme="dark" v-if="authStore.getCurrentSalon.id !== props.row.id">
+                                                        <Tooltip placement="top" arrow theme="dark"
+                                                                 v-if="authStore.getCurrentSalon.id !== props.row.id">
                       <template #button>
                         <div class="action-btn" @click="changeSalon(props.row.id)">
                           <Icon icon="heroicons:arrows-right-left"/>
@@ -116,11 +118,13 @@ import main from "@/mixins/main";
 import {humanizeDuration} from "@/utils/utils";
 import AddServiceModal from "@/components/modals/AddServiceModal.vue";
 import emitter from "@/plugins/mitt";
+import AddSalonModal from "@/components/modals/AddSalonModal.vue";
 
 export default {
   name: "ListView",
   mixins: [main],
   components: {
+    AddSalonModal,
     AddServiceModal,
     AddEmployeeModal,
     Button,

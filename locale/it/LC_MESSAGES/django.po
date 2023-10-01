@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-01 09:52+0200\n"
+"POT-Creation-Date: 2023-10-01 11:08+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -49,7 +49,9 @@ msgstr "Il giorno selezionato non è lavorativo per il dipendente scelto"
 msgid ""
 "The selected time is not within the employee's working hours for this day. "
 "Please choose a different time"
-msgstr "L'orario selezionato non rientra nell'orario di lavoro del dipendente per questo giorno. Si prega di scegliere un orario diverso"
+msgstr ""
+"L'orario selezionato non rientra nell'orario di lavoro del dipendente per "
+"questo giorno. Si prega di scegliere un orario diverso"
 
 #: .\salon_booking\core\constants.py:4
 msgid "English"
@@ -122,16 +124,20 @@ msgid "An invitation already exists for this email"
 msgstr "Esiste già un invito per questa email"
 
 #: .\salon_booking\salons\api\views.py:40
+msgid "The salon name is invalid."
+msgstr "Il nome del salone non è valido"
+
+#: .\salon_booking\salons\api\views.py:43
 msgid "There is already a salon with this name"
 msgstr "Esiste già un salone con questo nome"
 
-#: .\salon_booking\salons\api\views.py:65
+#: .\salon_booking\salons\api\views.py:68
 #, fuzzy
 #| msgid "There is already a salon with this name"
 msgid "A user is already registered with this e-mail address."
 msgstr "Esiste già un salone con questo nome"
 
-#: .\salon_booking\salons\api\views.py:111
+#: .\salon_booking\salons\api\views.py:114
 msgid "Invalid time range for work range"
 msgstr "Orario di lavoro non valido"
 

@@ -87,6 +87,7 @@ const createSpecificCallbacks = (config, success_callback = null, error_callback
         },
         error_callback: (err) => {
             if (!config?.formErrors) {
+                console.log("ciao")
                 if (err?.code === 'ERR_NETWORK') {
                     toast.error(t('errors.serverOffline'))
                 } else if (Array.isArray(err?.response?.data) && err?.response?.status === 400) {
@@ -153,6 +154,7 @@ const backendService = {
                 if (response.data.employee_invitations?.length > 0) {
                     emitter.emit("openInvitationsModal")
                 }
+                emitter.emit("changeLang", response.data.settings.lang)
             })
         }
 
@@ -382,8 +384,22 @@ const backendService = {
         config = createSpecificCallbacks(config, (response) => {
             toast.success(t('app.employees.updatedPic'));
         })
+        apiCaller("patch", endpoint, formData, config, headers);
+    },
+    updateSalonLogo(salonSlug, file, config) {
+        const formData = new FormData();
+        formData.append("logo", file);
+        let endpoint = apiEndpoints.salon(salonSlug);
 
+        const headers = {
+            "Content-Type": "multipart/form-data",
+        };
 
+        config = createSpecificCallbacks(config, (response) => {
+            const authStore = useAuthStore();
+            authStore.setSalon(response.data.id, response.data);
+            toast.success(t('app.salons.updatedLogo'));
+        })
         apiCaller("patch", endpoint, formData, config, headers);
     },
     deleteService(serviceID, config = null) {

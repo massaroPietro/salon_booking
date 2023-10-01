@@ -24,7 +24,7 @@
             This will show up when there are no rows
           </div>
           <template v-slot:table-row="props">
-            <span v-if="props.column.field === 'name'" class="flex justify-center">
+            <span v-if="props.column.field === 'name'" class="flex justify-center align-middle">
               <span class="w-7 h-7 rounded-full ltr:mr-3 rtl:ml-3 flex-none">
                 <img
                         v-if="props.row.image"
@@ -38,21 +38,21 @@
               >{{ props.row.name }}</span
               >
             </span>
-            <span v-if="props.column.field === 'duration'">
+            <span v-if="props.column.field === 'duration'" class="align-middle">
 
               <span
                   class="text-sm text-slate-600 dark:text-slate-300 capitalize mt-auto mb-auto"
               >{{ humanizeDuration(props.row.duration) }}</span>
 
                 </span>
-            <span v-if="props.column.field === 'price'">
+            <span v-if="props.column.field === 'price'" class="align-middle">
 
               <span
                   class="text-sm text-slate-600 dark:text-slate-300 capitalize mt-auto mb-auto"
               >{{ props.row.price }}&euro;</span>
 
                 </span>
-            <span v-if="props.column.field === 'action'">
+            <span v-if="props.column.field === 'action'" class="align-middle">
                                 <div class="flex space-x-3 justify-center">
                     <Tooltip placement="top" arrow theme="dark">
                       <template #button>

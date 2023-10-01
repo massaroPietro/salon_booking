@@ -74,6 +74,7 @@ import apiEndpoints from '@/constant/apiEndpoints.js';
 import it from "@/assets/images/flags/it.png";
 import en from "@/assets/images/flags/en.svg";
 import backendService from "@/utils/backendService";
+import emitter from "@/plugins/mitt";
 
 export default {
   name: "Language",
@@ -94,7 +95,11 @@ export default {
     return {store, languages};
   },
   created() {
-    this.changeLang(this.store.user.settings.lang, false)
+    emitter.on('changeLang', (lang) => {
+      this.changeLang(lang, false);
+    })
+    const lang = localStorage.getItem('lang') || navigator.language.substring(0, 2)
+    this.changeLang(lang, false)
   },
   computed: {
     selectedLanguage() {
@@ -108,8 +113,8 @@ export default {
       localStorage.setItem('lang', language);
       axios.defaults.headers.common["Accept-Language"] = language;
 
-      if (saveOnDB) {
-          backendService.changeLanguage(language)
+      if (saveOnDB && this.store.isAuthenticated) {
+        backendService.changeLanguage(language)
       }
     }
   }

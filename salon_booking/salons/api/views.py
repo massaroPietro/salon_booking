@@ -36,6 +36,9 @@ class SalonViewSet(viewsets.ModelViewSet):
         user = self.request.user
         slug_name = slugify(serializer.validated_data['name'])
 
+        if len(slug_name) == 0:
+            raise ValidationError(_('The salon name is invalid.'))
+
         if Salon.objects.filter(slug=slug_name).exists():
             raise ValidationError(_('There is already a salon with this name'))
 

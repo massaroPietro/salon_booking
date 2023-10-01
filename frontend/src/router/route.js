@@ -1,10 +1,6 @@
-import auth, {IsCurrentSalonOwner} from "@/middleware/auth";
+import {IsCurrentSalonOwner, mustBeSalonOwner, auth} from "@/middleware/auth";
 
 const routes = [
-    {
-        path: "/",
-        redirect: "/app/home",
-    },
     {
         path: "/auth/login",
         name: "Login",
@@ -34,7 +30,7 @@ const routes = [
         path: "/app",
         name: "Layout",
         redirect: "/app/calendar",
-        component: () => import("@/Layout/index.vue"),
+        component: () => import("@/Layout/DashboardLayout.vue"),
         meta: {
             middleware: [auth],
             hide: true,
@@ -85,9 +81,13 @@ const routes = [
                 component: () => import("@/views/app/salons/ListView.vue"),
             },
             {
-                path: "salon/:salonID/detail",
+                path: "salon/:salonSlug/detail",
                 name: "salon-detail",
                 component: () => import("@/views/app/salons/DetailView.vue"),
+                props: true,
+                meta: {
+                    middleware: [mustBeSalonOwner],
+                }
             },
             {
                 path: "notifications",
@@ -101,7 +101,7 @@ const routes = [
                 path: "home",
                 name: "home",
                 redirect: "/app/calendar",
-                // component: () => import("@/views/home/index.vue"),
+                // component: () => import("@/views/home/DashboardLayout.vue"),
                 meta: {
                     hide: true,
                 },
@@ -595,6 +595,22 @@ const routes = [
                 component: () => import("@/views/icons.vue"),
             },
         ],
+    },
+    {
+        path: "/",
+        name: "BaseLayout",
+        component: () => import("@/Layout/BaseLayout.vue"),
+        meta: {
+            hide: true,
+        },
+        children: [
+            {
+                path: "/:salonSlug",
+                name: "booking-appointment",
+                component: () => import("@/views/BookingAppointmentView.vue"),
+                props: true,
+            },
+        ]
     },
     {
         path: "/:catchAll(.*)",

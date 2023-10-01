@@ -73,9 +73,16 @@ class FriendlySalonSerializer(serializers.ModelSerializer):
         read_only_fields = ('slug', 'owner')
 
 
+class SalonSettingsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = SalonSettings
+        fields = "__all__"
+
+
 class SalonSerializer(serializers.ModelSerializer):
     employees = EmployeeSerializer(read_only=True, many=True)
     services = ServiceSerializer(read_only=True, many=True)
+    settings = SalonSettingsSerializer(read_only=True)
 
     class Meta:
         model = Salon

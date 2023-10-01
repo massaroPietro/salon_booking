@@ -4,7 +4,7 @@
 </template>
 
 <script>
-import {useThemeSettingsStore} from "@/store/themeSettings";
+import  {useThemeSettingsStore} from "@/store/themeSettings";
 import {useAuthStore} from "@/store/auth";
 import axios from "@/plugins/axios";
 import {useCoreStore} from "@/store/core";

@@ -6,7 +6,7 @@ import user4Img from "@/assets/images/all-img/user4.png";
 export const menuItems = [
     {
         isHeadr: true,
-        title: "menu",
+        title: "generic.menu",
     },
     {
         title: "app.menuItems.calendar",

@@ -39,7 +39,8 @@ export const useAuthStore = defineStore('authStore', {
             const currentSalonId = state.user.settings.current_salon;
             return state.user.salons.find(salon => salon.id === currentSalonId);
         },
-        getSalon: state => id => state.user.salons.find(salon => salon.id === id),
+        getSalon: state => id => state?.user?.salons?.find(salon => salon.id === id),
+        getSalonBySlug: state => slug => state?.user?.salons?.find(salon => salon.slug === slug),
         statusClass() {
             return (id, salon_id=this.getCurrentSalon.id) => {
                 const isOwner = this.isOwner(id, salon_id);

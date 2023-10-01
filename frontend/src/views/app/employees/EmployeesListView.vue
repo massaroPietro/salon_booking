@@ -21,7 +21,7 @@
           }"
         >
           <template v-slot:table-row="props">
-            <span v-if="props.column.field === 'user.full_name'" class="flex justify-center">
+            <span v-if="props.column.field === 'user.full_name'" class="flex justify-center align-middle">
               <span class="w-7 h-7 rounded-full ltr:mr-3 rtl:ml-3 flex-none  cursor-pointer"
                     @click="$router.push({name:'employee-detail', params:{employeeID: props.row.id}})">
                 <img
@@ -36,7 +36,7 @@
               >{{ props.row.user.full_name }}</span
               >
             </span>
-            <span v-if="props.column.field === 'role'">
+            <span v-if="props.column.field === 'role'" class="align-middle">
                                 <span
                                     class="bg-opacity-20 mr-1 capitalize font-normal text-xs leading-4 px-[10px] py-[2px] rounded-full inline-block text-info-500 bg-info-500"
                                     v-if="authStore.isLoggedUser(props.row.user.id)"
@@ -62,8 +62,8 @@
 
 
                 </span>
-            <span v-if="props.column.field === 'action'">
-                                <div class="flex space-x-3 justify-center">
+            <span v-if="props.column.field === 'action'" class="align-middle">
+                                <div class="flex space-x-3 justify-center align-middle">
                     <Tooltip placement="top" arrow theme="dark">
                       <template #button>
                         <div @click="$router.push({name:'employee-detail', params:{employeeID: props.row.id}})"

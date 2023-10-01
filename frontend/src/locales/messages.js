@@ -67,7 +67,8 @@ export default {
             operator: "Operator",
             date: "Date",
             edit: "Modifica",
-            salon: "Salon"
+            salon: "Salon",
+            menu: "menu"
         },
         auth: {
             signIn: "Sign in",
@@ -118,13 +119,16 @@ export default {
                 addSalon: "Add salon",
                 salonAddedSuccessfully: "Salon added successfully",
                 nameNotAvailable: 'The name "%{name}" is already taken',
-                nameIsAvailableAlert: 'The name "%{name}" is available.<br>This is what the public domain of your salon will look like: http://localhost:5173/%{slug}',
+                nameIsAvailableAlert: 'The name "%{name}" is available.<br><br>This is what the public domain of your salon will look like:<br>http://localhost:5173/%{slug}',
                 salonNamePlaceholder: "Type your salon name",
                 workHoursUpdated: "working hours on %{weekday} updated correctly",
                 addEmployee: "Add employee",
                 addNewEmployee: "Add new employee",
                 invitedForSalon: "You have received an invitation to participate",
                 firstSalonDescription: "Welcome to our application! To access the dashboard, we kindly ask you to register your business",
+                addNewSalon: "Add new salon",
+                editSalon: "Edit salon",
+                updatedLogo: "Logo updated successfully",
             },
             services: {
                 addNewService: "Add new service",
@@ -226,7 +230,8 @@ export default {
             operator: "Operatore",
             date: "Date",
             edit: "Modifica",
-            salon: "Salone"
+            salon: "Salone",
+            menu: "menu"
         },
         errors: {
             notValidEmail: "Email non valida",
@@ -311,12 +316,15 @@ export default {
                 addSalon: "Aggiungi salone",
                 salonAddedSuccessfully: "Salone aggiunto con successo",
                 nameNotAvailable: 'Il nome "%{name}" è già occupato',
-                nameIsAvailableAlert: 'Il nome "%{name}" è disponibile.<br>Ecco come sarà il dominio pubblico del tuo salone: http://localhost:5173/%{slug}',
+                nameIsAvailableAlert: 'Il nome "%{name}" è disponibile.<br><br>Ecco come sarà il dominio pubblico del tuo salone:<br>http://localhost:5173/%{slug}',
                 salonNamePlaceholder: "Inserisci il nome del salone",
                 workHoursUpdated: "Orari di lavoro di %{weekday} aggiornati correttamente",
                 addNewEmployee: "Aggiungi nuovo dipendente",
                 addEmployee: "Aggiungi dipendente",
                 invitedForSalon: "Hai ricevuto un invito a partecipare",
+                addNewSalon: "Aggiungi nuovo salone",
+                editSalon: "Modifica salon",
+                updatedLogo: "Logo aggiornato correttamente",
                 firstSalonDescription: "Benvenuto alla nostra applicazione! Per accedere alla dashboard, ti chiediamo gentilmente di registrare la tua attività",
             },
             services: {
