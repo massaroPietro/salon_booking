@@ -1,6 +1,7 @@
 import {createRouter, createWebHistory} from "vue-router";
 import middlewarePipeline from "../middleware/middlewarePipeline";
 import routes from './route';
+import {useAuthStore} from "@/store/auth";
 
 
 const router = createRouter({
@@ -23,6 +24,12 @@ router.beforeEach((to, from, next) => {
         words[i] = words[i][0].toUpperCase() + words[i].substr(1);
     }
     document.title = "Salon Booking  - " + words;
+
+    const authStore = useAuthStore();
+
+    if(to.meta.mustBeUnauthorized && authStore.isAuthenticated){
+        router.push("/")
+    }
 
     /** Navigate to next if middleware is not applied */
     if (!to.meta.middleware) {

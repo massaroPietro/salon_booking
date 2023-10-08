@@ -14,8 +14,9 @@
 
     <Alert v-if="response?.detail" type="success">{{ response.detail }}</Alert>
 
-    <Button :text="canSend > 0 ? countdown : $t('auth.sendRecoveryEmail')" btn-class="btn btn-dark" class="block w-full text-center"
-            :is-disabled="canSend"
+    <Button :text="countdown ? countdown : $t('auth.sendRecoveryEmail')" btn-class="btn btn-dark"
+            class="block w-full text-center"
+            :is-disabled="countdown > 0"
             :is-loading="loading"
             :loading-class="'mr-2'"/>
 
@@ -41,7 +42,7 @@ export default {
   data() {
     return {
       response: {},
-      countdown: 15,
+      countdown: 0,
     };
   },
   setup() {
@@ -60,12 +61,12 @@ export default {
   methods: {
     onSubmit() {
       this.validateForm().then(() => {
-        this.countdown = 15;
         const config = {
           dataTarget: this.response,
           formErrors: this.formErrors,
           loader: this.toggleLoading,
           success_callback: () => {
+            this.countdown = 15;
             const countdownInterval = setInterval(() => {
               this.countdown--;
               if (this.countdown <= 0) {

@@ -6,12 +6,13 @@ from rest_framework.generics import get_object_or_404
 from ..models import *
 from rest_framework import serializers
 from django.utils.translation import gettext as _
-from ...services.api.serializers import ServiceSerializer
+from ...services.api.serializers import ServiceSerializer, FriendlyServiceSerializer
 
 
 class EmployeeSerializer(serializers.ModelSerializer):
     user = serializers.SerializerMethodField(read_only=True)
     email_verified = serializers.SerializerMethodField(read_only=True)
+    services = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
 
     class Meta:
         model = Employee
@@ -29,6 +30,18 @@ class EmployeeSerializer(serializers.ModelSerializer):
             return email_address.verified
         except EmailAddress.DoesNotExist:
             return False
+
+
+class FriendlyEmployeeSerializer(serializers.ModelSerializer):
+    user = serializers.SerializerMethodField(read_only=True)
+
+    class Meta:
+        model = Employee
+        fields = ('id', 'user', 'pic', 'services')
+
+    def get_user(self, instance):
+        from salon_booking.users.api.serializers import FriendlyUserSerializer
+        return FriendlyUserSerializer(instance.user).data
 
 
 class EmployeeWorkRangeSerializer(serializers.ModelSerializer):
@@ -67,9 +80,12 @@ class FullEmployeeSerializer(EmployeeSerializer):
 
 
 class FriendlySalonSerializer(serializers.ModelSerializer):
+    services = FriendlyServiceSerializer(read_only=True, many=True)
+    employees = FriendlyEmployeeSerializer(read_only=True, many=True)
+
     class Meta:
         model = Salon
-        fields = ('id', 'name', 'slug', 'owner', 'logo')
+        fields = ('id', 'name', 'slug', 'owner', 'logo', 'services', 'employees')
         read_only_fields = ('slug', 'owner')
 
 

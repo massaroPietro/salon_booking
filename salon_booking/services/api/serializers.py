@@ -7,6 +7,7 @@ from salon_booking.services.models import Service
 class FriendlyServiceSerializer(serializers.ModelSerializer):
     class Meta:
         model = Service
+        fields = ('id', 'name', 'duration', 'price', 'image', 'employees')
 
 
 class ServiceSerializer(serializers.ModelSerializer):

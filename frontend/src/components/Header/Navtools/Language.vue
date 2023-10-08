@@ -101,6 +101,9 @@ export default {
     const lang = localStorage.getItem('lang') || navigator.language.substring(0, 2)
     this.changeLang(lang, false)
   },
+  beforeUnmount() {
+    emitter.off('changeLang');
+  },
   computed: {
     selectedLanguage() {
       return this.languages.find((language) => language.locale === this.store.user.settings.lang);

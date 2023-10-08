@@ -66,6 +66,7 @@ import main from "@/mixins/main";
 
 export default {
   name: "SignUp",
+  emits: ['registered', 'emailSent'],
   mixins: [main],
   components: {
     Checkbox,
@@ -100,7 +101,8 @@ export default {
 
           const callbacks = {
             success_callback: () => {
-              this.$emit('emailSent', this.form.email)
+              this.$emit('registered');
+              this.$emit('emailSent', this.form.email);
             },
             loader: this.toggleLoading,
             formErrors: this.formErrors,

@@ -68,7 +68,13 @@ export default {
             date: "Date",
             edit: "Modifica",
             salon: "Salon",
-            menu: "menu"
+            menu: "menu",
+            and: "and",
+            next: "Next",
+            back: "Back",
+            select: "Select",
+            book: "Book",
+            customer: "Customer",
         },
         auth: {
             signIn: "Sign in",
@@ -97,6 +103,8 @@ export default {
             recoveryEmailSent: "The recovery email has been sent successfully",
             verifyEmailSuccess: "Email verified successfully",
             verifyEmailError: "Link is not valid or expired",
+            passwordReset: "Reset password",
+            backToSignIn: "Back to signIn",
         },
         toasts: {
             successLogin: "Welcome back to BarberBooking",
@@ -151,6 +159,12 @@ export default {
                 servicesList: "Services List",
                 calendar: "Calendar"
             }
+        },
+        booking: {
+            selectServices: "Select the services to book",
+            selectEmployee: "Select the worker",
+            selectDate: "Select the date",
+            signInToBooking: "Sign in to book",
         },
         themeCustomizer: {
             name: "Settings",
@@ -228,10 +242,16 @@ export default {
             rejected: "Rifiutato",
             pending: "In attesa",
             operator: "Operatore",
-            date: "Date",
+            date: "Data",
             edit: "Modifica",
             salon: "Salone",
-            menu: "menu"
+            menu: "menu",
+            and: "e",
+            next: "Avanti",
+            back: "Indietro",
+            select: "Seleziona",
+            book: "Prenota",
+            customer: "Cliente",
         },
         errors: {
             notValidEmail: "Email non valida",
@@ -294,6 +314,8 @@ export default {
             recoveryEmailSent: "L'email di recupero è stata inviata con successo",
             verifyEmailSuccess: "Email verificata con successo",
             verifyEmailError: "Link non valido o scaduto",
+            passwordReset: "Reimposta password",
+            backToSignIn: "Torna al login",
         },
         toasts: {
             successLogin: "Bentornato in BarberBooking",
@@ -350,6 +372,12 @@ export default {
                 salonsList: "Lista saloni",
                 calendar: "Calendario"
             }
+        },
+        booking: {
+            selectServices: "Seleziona i servizi da prenotare",
+            selectEmployee: "Seleziona l'operatore",
+            selectDate: "Seleziona la data",
+            signInToBooking: "Accedi per prenotare",
         },
         themeCustomizer: {
             name: "Impostazioni",

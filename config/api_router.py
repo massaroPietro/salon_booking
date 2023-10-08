@@ -35,6 +35,9 @@ urlpatterns = [
     # Services
     path("salons/<slug:slug>/services/", ServiceListCreateAPIView.as_view()),
     path("services/<uuid:pk>/", ServiceRUDAPIView.as_view()),
+
+    # Booking
+    path("available-slots/", SalonTimeSlotsAPIView.as_view()),
 ]
 
 app_name = "api"

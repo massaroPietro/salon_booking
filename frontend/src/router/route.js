@@ -5,21 +5,33 @@ const routes = [
         path: "/auth/login",
         name: "Login",
         component: () => import("@/views/auth/login/index.vue"),
+        meta: {
+            mustBeUnauthorized: true
+        }
     },
     {
         path: "/auth/register",
         name: "Register",
         component: () => import("@/views/auth/register"),
+        meta: {
+            mustBeUnauthorized: true
+        }
     },
     {
         path: "/auth/forgot-password",
         name: "forgot-password",
         component: () => import("@/views/auth/forgot-password.vue"),
+        meta: {
+            mustBeUnauthorized: true
+        }
     },
     {
         path: "/auth/lock-screen",
         name: "lock-screen",
         component: () => import("@/views/auth/lock-screen.vue"),
+        meta: {
+            mustBeUnauthorized: true
+        }
     },
     {
         path: "/auth/verify-email/:key",
@@ -599,6 +611,7 @@ const routes = [
     {
         path: "/",
         name: "BaseLayout",
+        redirect: "/app",
         component: () => import("@/Layout/BaseLayout.vue"),
         meta: {
             hide: true,

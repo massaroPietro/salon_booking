@@ -24,9 +24,13 @@ function setUserInfoOnLogin(response, rememberUser) {
     toast.success(t("toasts.successLogin"), {
         timeout: 2000
     });
-    const toPath = router.currentRoute.value.query.to || '/'
 
-    router.push(toPath);
+    if (router.currentRoute.value.matched.some(route => route.name === "BaseLayout")) {
+    } else {
+        const toPath = router.currentRoute.value.query.to || '/'
+        router.push(toPath);
+    }
+
     if (response.data.user.employee_invitations?.length > 0) {
         emitter.emit("openInvitationsModal")
     }
@@ -87,7 +91,6 @@ const createSpecificCallbacks = (config, success_callback = null, error_callback
         },
         error_callback: (err) => {
             if (!config?.formErrors) {
-                console.log("ciao")
                 if (err?.code === 'ERR_NETWORK') {
                     toast.error(t('errors.serverOffline'))
                 } else if (Array.isArray(err?.response?.data) && err?.response?.status === 400) {
@@ -119,12 +122,14 @@ const createSpecificCallbacks = (config, success_callback = null, error_callback
 const backendService = {
     logout(config = null) {
         let endpoint = apiEndpoints.logout();
-
         config = createSpecificCallbacks(config, () => {
-            router.push({name: "Login"})
+            if (router.currentRoute.value.matched.some(route => route.name === "BaseLayout")) {
+            } else {
+                router.push({name: "Login"})
+            }
             const store = useAuthStore();
             store.removeToken();
-            const lang = navigator.language.substring(0, 2);
+            const lang = localStorage.getItem('lang') || navigator.language.substring(0, 2);
             axios.defaults.headers['Accept-Language'] = lang
             i18n.locale = lang;
         })
@@ -447,9 +452,13 @@ const backendService = {
 
         apiCaller("get", endpoint, null, config);
     },
-    addAppointment(data, config) {
+    addAppointmentFromDashboard(data, config) {
         const authStore = useAuthStore();
         const salonSlug = authStore.getCurrentSalon.slug;
+        this.addAppointment(data, config, salonSlug)
+    },
+    addAppointment(data, config, salonSlug) {
+        const authStore = useAuthStore();
         const endpoint = apiEndpoints.appointments(salonSlug);
 
         config = createSpecificCallbacks(config, (response) => {
@@ -471,6 +480,11 @@ const backendService = {
     deleteAppointment(id, config) {
         const endpoint = apiEndpoints.appointment(id);
         apiCaller("delete", endpoint, null, config)
+    },
+    getAvailableSlots(data, config) {
+        let endpoint = apiEndpoints.salonAvailableSlots();
+
+        apiCaller("post", endpoint, data, config)
     }
 };
 

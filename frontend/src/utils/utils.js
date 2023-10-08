@@ -72,18 +72,53 @@ export function humanizeDuration(duration) {
     const [hours, minutes] = duration.split(':').map(Number);
 
     const obj = {hours: hours, minutes: minutes}
-
-    if (hours > 0 && minutes > 0) {
-        return t("humanizeDuration.minutesAndHours", obj)
-    } else if (hours > 0) {
+    let str = "";
+    if (hours > 0) {
         if (hours === 1) {
-            return t("humanizeDuration.onlySingleHours", obj)
+            str += t("humanizeDuration.onlySingleHours", obj)
         } else {
-            return t("humanizeDuration.onlyHours", obj)
+            str += t("humanizeDuration.onlyHours", obj)
         }
-    } else {
-        return t("humanizeDuration.onlyMinutes", obj)
     }
+    if (minutes > 0) {
+        let tmpStr = "";
+        if (hours > 0) {
+            tmpStr = " " + t("generic.and") + " ";
+        }
+        tmpStr += t("humanizeDuration.onlyMinutes", obj)
+        str += tmpStr;
+    }
+
+    return str;
+}
+
+export function sumDurations(duration1, duration2) {
+    const [hours1, minutes1] = duration1.split(":").map(Number);
+    const [hours2, minutes2] = duration2.split(":").map(Number);
+
+    let totalHours = hours1 + hours2;
+    let totalMinutes = minutes1 + minutes2;
+
+    if (totalMinutes >= 60) {
+        totalHours += Math.floor(totalMinutes / 60);
+        totalMinutes %= 60;
+    }
+
+    return `${String(totalHours).padStart(2, "0")}:${String(totalMinutes).padStart(2, "0")}:00`;
+}
+
+export function sumDurationsList(durations) {
+    if (durations.length === 0) {
+        return "00:00:00";
+    }
+    if (durations.length === 1) {
+        return durations[0];
+    }
+    let duration = durations[0];
+    for (let i = 1; i < durations.length; i++) {
+        duration = sumDurations(duration, durations[i]);
+    }
+    return duration;
 }
 
 export function getClientTimezoneOffset() {

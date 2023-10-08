@@ -34,4 +34,3 @@ def add_work_days_to_employee(sender, instance, created, **kwargs):
 @receiver(post_delete, sender=Salon)
 def change_current_salon_settings(sender, instance, **kwargs):
     users_settings = UserSettings.objects.filter(current_salon=instance)
-    print(users_settings)

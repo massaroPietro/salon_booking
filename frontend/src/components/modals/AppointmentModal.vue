@@ -9,6 +9,13 @@
   >
     <form @submit.prevent="onSubmit()">
       <div class="space-y-3">
+        <Textinput
+            :label="$t('generic.customer')"
+            name="pn2"
+            isReadonly
+            type="text"
+            :model-value="appointment?.customer?.full_name"
+        />
         <FromGroup :label="$t('generic.date')" :error="formErrors.start">
           <flat-pickr
               v-model="form.start"
@@ -232,7 +239,7 @@ export default {
           data.id = this.appointment.id;
           backendService.updateAppointment(data, config)
         } else {
-          backendService.addAppointment(data, config)
+          backendService.addAppointment(data, config, this.authStore.getCurrentSalon.slug)
         }
       })
     },

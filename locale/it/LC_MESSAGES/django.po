@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-01 11:08+0200\n"
+"POT-Creation-Date: 2023-10-08 16:43+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,21 +18,21 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: .\salon_booking\appointments\api\views.py:79
+#: .\salon_booking\appointments\api\views.py:83
 msgid "Employee is not valid"
 msgstr "Il dipendente non è valido"
 
-#: .\salon_booking\appointments\api\views.py:84
+#: .\salon_booking\appointments\api\views.py:89
 #, fuzzy
 #| msgid "{value!r} is not a valid UUID."
 msgid "Service is not valid"
 msgstr "%(value)s non è un UUID valido."
 
-#: .\salon_booking\appointments\api\views.py:87
+#: .\salon_booking\appointments\api\views.py:92
 msgid "The selected employee is not authorized for the chosen service"
 msgstr "Il dipendente selezionato non è abilitato al servizio scelto"
 
-#: .\salon_booking\appointments\api\views.py:91
+#: .\salon_booking\appointments\api\views.py:97
 msgid ""
 "The employee is already busy with another appointment during this time slot. "
 "Please choose a different time or another available employee"
@@ -40,18 +40,25 @@ msgstr ""
 "L'orario selezionato non rientra nell'orario di lavoro del dipendente per "
 "questo giorno. Scegli un orario diverso"
 
-#: .\salon_booking\appointments\api\views.py:98
+#: .\salon_booking\appointments\api\views.py:107
 msgid "The selected day is not a working day for the chosen employee"
 msgstr "Il giorno selezionato non è lavorativo per il dipendente scelto"
 
-#: .\salon_booking\appointments\api\views.py:106
-#, fuzzy
+#: .\salon_booking\appointments\api\views.py:118
 msgid ""
 "The selected time is not within the employee's working hours for this day. "
 "Please choose a different time"
 msgstr ""
 "L'orario selezionato non rientra nell'orario di lavoro del dipendente per "
 "questo giorno. Si prega di scegliere un orario diverso"
+
+#: .\salon_booking\appointments\api\views.py:128
+#, python-brace-format
+msgid ""
+"The time entered is invalid. The lounge only accepts reservations in "
+"{slot_minutes} minute slots."
+msgstr ""
+"L'orario inserito non è valido. Il salone accetta solo prenotazioni in intervalli di {slot_minutes} minuti."
 
 #: .\salon_booking\core\constants.py:4
 msgid "English"
@@ -115,29 +122,29 @@ msgstr ""
 msgid "Rejected"
 msgstr ""
 
-#: .\salon_booking\salons\api\serializers.py:127
+#: .\salon_booking\salons\api\serializers.py:150
 msgid "The user with this email is already part of the salon"
 msgstr "L'utente con questa email fa già parte di un salone"
 
-#: .\salon_booking\salons\api\serializers.py:130
+#: .\salon_booking\salons\api\serializers.py:153
 msgid "An invitation already exists for this email"
 msgstr "Esiste già un invito per questa email"
 
-#: .\salon_booking\salons\api\views.py:40
+#: .\salon_booking\salons\api\views.py:41
 msgid "The salon name is invalid."
 msgstr "Il nome del salone non è valido"
 
-#: .\salon_booking\salons\api\views.py:43
+#: .\salon_booking\salons\api\views.py:44
 msgid "There is already a salon with this name"
 msgstr "Esiste già un salone con questo nome"
 
-#: .\salon_booking\salons\api\views.py:68
+#: .\salon_booking\salons\api\views.py:69
 #, fuzzy
 #| msgid "There is already a salon with this name"
 msgid "A user is already registered with this e-mail address."
 msgstr "Esiste già un salone con questo nome"
 
-#: .\salon_booking\salons\api\views.py:114
+#: .\salon_booking\salons\api\views.py:115
 msgid "Invalid time range for work range"
 msgstr "Orario di lavoro non valido"
 

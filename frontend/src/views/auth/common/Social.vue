@@ -6,16 +6,15 @@
   </ul>
 </template>
 <script>
-import axios from "@/plugins/axios";
 import {useAuthStore} from "@/store/auth";
 import {useToast} from "vue-toastification";
 import {googleOneTap} from "vue3-google-login"
 import Button from "@/components/Button/index.vue";
-import apiEndpoints from "@/constant/apiEndpoints";
 import backendService from "@/utils/backendService";
 
 export default {
   name: "Social",
+  emits: ['logged'],
   components: {Button},
   setup() {
     const toast = useToast();
@@ -33,8 +32,13 @@ export default {
       const data = {
         access_token: response.credential
       }
+      const config = {
+        success_callback: () => {
+          this.$emit('logged');
+        }
+      }
 
-      backendService.googleLoginUser(data);
+      backendService.googleLoginUser(data, config);
     }
   },
 };

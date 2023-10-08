@@ -46,11 +46,11 @@
         >{{ $t('auth.keepSignIn') }}</span
         >
       </label>
-      <router-link
-          :to="{name:'forgot-password'}"
+      <span
+          @click="goToForgotPassword()"
           class="text-sm text-slate-800 dark:text-slate-400 leading-6 font-medium"
       >{{ $t('auth.forgotPassword') }}
-      </router-link
+      </span
       >
     </div>
     <Alert v-if="formErrors.non_field_errors" type="danger">{{ formErrors.non_field_errors }}</Alert>
@@ -72,10 +72,18 @@ import main from "@/mixins/main";
 export default {
   name: "SignIn",
   mixins: [main],
+  emits: ['logged', 'forgotPassword'],
   components: {
     Alert,
     Button,
     Textinput,
+  },
+  props: {
+    isModal: {
+      type: Boolean,
+      required: false,
+      default: false,
+    }
   },
   setup() {
 
@@ -97,10 +105,20 @@ export default {
         const config = {
           loader: this.toggleLoading,
           formErrors: this.formErrors,
+          success_callback: () => {
+            this.$emit('logged');
+          }
         }
         backendService.loginUser(this.form, config, this.checkbox)
       })
     },
+    goToForgotPassword() {
+      if (this.isModal) {
+        this.$emit('forgotPassword');
+      } else {
+        this.$router.push({name: 'forgot-password'})
+      }
+    }
   },
 };
 </script>

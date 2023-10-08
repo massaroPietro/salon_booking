@@ -20,6 +20,7 @@ export const useAuthStore = defineStore('authStore', {
         }
     },
     getters: {
+        hasDashboardAccess: state => state?.user?.salons?.length > 0 && state?.isAuthenticated,
         fullName() {
             if (this.user) {
                 return this.user.first_name + " " + this.user.last_name;
@@ -33,7 +34,7 @@ export const useAuthStore = defineStore('authStore', {
             return (id) => this.user.id === id;
         },
         isOwner() {
-            return (id, salon_id=this.getCurrentSalon.id) => this.getSalon(salon_id).owner === id;
+            return (id, salon_id = this.getCurrentSalon.id) => this.getSalon(salon_id).owner === id;
         },
         getCurrentSalon: state => {
             const currentSalonId = state.user.settings.current_salon;
@@ -42,7 +43,7 @@ export const useAuthStore = defineStore('authStore', {
         getSalon: state => id => state?.user?.salons?.find(salon => salon.id === id),
         getSalonBySlug: state => slug => state?.user?.salons?.find(salon => salon.slug === slug),
         statusClass() {
-            return (id, salon_id=this.getCurrentSalon.id) => {
+            return (id, salon_id = this.getCurrentSalon.id) => {
                 const isOwner = this.isOwner(id, salon_id);
                 return {
                     "text-success-500 bg-success-500": isOwner,

@@ -145,7 +145,7 @@ export default {
   },
   methods: {
     dateClicked(event) {
-        event.dayEl.classList.add("selectedDate");
+      event.dayEl.classList.add("selectedDate");
       this.appointment.start = event.date;
       this.appointment.employee = null;
       this.appointment.services = []
@@ -154,12 +154,13 @@ export default {
       emitter.emit('openAppointmentModal')
     },
     onClickEvent(event) {
-        event.backgroundColor = "#ff0000"
+      event.backgroundColor = "#ff0000"
       this.event = event
       this.appointment.id = event.event.id;
       this.appointment.start = event.event.start;
       this.appointment.services = event.event.extendedProps.services;
       this.appointment.employee = event.event.extendedProps.employee;
+      this.appointment.customer = event.event.extendedProps.customer;
       this.appointmentModalEditMode = true;
       emitter.emit('openAppointmentModal')
     },

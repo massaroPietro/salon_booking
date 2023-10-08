@@ -133,45 +133,6 @@ export const useKanbanStore = defineStore('kanban',{
                         },
                     ],
                 },
-                {
-                    id: uuidv4(),
-                    name: "Done",
-                    color: "#50C793",
-                    tasks: [
-                        {
-                            id: uuidv4(),
-                            assignto: [
-                                {
-                                    image: av1Img,
-                                    title: "Mahedi Amin",
-                                },
-                                {
-                                    image: av2Img,
-                                    title: "Sovo Haldar",
-                                },
-                                {
-                                    image: av2Img,
-                                    title: "Rakibul Islam",
-                                },
-                            ],
-                            name: "Management Dashboard ",
-                            des: "Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint.",
-                            startDate: "2022-10-03",
-                            endDate: "2022-10-06",
-                            progress: 75,
-                            category: [
-                                {
-                                    value: "team",
-                                    label: "team",
-                                },
-                                {
-                                    value: "low",
-                                    label: "low",
-                                },
-                            ],
-                        },
-                    ],
-                },
             ],
         }
     },
